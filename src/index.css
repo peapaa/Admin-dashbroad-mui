@@ -1,0 +1,23 @@
+@import "@fontsource/nunito-sans/300.css";
+@import "@fontsource/nunito-sans/400.css";
+@import "@fontsource/nunito-sans/500.css";
+@import "@fontsource/nunito-sans/600.css";
+@import "@fontsource/nunito-sans/700.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.app {
+  min-height: 100vh;
+  background-color: #f1f5f9;
+}
+
+.form-slecet-day .MuiInputBase-input {
+  padding: 2px 4px;
+}
+
+.form-slecet-day
+  .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  font-size: 12px;
+  color: "#64748B";
+}
