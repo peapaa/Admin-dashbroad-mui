@@ -7,13 +7,14 @@ function App() {
       <div className="min-w-[1024px] max-w-[1440px] w-full ">
         <Routes>
           <Route
-            path="/users"
+            path="/"
             element={
               <Dashbroad>
                 <Content />
               </Dashbroad>
             }
           ></Route>
+          {/* <Route path="/" element={<Dashbroad />}></Route> */}
         </Routes>
       </div>
     </div>
