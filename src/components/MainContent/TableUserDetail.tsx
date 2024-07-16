@@ -5,14 +5,12 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { visuallyHidden } from "@mui/utils";
 import user1 from "../../assets/images/table-logo/user1.png";
 import user2 from "../../assets/images/table-logo/user2.png";
@@ -20,11 +18,17 @@ import user3 from "../../assets/images/table-logo/user3.png";
 import user4 from "../../assets/images/table-logo/user4.png";
 import check from "../../assets/images/table-logo/check.png";
 import xIcon from "../../assets/images/table-logo/x.png";
+import { useTheme } from "@mui/material/styles";
+import { HiOutlineVideoCamera } from "react-icons/hi2";
+import { CiFilter } from "react-icons/ci";
 
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { IoIosMore } from "react-icons/io";
 import { LiaEditSolid } from "react-icons/lia";
+import CustomTablePagination from "./CustomTablePagination";
+import { Typography } from "@mui/material";
+import { ExpandMore } from "@mui/icons-material";
 
 interface Data {
   id: number;
@@ -143,20 +147,38 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
   return (
     <TableHead>
-      <div className="flex items-center">
-        <Checkbox
-          color="primary"
-          indeterminate={numSelected > 0 && numSelected < rowCount}
-          checked={numSelected === rowCount}
-          onChange={props.onSelectAllClick}
-          inputProps={{
-            "aria-label": "select all desserts",
-          }}
-        />
-        <CameraAltIcon />
-      </div>
-
       <TableRow>
+        <TableCell
+          colSpan={headCells.length + 2}
+          style={{ paddingLeft: "4px" }}
+        >
+          <div className="flex items-center  justify-between w-full">
+            <span>
+              <Checkbox
+                color="primary"
+                indeterminate={numSelected > 0 && numSelected < rowCount}
+                checked={numSelected === rowCount}
+                onChange={props.onSelectAllClick}
+                inputProps={{
+                  "aria-label": "select all desserts",
+                }}
+              />
+              <ExpandMore className="cursor-pointer" />
+            </span>
+            <div className="flex">
+              <span className="flex cursor-pointer">
+                <HiOutlineVideoCamera className="w-6 h-6" />
+                <ExpandMore />
+              </span>
+              <span className="flex ml-3 cursor-pointer">
+                <CiFilter className="w-6 h-6" />
+                <ExpandMore />
+              </span>
+            </div>
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow sx={{ backgroundColor: "#F1F5F9" }}>
         <TableCell></TableCell>
         {headCells.map((headCell) => (
           <TableCell
@@ -191,10 +213,21 @@ export default function TableUserDetail() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("avatar");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
+  // const [page] = React.useState(0);
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(false);
   //   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage] = React.useState(5);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const theme = useTheme();
+
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -234,21 +267,6 @@ export default function TableUserDetail() {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (_: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  //   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     setDense(event.target.checked);
-  //   };
-
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   const emptyRows =
@@ -258,11 +276,7 @@ export default function TableUserDetail() {
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
+          <Table aria-labelledby="tableTitle" size={dense ? "small" : "medium"}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -289,14 +303,14 @@ export default function TableUserDetail() {
                       selected={isItemSelected}
                       sx={{ cursor: "pointer" }}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell padding="checkbox" width="5%">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" width="5%">
                         <span
                           className="font-bold"
                           style={{ color: "#0EA5E9" }}
@@ -304,33 +318,60 @@ export default function TableUserDetail() {
                           {row.id}
                         </span>
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" width="10%">
                         <img src={row.avatar.toString()} alt="avatar" />
                       </TableCell>
-                      <TableCell align="left">{row.name}</TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" width="10%">
+                        <Typography
+                          sx={{ color: theme.palette.textColor?.main }}
+                        >
+                          {row.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="left" width="20%">
+                        <Typography
+                          sx={{ color: theme.palette.textColor?.main }}
+                        >
+                          {row.email}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="left" width="5%">
                         {row.admin === "1" ? (
                           <img src={check} alt="check" />
                         ) : (
                           <img src={xIcon} alt="xIcon" />
                         )}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" width="5%">
                         {row.fa === "1" ? (
                           <img src={check} alt="check" />
                         ) : (
                           <img src={xIcon} alt="xIcon" />
                         )}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell
+                        align="center"
+                        style={{
+                          paddingLeft: 0,
+                          paddingRight: 0,
+                        }}
+                        className="icon-options-table"
+                      >
                         <Tooltip title="More">
-                          <IconButton>
+                          <IconButton
+                            sx={{
+                              padding: { md: "0", lg: "8px" },
+                            }}
+                          >
                             <IoIosMore />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Preview">
-                          <IconButton>
+                          <IconButton
+                            sx={{
+                              padding: { md: "0", lg: "8px" },
+                            }}
+                          >
                             <VisibilityOutlinedIcon />
                           </IconButton>
                         </Tooltip>
@@ -361,13 +402,12 @@ export default function TableUserDetail() {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          component="div"
+
+        <CustomTablePagination
           count={rows.length}
-          rowsPerPage={rowsPerPage}
           page={page}
+          rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </Box>

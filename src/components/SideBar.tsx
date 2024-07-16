@@ -48,14 +48,9 @@ const SideBar: React.FC = () => {
     setOpen2(!open2);
   };
   return (
-    <Box
-      sx={{
-        maxWidth: "240px",
-        minWidth: "200px",
-      }}
-    >
+    <Box className="lg:w-[180px] xl:w-[240px]">
       {/* <Routes><Route path="/main" element={<Main/>}></Route></Routes> */}
-      <Box pl={4}>
+      <Box className="lg:pl-0 xl:pl-4">
         <Box>
           <ListItemButton onClick={handleClick1} sx={{ width: "100%" }}>
             <ListItemIcon sx={{ minWidth: 0, marginRight: "8px" }}>
