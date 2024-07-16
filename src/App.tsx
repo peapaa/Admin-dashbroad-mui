@@ -4,7 +4,7 @@ import Content from "./components/MainContent/Content";
 function App() {
   return (
     <div className="flex justify-center app">
-      <div className="min-w-[1024px] max-w-[1440px] w-full ">
+      <div className="min-w-[1024px] max-w-[1440px] w-full container">
         <Routes>
           <Route
             path="/"
