@@ -79,8 +79,8 @@ const SideBar: React.FC = () => {
                   flexDirection: "column",
                 }}
               >
-                <Item title="Main" to="/main" />
-                <Item title="User Insights" to="/user-insights" />
+                <Item title="Main" to="/admin/main" />
+                <Item title="User Insights" to="/admin/user-insights" />
               </ListItemText>
             </List>
           </Collapse>
@@ -110,12 +110,12 @@ const SideBar: React.FC = () => {
                     flexDirection: "column",
                   }}
                 >
-                  <Item title="Addresses" to="/addresses" />
-                  <Item title="Posts" to="/posts" />
-                  <Item title="Purchases" to="/purchases" />
-                  <Item title="Roles" to="/roles" />
-                  <Item title="Tags" to="/tags" />
-                  <Item title="Users" to="/users" />
+                  <Item title="Addresses" to="/admin/addresses" />
+                  <Item title="Posts" to="/admin/posts" />
+                  <Item title="Purchases" to="/admin/purchases" />
+                  <Item title="Roles" to="/admin/roles" />
+                  <Item title="Tags" to="/admin/tags" />
+                  <Item title="Users" to="/admin/users" />
                 </ListItemText>
               </List>
             </Collapse>

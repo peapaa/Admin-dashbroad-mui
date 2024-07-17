@@ -4,7 +4,7 @@ import { useTheme } from "@mui/material/styles";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
-import chart from "../../assets/images/content-logo/chart-bar.svg";
+import chart from "../../../assets/images/content-logo/chart-bar.svg";
 
 import { styled } from "@mui/system";
 import LinearProgress, {

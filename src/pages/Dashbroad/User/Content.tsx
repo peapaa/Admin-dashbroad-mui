@@ -1,4 +1,4 @@
-import Footer from "./Footer";
+import Footer from "../../../components/Footer";
 import NavUser from "./NavUser";
 import TableUserDetail from "./TableUserDetail";
 import UserInfo from "./UserInfo";
