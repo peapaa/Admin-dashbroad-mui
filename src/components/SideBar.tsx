@@ -16,6 +16,8 @@ const Item = ({ title, to }: { title: string; to: string }) => {
   const isActive = location.pathname === to;
   return (
     <ListItemButton
+      component={Link}
+      to={to}
       sx={{
         paddingLeft: "48px",
         color: isActive
@@ -23,15 +25,13 @@ const Item = ({ title, to }: { title: string; to: string }) => {
           : `${theme.palette.textColor?.main}`,
       }}
     >
-      <Link to={to}>
-        <Typography
-          sx={{
-            fontWeight: isActive ? "bold" : "normal",
-          }}
-        >
-          {title}
-        </Typography>
-      </Link>
+      <Typography
+        sx={{
+          fontWeight: isActive ? "bold" : "normal",
+        }}
+      >
+        {title}
+      </Typography>
     </ListItemButton>
   );
 };

@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import logo from "../assets/images/header-logo/logo.png";
-import avatar from "../assets/images/header-logo/avatar.png";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import React from "react";
 import { useTheme } from "@mui/material/styles";
@@ -17,6 +16,7 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import { User } from "../pages/Registration/Login";
 
 const Header: React.FC = () => {
   const theme = useTheme();
@@ -28,6 +28,9 @@ const Header: React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const data = sessionStorage.getItem("UserCurrent");
+  const user: User | null = data ? JSON.parse(data) : null;
   return (
     <Box
       display="flex"
@@ -76,7 +79,7 @@ const Header: React.FC = () => {
           </Box>
           <Box display="flex" alignItems="center">
             <img
-              src={avatar}
+              src={user?.avatar}
               alt="avatar"
               style={{ marginLeft: 20, marginRight: 10, cursor: "pointer" }}
             />
@@ -88,9 +91,7 @@ const Header: React.FC = () => {
               onClick={handleClick}
               style={{ padding: 0 }}
             >
-              <Typography style={{ color: "#475569" }}>
-                Digital Creative
-              </Typography>
+              <Typography style={{ color: "#475569" }}>{user?.name}</Typography>
               <ExpandMoreIcon style={{ color: "#64748B" }} />
             </Button>
             <Menu

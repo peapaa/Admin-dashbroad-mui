@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Dashbroad from "./pages/Dashbroad/Dashbroad";
-import Content from "./pages/Dashbroad/User/Content";
+import Content from "./pages/Dashbroad/UserManager/Content";
 import Main from "./pages/Dashbroad/Main/Main";
 import UserInsight from "./pages/Dashbroad/UserInsight/UserInsight";
 import Address from "./pages/Dashbroad/Address/Address";
@@ -9,12 +9,15 @@ import Purchars from "./pages/Dashbroad/Purchars/Purchars";
 import Roles from "./pages/Dashbroad/Roles/Roles";
 import Tag from "./pages/Dashbroad/Tags/Tag";
 import AdminPage from "./pages/Dashbroad/AdminPage";
+import Login from "./pages/Registration/Login";
 function App() {
   return (
     <div className="flex justify-center app">
       <div className="min-w-[1024px] max-w-[1440px] w-full container">
         <Routes>
           <Route path="/" element={<AdminPage />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+
           <Route
             path="/admin/users"
             element={

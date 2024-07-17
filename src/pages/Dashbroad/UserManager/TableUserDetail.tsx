@@ -211,7 +211,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 export default function TableUserDetail() {
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("avatar");
+  const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   // const [page] = React.useState(0);
   const [page, setPage] = React.useState(0);
@@ -362,6 +362,7 @@ export default function TableUserDetail() {
                             sx={{
                               padding: { md: "0", lg: "8px" },
                             }}
+                            onClick={(event) => event.stopPropagation()}
                           >
                             <IoIosMore />
                           </IconButton>
@@ -371,18 +372,23 @@ export default function TableUserDetail() {
                             sx={{
                               padding: { md: "0", lg: "8px" },
                             }}
+                            onClick={(event) => event.stopPropagation()}
                           >
                             <VisibilityOutlinedIcon />
                           </IconButton>
                         </Tooltip>
 
                         <Tooltip title="Edit">
-                          <IconButton>
+                          <IconButton
+                            onClick={(event) => event.stopPropagation()}
+                          >
                             <LiaEditSolid />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete">
-                          <IconButton>
+                          <IconButton
+                            onClick={(event) => event.stopPropagation()}
+                          >
                             <RiDeleteBinLine />
                           </IconButton>
                         </Tooltip>
