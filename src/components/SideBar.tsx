@@ -49,7 +49,6 @@ const SideBar: React.FC = () => {
   };
   return (
     <Box className="lg:w-[180px] xl:w-[240px]">
-      {/* <Routes><Route path="/main" element={<Main/>}></Route></Routes> */}
       <Box className="lg:pl-0 xl:pl-4">
         <Box>
           <ListItemButton onClick={handleClick1} sx={{ width: "100%" }}>
