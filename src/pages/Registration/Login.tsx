@@ -1,7 +1,7 @@
 import { useState } from "react";
 import avatarUser from "../../assets/images/header-logo/avatar.png";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button } from "@mui/material";
+import { Alert } from "@mui/material";
 export interface User {
   name: string;
   email: string;
