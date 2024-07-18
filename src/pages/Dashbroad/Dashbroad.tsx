@@ -2,11 +2,9 @@ import React from "react";
 import Header from "../../components/Header";
 import SideBar from "../../components/SideBar";
 import { Box } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-const Dashbroad: React.FC<DashboardLayoutProps> = ({ children }) => {
+const Dashbroad: React.FC = () => {
   return (
     <div>
       <Header />
@@ -14,7 +12,9 @@ const Dashbroad: React.FC<DashboardLayoutProps> = ({ children }) => {
         <Box flex={1}>
           <SideBar />
         </Box>
-        <Box flex={5}>{children}</Box>
+        <Box flex={5}>
+          <Outlet />
+        </Box>
       </div>
     </div>
   );

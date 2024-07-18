@@ -1,6 +1,5 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-
 import { Box, Collapse, List, Typography } from "@mui/material";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -9,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import dashbroadLogo from "../assets/images/sidebar-logo/view-grid.svg";
 import resourceLogo from "../assets/images/sidebar-logo/Vector.svg";
+import { dashboardList, resourcesList } from "../utils/data";
 
 const Item = ({ title, to }: { title: string; to: string }) => {
   const theme = useTheme();
@@ -78,8 +78,12 @@ const SideBar: React.FC = () => {
                   flexDirection: "column",
                 }}
               >
-                <Item title="Main" to="/admin/main" />
-                <Item title="User Insights" to="/admin/user-insights" />
+                {dashboardList.map((dashboardListItem) => (
+                  <Item
+                    title={dashboardListItem.title}
+                    to={dashboardListItem.href}
+                  />
+                ))}
               </ListItemText>
             </List>
           </Collapse>
@@ -109,12 +113,12 @@ const SideBar: React.FC = () => {
                     flexDirection: "column",
                   }}
                 >
-                  <Item title="Addresses" to="/admin/addresses" />
-                  <Item title="Posts" to="/admin/posts" />
-                  <Item title="Purchases" to="/admin/purchases" />
-                  <Item title="Roles" to="/admin/roles" />
-                  <Item title="Tags" to="/admin/tags" />
-                  <Item title="Users" to="/admin/users" />
+                  {resourcesList.map((resourcesListItem) => (
+                    <Item
+                      title={resourcesListItem.title}
+                      to={resourcesListItem.href}
+                    />
+                  ))}
                 </ListItemText>
               </List>
             </Collapse>

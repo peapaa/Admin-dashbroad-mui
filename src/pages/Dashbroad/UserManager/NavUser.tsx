@@ -1,19 +1,42 @@
-import {
-  Box,
-  Button,
-  InputAdornment,
-  InputBase,
-  Typography,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { GoSearch } from "react-icons/go";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavUser = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchText, setSearchText] = useState<string>("");
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const searchQuery = queryParams.get("search") || "";
+    setSearchText(searchQuery);
+  }, [location.search]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(event.target.value.trim());
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      const newSearchParams = new URLSearchParams(location.search);
+
+      if (searchText.trim() === "") {
+        newSearchParams.delete("search");
+      } else {
+        newSearchParams.set("search", searchText.trim());
+      }
+
+      navigate(`${location.pathname}?${newSearchParams.toString()}`);
+    }
+  };
 
   return (
     <div className="flex flex-col my-5">
-      <Typography sx={{ fontSize: 24, color: theme.palette.textColor?.main }}>
+      <Typography sx={{ fontSize: 24, color: theme.palette.text.primary }}>
         Users
       </Typography>
       <Box
@@ -25,6 +48,9 @@ const NavUser = () => {
       >
         <InputBase
           placeholder="Search"
+          value={searchText}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           sx={{
             width: "320px",
             height: "32px",
@@ -40,16 +66,6 @@ const NavUser = () => {
             </InputAdornment>
           }
         />
-
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: theme.palette.blueAccent?.secondary,
-            textTransform: "none",
-          }}
-        >
-          Create Users
-        </Button>
       </Box>
     </div>
   );

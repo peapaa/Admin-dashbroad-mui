@@ -33,6 +33,17 @@ const Login = () => {
       avatar: avatarUser,
       active: "active",
     },
+    {
+      name: "Kaka admin123",
+      email: "admin1@gmail.com",
+      id: "thien1234",
+      role: "user",
+      time: "10000",
+      date: "17/07/2024",
+      expiration: 10000,
+      avatar: avatarUser,
+      active: "active",
+    },
   ];
   const [userLogin, setUserLogin] = useState<UserLogin>({
     email: "",

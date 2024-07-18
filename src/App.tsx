@@ -8,80 +8,31 @@ import Posts from "./pages/Dashbroad/Posts/Posts";
 import Purchars from "./pages/Dashbroad/Purchars/Purchars";
 import Roles from "./pages/Dashbroad/Roles/Roles";
 import Tag from "./pages/Dashbroad/Tags/Tag";
-import AdminPage from "./pages/Dashbroad/AdminPage";
 import Login from "./pages/Registration/Login";
+import ProtectedRouter from "./components/ProtectedRouter";
 function App() {
   return (
     <div className="flex justify-center app">
       <div className="min-w-[1024px] max-w-[1440px] w-full container">
         <Routes>
-          <Route path="/" element={<AdminPage />}></Route>
           <Route path="/login" element={<Login />}></Route>
-
           <Route
-            path="/admin/users"
+            path="/admin"
             element={
-              <Dashbroad>
-                <Content />
-              </Dashbroad>
+              <ProtectedRouter>
+                <Dashbroad />
+              </ProtectedRouter>
             }
-          ></Route>
-          <Route
-            path="/admin/main"
-            element={
-              <Dashbroad>
-                <Main />
-              </Dashbroad>
-            }
-          ></Route>
-          <Route
-            path="/admin/user-insights"
-            element={
-              <Dashbroad>
-                <UserInsight />
-              </Dashbroad>
-            }
-          ></Route>
-          <Route
-            path="/admin/addresses"
-            element={
-              <Dashbroad>
-                <Address />
-              </Dashbroad>
-            }
-          ></Route>
-          <Route
-            path="/admin/posts"
-            element={
-              <Dashbroad>
-                <Posts />
-              </Dashbroad>
-            }
-          ></Route>
-          <Route
-            path="/admin/purchases"
-            element={
-              <Dashbroad>
-                <Purchars />
-              </Dashbroad>
-            }
-          ></Route>
-          <Route
-            path="/admin/roles"
-            element={
-              <Dashbroad>
-                <Roles />
-              </Dashbroad>
-            }
-          ></Route>
-          <Route
-            path="/admin/tags"
-            element={
-              <Dashbroad>
-                <Tag />
-              </Dashbroad>
-            }
-          ></Route>
+          >
+            <Route path="users" element={<Content />} />
+            <Route path="main" element={<Main />} />
+            <Route path="user-insights" element={<UserInsight />} />
+            <Route path="addresses" element={<Address />} />
+            <Route path="posts" element={<Posts />} />
+            <Route path="purchases" element={<Purchars />} />
+            <Route path="roles" element={<Roles />} />
+            <Route path="tags" element={<Tag />} />
+          </Route>
         </Routes>
       </div>
     </div>

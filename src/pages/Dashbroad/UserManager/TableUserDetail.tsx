@@ -27,10 +27,11 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { IoIosMore } from "react-icons/io";
 import { LiaEditSolid } from "react-icons/lia";
 import CustomTablePagination from "./CustomTablePagination";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
+import { useLocation, useNavigate } from "react-router-dom";
 
-interface Data {
+export interface Data {
   id: number;
   avatar: string;
   admin: string | number;
@@ -135,15 +136,20 @@ interface EnhancedTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
+  selected: number[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort, numSelected, rowCount } = props;
+  const { order, orderBy, onRequestSort, numSelected, rowCount, selected } =
+    props;
 
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
+  const handleDeleteSelectedRecord = () => {
+    console.log("delete selected", selected);
+  };
 
   return (
     <TableHead>
@@ -165,6 +171,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
               />
               <ExpandMore className="cursor-pointer" />
             </span>
+            {numSelected > 0 && (
+              <Button
+                variant="contained"
+                onClick={() => handleDeleteSelectedRecord()}
+              >
+                Delete record
+              </Button>
+            )}
             <div className="flex">
               <span className="flex cursor-pointer">
                 <HiOutlineVideoCamera className="w-6 h-6" />
@@ -212,9 +226,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 export default function TableUserDetail() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [selected, setSelected] = React.useState<number[]>([]);
   // const [page] = React.useState(0);
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = React.useState<number>(0);
   const [dense] = React.useState(false);
   //   const [dense, setDense] = React.useState(false);
   const [rowsPerPage] = React.useState(5);
@@ -222,11 +236,33 @@ export default function TableUserDetail() {
 
   const theme = useTheme();
 
+  // check select item
+  console.log("selected", selected);
+
+  // pagination with param url
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const pageQueryParam = parseInt(queryParams.get("page") || "1", 10);
+    if (!isNaN(pageQueryParam) && pageQueryParam !== page) {
+      setPage(pageQueryParam - 1);
+    }
+  }, [location.search]);
+
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
     setPage(newPage);
+    const queryParams = new URLSearchParams(location.search);
+    if (newPage === 0) {
+      queryParams.delete("page");
+    } else {
+      queryParams.set("page", (newPage + 1).toString());
+    }
+    navigate(`${location.pathname}?${queryParams.toString()}`);
   };
 
   const handleRequestSort = (
@@ -249,7 +285,7 @@ export default function TableUserDetail() {
 
   const handleClick = (_: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
+    let newSelected: number[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -284,6 +320,7 @@ export default function TableUserDetail() {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              selected={selected}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
