@@ -9,14 +9,15 @@ import {
 } from "@mui/material";
 import logo from "../assets/images/header-logo/logo.png";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import React from "react";
+import React, { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
 import { GoSearch } from "react-icons/go";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-import { User } from "../pages/Registration/Login";
+import AuthContext from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const theme = useTheme();
@@ -29,8 +30,18 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const data = sessionStorage.getItem("UserCurrent");
-  const user: User | null = data ? JSON.parse(data) : null;
+  const navigate = useNavigate();
+
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    return null;
+  }
+  const { handleLogout } = authContext;
+  const handleLogoutClick = () => {
+    handleLogout();
+    navigate("/login");
+  };
+
   return (
     <Box
       display="flex"
@@ -79,7 +90,8 @@ const Header: React.FC = () => {
           </Box>
           <Box display="flex" alignItems="center">
             <img
-              src={user?.avatar}
+              // src={user?.avatar}
+              src=""
               alt="avatar"
               style={{ marginLeft: 20, marginRight: 10, cursor: "pointer" }}
             />
@@ -91,7 +103,10 @@ const Header: React.FC = () => {
               onClick={handleClick}
               style={{ padding: 0 }}
             >
-              <Typography style={{ color: "#475569" }}>{user?.name}</Typography>
+              <Typography style={{ color: "#475569" }}>
+                {/* {user?.name} */}
+                Thien
+              </Typography>
               <ExpandMoreIcon style={{ color: "#64748B" }} />
             </Button>
             <Menu
@@ -120,7 +135,7 @@ const Header: React.FC = () => {
                 />
                 My account
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={() => handleLogoutClick()}>
                 <LoginOutlinedIcon
                   style={{ color: "#64748B", marginRight: 10 }}
                 />

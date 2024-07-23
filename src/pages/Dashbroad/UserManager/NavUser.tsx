@@ -23,7 +23,7 @@ const NavUser = () => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       const newSearchParams = new URLSearchParams(location.search);
-
+      // console.log("newSearchParams", newSearchParams.toString());
       if (searchText.trim() === "") {
         newSearchParams.delete("search");
       } else {

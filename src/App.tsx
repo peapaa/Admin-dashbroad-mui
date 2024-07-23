@@ -24,14 +24,70 @@ function App() {
               </ProtectedRouter>
             }
           >
-            <Route path="users" element={<Content />} />
-            <Route path="main" element={<Main />} />
-            <Route path="user-insights" element={<UserInsight />} />
-            <Route path="addresses" element={<Address />} />
-            <Route path="posts" element={<Posts />} />
-            <Route path="purchases" element={<Purchars />} />
-            <Route path="roles" element={<Roles />} />
-            <Route path="tags" element={<Tag />} />
+            <Route
+              path="users"
+              element={
+                <ProtectedRouter>
+                  <Content />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="main"
+              element={
+                <ProtectedRouter>
+                  <Main />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="user-insights"
+              element={
+                <ProtectedRouter>
+                  <UserInsight />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="addresses"
+              element={
+                <ProtectedRouter>
+                  <Address />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="posts"
+              element={
+                <ProtectedRouter>
+                  <Posts />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="purchases"
+              element={
+                <ProtectedRouter>
+                  <Purchars />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="roles"
+              element={
+                <ProtectedRouter>
+                  <Roles />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="tags"
+              element={
+                <ProtectedRouter>
+                  <Tag />
+                </ProtectedRouter>
+              }
+            />
           </Route>
         </Routes>
       </div>

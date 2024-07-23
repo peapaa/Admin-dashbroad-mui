@@ -78,10 +78,11 @@ const SideBar: React.FC = () => {
                   flexDirection: "column",
                 }}
               >
-                {dashboardList.map((dashboardListItem) => (
+                {dashboardList.map((dashboardListItem, index) => (
                   <Item
                     title={dashboardListItem.title}
                     to={dashboardListItem.href}
+                    key={index}
                   />
                 ))}
               </ListItemText>
@@ -113,10 +114,11 @@ const SideBar: React.FC = () => {
                     flexDirection: "column",
                   }}
                 >
-                  {resourcesList.map((resourcesListItem) => (
+                  {resourcesList.map((resourcesListItem, index) => (
                     <Item
                       title={resourcesListItem.title}
                       to={resourcesListItem.href}
+                      key={index}
                     />
                   ))}
                 </ListItemText>

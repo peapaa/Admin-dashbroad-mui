@@ -1,64 +1,63 @@
-import { useState } from "react";
-import avatarUser from "../../assets/images/header-logo/avatar.png";
+import { useContext, useState } from "react";
+// import avatarUser from "../../assets/images/header-logo/avatar.png";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "@mui/material";
-export interface User {
-  name: string;
-  email: string;
-  id: string;
-  role: string;
-  time: string;
-  date: string;
-  expiration: number;
-  avatar?: string;
-  active: string;
-}
+import AuthContext from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import { login } from "../../services/authService";
 
 interface UserLogin {
   email: string;
   password: string;
 }
 
-const Login = () => {
+const Login: React.FC = () => {
+  const authContext = useContext(AuthContext);
   const navigate = useNavigate();
-  const dataUser: User[] = [
-    {
-      name: "Thien admin123",
-      email: "admin@gmail.com",
-      id: "thien123",
-      role: "admin",
-      time: "10000",
-      date: "17/07/2024",
-      expiration: 10000,
-      avatar: avatarUser,
-      active: "active",
-    },
-    {
-      name: "Kaka admin123",
-      email: "admin1@gmail.com",
-      id: "thien1234",
-      role: "user",
-      time: "10000",
-      date: "17/07/2024",
-      expiration: 10000,
-      avatar: avatarUser,
-      active: "active",
-    },
-  ];
+
+  if (!authContext) {
+    return null;
+  }
+
+  const { setToken } = authContext;
   const [userLogin, setUserLogin] = useState<UserLogin>({
     email: "",
     password: "",
   });
   console.log(userLogin);
-  const handleSubmit = () => {
-    if (userLogin.email === dataUser[0].email && userLogin.password) {
-      sessionStorage.setItem("UserCurrent", JSON.stringify(dataUser[0]));
-      const data = sessionStorage.getItem("UserCurrent");
-      const user: User | null = data ? JSON.parse(data) : null;
-      if (user?.active === "active") {
-        <Alert severity="success">Login susscessfully</Alert>;
-        navigate("/admin/users");
+  const handleSubmit = async () => {
+    try {
+      const checkLogin = await login(userLogin.email, userLogin.password);
+      console.log("checkLogin", checkLogin.data);
+      const { access } = checkLogin.data;
+      if (checkLogin?.status === 200) {
+        localStorage.setItem(
+          "token",
+          JSON.stringify({
+            access: checkLogin.data.access,
+            refresh: checkLogin.data.refresh,
+          })
+        );
+
+        setToken(access);
       }
+      // const tokenRefresh = await refreshAccessToken();
+      // console.log("tokenRefresh", tokenRefresh);
+      if (checkLogin.data.access) {
+        toast.success("Login successful!", {
+          position: "top-right",
+        });
+        localStorage.setItem("user", JSON.stringify(userLogin));
+        navigate("/admin/users");
+      } else {
+        toast.error("Login failed!", {
+          position: "top-right",
+        });
+      }
+    } catch (err) {
+      console.log("login failed", err);
+      toast.error("Login failed!", {
+        position: "top-right",
+      });
     }
   };
   return (
