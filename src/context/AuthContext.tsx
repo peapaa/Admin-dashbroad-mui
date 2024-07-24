@@ -1,5 +1,4 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
-import { login } from "../services/authService";
 
 interface AuthContextProps {
   token: string | null;
@@ -18,30 +17,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   console.log("token", token);
 
   useEffect(() => {
-    const getTokenFromLogin = async () => {
+    const getTokenFromLocalStorge = async () => {
       try {
-        const userString = localStorage.getItem("user");
-        const user = userString ? JSON.parse(userString) : null;
-        if (user) {
-          const loginWhenF5 = await login(user.email, user.password);
-          const { access } = loginWhenF5.data;
-          if (loginWhenF5?.status === 200) {
-            localStorage.setItem(
-              "token",
-              JSON.stringify({
-                access: loginWhenF5.data.access,
-                refresh: loginWhenF5.data.refresh,
-              })
-            );
-            setToken(access);
-            console.log("vào đây");
-          }
+        const tokenString = localStorage.getItem("token");
+        const token = tokenString ? JSON.parse(tokenString) : null;
+        if (token) {
+          setToken(token.access);
+          console.log("vào đây");
         }
       } catch (err) {
         console.log(err);
       }
     };
-    getTokenFromLogin();
+    getTokenFromLocalStorge();
   }, []);
 
   const handleLogout = () => {

@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-// import avatarUser from "../../assets/images/header-logo/avatar.png";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -40,13 +39,10 @@ const Login: React.FC = () => {
 
         setToken(access);
       }
-      // const tokenRefresh = await refreshAccessToken();
-      // console.log("tokenRefresh", tokenRefresh);
       if (checkLogin.data.access) {
         toast.success("Login successful!", {
           position: "top-right",
         });
-        localStorage.setItem("user", JSON.stringify(userLogin));
         navigate("/admin/users");
       } else {
         toast.error("Login failed!", {

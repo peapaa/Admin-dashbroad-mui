@@ -73,36 +73,3 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
-
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const originalConfig = error.config;
-//     console.log("Access token expired");
-//     if (error.response && error.response.status === 401) {
-//       try {
-//         console.log("call request token api");
-//         const tokenString = JSON.parse(localStorage.getItem("token"));
-//         const token = tokenString ? JSON.parse(tokenString) : null;
-//         if (token && token.refresh) {
-//           const result = await refreshAccessToken(token?.refresh);
-//           if (result?.status === 200) {
-//             localStorage.setItem(
-//               "token",
-//               JSON.stringify({
-//                 ...token,
-//                 access: result?.data?.access,
-//                 refresh: result?.data?.refresh,
-//               })
-//             );
-//             originalConfig.headers[
-//               "Authorization"
-//             ] = `Bearer ${result?.data?.access}`;
-//           }
-//           return axiosInstance(originalConfig);
-//         }
-//       } catch (error) {}
-//     }
-//   }
-// );
-// export default axiosInstance;
