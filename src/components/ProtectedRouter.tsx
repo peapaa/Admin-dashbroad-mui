@@ -10,8 +10,7 @@ const ProtectedRouter: React.FC<protectedRouter> = ({ children }) => {
   if (!authContext) {
     return null;
   }
-  const { token } = authContext;
-  const [loading, setLoading] = useState<boolean>(true);
+  const { token, loading, setLoading } = authContext;
 
   useEffect(() => {
     if (token !== null) {
@@ -20,7 +19,7 @@ const ProtectedRouter: React.FC<protectedRouter> = ({ children }) => {
       setLoading(false);
       navigate("/login");
     }
-  }, [token]);
+  }, [token, navigate]);
 
   if (loading) {
     return <div>Loading...</div>;

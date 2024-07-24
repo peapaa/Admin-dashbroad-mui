@@ -3,6 +3,8 @@ import React, { createContext, ReactNode, useEffect, useState } from "react";
 interface AuthContextProps {
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   handleLogout: () => void;
 }
 
@@ -15,9 +17,9 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   console.log("token", token);
-
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    const getTokenFromLocalStorge = async () => {
+    const getTokenFromLocalStorge = () => {
       try {
         const tokenString = localStorage.getItem("token");
         const token = tokenString ? JSON.parse(tokenString) : null;
@@ -27,6 +29,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false);
       }
     };
     getTokenFromLocalStorge();
@@ -38,8 +42,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     setToken(null);
   };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
-    <AuthContext.Provider value={{ token, handleLogout, setToken }}>
+    <AuthContext.Provider
+      value={{ token, handleLogout, setToken, loading, setLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
