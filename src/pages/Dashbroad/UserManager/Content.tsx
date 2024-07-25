@@ -1,16 +1,15 @@
-import Footer from "../../../components/Footer";
 import NavUser from "./NavUser";
 import TableUserDetail from "./TableUserDetail";
 import UserInfo from "./UserInfo";
+import LayoutContent from "../LayoutContent/LayoutContent";
 
 const Content = () => {
   return (
-    <div className="w-full xl:pl-8 xl:pr-8 my-6 lg:pl-0 lg:pr-2 ">
+    <LayoutContent>
       <UserInfo />
       <NavUser />
       <TableUserDetail />
-      <Footer />
-    </div>
+    </LayoutContent>
   );
 };
 

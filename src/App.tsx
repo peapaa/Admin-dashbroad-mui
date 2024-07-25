@@ -10,6 +10,7 @@ import Roles from "./pages/Dashbroad/Roles/Roles";
 import Tag from "./pages/Dashbroad/Tags/Tag";
 import Login from "./pages/Registration/Login";
 import ProtectedRouter from "./components/ProtectedRouter";
+import Categories from "./pages/Dashbroad/Categories/Categories";
 function App() {
   return (
     <div className="flex justify-center app">
@@ -25,15 +26,7 @@ function App() {
             }
           >
             <Route
-              path="users"
-              element={
-                <ProtectedRouter>
-                  <Content />
-                </ProtectedRouter>
-              }
-            />
-            <Route
-              path="main"
+              path="dashbroad/main"
               element={
                 <ProtectedRouter>
                   <Main />
@@ -41,7 +34,7 @@ function App() {
               }
             />
             <Route
-              path="user-insights"
+              path="dashbroad/user-insights"
               element={
                 <ProtectedRouter>
                   <UserInsight />
@@ -49,7 +42,15 @@ function App() {
               }
             />
             <Route
-              path="addresses"
+              path="resources/users"
+              element={
+                <ProtectedRouter>
+                  <Content />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="resources/addresses"
               element={
                 <ProtectedRouter>
                   <Address />
@@ -57,7 +58,7 @@ function App() {
               }
             />
             <Route
-              path="posts"
+              path="resources/posts"
               element={
                 <ProtectedRouter>
                   <Posts />
@@ -65,7 +66,7 @@ function App() {
               }
             />
             <Route
-              path="purchases"
+              path="resources/purchases"
               element={
                 <ProtectedRouter>
                   <Purchars />
@@ -73,7 +74,7 @@ function App() {
               }
             />
             <Route
-              path="roles"
+              path="resources/roles"
               element={
                 <ProtectedRouter>
                   <Roles />
@@ -81,10 +82,18 @@ function App() {
               }
             />
             <Route
-              path="tags"
+              path="resources/tags"
               element={
                 <ProtectedRouter>
                   <Tag />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="resources/categories"
+              element={
+                <ProtectedRouter>
+                  <Categories />
                 </ProtectedRouter>
               }
             />

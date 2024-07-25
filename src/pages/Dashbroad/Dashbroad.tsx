@@ -8,7 +8,7 @@ const Dashbroad: React.FC = () => {
   return (
     <div>
       <Header />
-      <div className="flex">
+      <div className="flex min-h-[calc(100vh-60px)]">
         <Box flex={1}>
           <SideBar />
         </Box>

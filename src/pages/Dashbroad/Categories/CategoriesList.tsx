@@ -12,20 +12,11 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { visuallyHidden } from "@mui/utils";
-import user1 from "../../../assets/images/table-logo/user1.png";
-import user2 from "../../../assets/images/table-logo/user2.png";
-import user3 from "../../../assets/images/table-logo/user3.png";
-import user4 from "../../../assets/images/table-logo/user4.png";
-import check from "../../../assets/images/table-logo/check.png";
-import xIcon from "../../../assets/images/table-logo/x.png";
 import { useTheme } from "@mui/material/styles";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { IoIosMore } from "react-icons/io";
 import { LiaEditSolid } from "react-icons/lia";
 import CustomTablePagination from "../../../components/CustomTablePagination";
 import { Typography } from "@mui/material";
-
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getComparator,
@@ -36,67 +27,38 @@ import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { CiFilter } from "react-icons/ci";
-interface Data {
+import { getAllCategories } from "../../../services/materialCategories";
+interface CategoriesProps {
   id: number;
-  avatar: string;
-  admin: string | number;
-  email: string;
   name: string;
-  fa: string | number;
+  image: string;
+  price_type: string;
 }
-
-function createData(
-  id: number,
-  name: string,
-  avatar: string,
-  email: string,
-  admin: string | number,
-  fa: string | number
-): Data {
-  return {
-    id,
-    name,
-    avatar,
-    email,
-    admin,
-    fa,
-  };
-}
-
-const rows: Data[] = [
-  createData(1, "Cupcake", user1, "cupcake@example.com", "1", "1"),
-  createData(2, "Donut", user2, "donut@example.com", "0", "0"),
-  createData(3, "Eclair", user3, "eclair@example.com", "1", "1"),
-  createData(4, "Frozen yoghurt", user4, "froyo@example.com", "0", "0"),
-  createData(5, "Gingerbread", user1, "ginger@example.com", "1", "1"),
-  createData(6, "Honeycomb", user2, "honey@example.com", "0", "0"),
-  createData(7, "Ice cream sandwich", user3, "icecream@example.com", "1", "1"),
-  createData(8, "Jelly Bean", user4, "jelly@example.com", "0", "0"),
-  createData(9, "KitKat", user1, "kitkat@example.com", "1", "1"),
-  createData(10, "Lollipop", user2, "lollipop@example.com", "0", "0"),
-];
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof CategoriesProps;
   label: string;
   numeric: boolean;
 }
 
 const headCells: HeadCell[] = [
   { id: "id", numeric: true, disablePadding: false, label: "ID" },
-  { id: "avatar", numeric: true, disablePadding: false, label: "Avatar" },
+  { id: "image", numeric: true, disablePadding: false, label: "Avatar" },
   { id: "name", numeric: true, disablePadding: false, label: "Name" },
-  { id: "email", numeric: true, disablePadding: false, label: "Email" },
-  { id: "admin", numeric: true, disablePadding: false, label: "Admin" },
-  { id: "fa", numeric: true, disablePadding: false, label: "2FA" },
+  {
+    id: "price_type",
+    numeric: true,
+    disablePadding: false,
+    label: "Price type",
+  },
 ];
 
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof CategoriesProps
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
@@ -110,7 +72,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     props;
 
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof CategoriesProps) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
   const handleDeleteSelectedRecord = () => {
@@ -189,25 +151,29 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-export default function TableUserDetail() {
+export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
+  const [orderBy, setOrderBy] = React.useState<keyof CategoriesProps>("id");
   const [selected, setSelected] = React.useState<number[]>([]);
-  // const [page] = React.useState(0);
   const [page, setPage] = React.useState<number>(0);
   const [dense] = React.useState(false);
-  //   const [dense, setDense] = React.useState(false);
   const [rowsPerPage] = React.useState(5);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
   const theme = useTheme();
 
-  // check select item
-  console.log("selected", selected);
-
-  // pagination with param url
   const location = useLocation();
   const navigate = useNavigate();
+  const [data, setData] = React.useState<CategoriesProps[]>([]);
+
+  // fetch data
+  const x = async () => {
+    const r = await getAllCategories();
+    console.log(r);
+    const data = r.data.results;
+    setData(data);
+  };
+  React.useEffect(() => {
+    x();
+  }, []);
 
   React.useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -233,7 +199,7 @@ export default function TableUserDetail() {
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof CategoriesProps
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -242,7 +208,7 @@ export default function TableUserDetail() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((row) => row.id);
+      const newSelecteds = data.map((row) => row.id);
       setSelected(newSelecteds);
     } else {
       setSelected([]);
@@ -272,7 +238,7 @@ export default function TableUserDetail() {
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -285,11 +251,11 @@ export default function TableUserDetail() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={data.length}
               selected={selected}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(data, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
@@ -322,7 +288,7 @@ export default function TableUserDetail() {
                         </span>
                       </TableCell>
                       <TableCell align="left" width="10%">
-                        <img src={row.avatar.toString()} alt="avatar" />
+                        <img src={row.image} alt="avatar" />
                       </TableCell>
                       <TableCell align="left" width="10%">
                         <Typography
@@ -335,23 +301,10 @@ export default function TableUserDetail() {
                         <Typography
                           sx={{ color: theme.palette.textColor?.main }}
                         >
-                          {row.email}
+                          {row.price_type}
                         </Typography>
                       </TableCell>
-                      <TableCell align="left" width="5%">
-                        {row.admin === "1" ? (
-                          <img src={check} alt="check" />
-                        ) : (
-                          <img src={xIcon} alt="xIcon" />
-                        )}
-                      </TableCell>
-                      <TableCell align="left" width="5%">
-                        {row.fa === "1" ? (
-                          <img src={check} alt="check" />
-                        ) : (
-                          <img src={xIcon} alt="xIcon" />
-                        )}
-                      </TableCell>
+
                       <TableCell
                         align="center"
                         style={{
@@ -360,27 +313,6 @@ export default function TableUserDetail() {
                         }}
                         className="icon-options-table"
                       >
-                        <Tooltip title="More">
-                          <IconButton
-                            sx={{
-                              padding: { md: "0", lg: "8px" },
-                            }}
-                            onClick={(event) => event.stopPropagation()}
-                          >
-                            <IoIosMore />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Preview">
-                          <IconButton
-                            sx={{
-                              padding: { md: "0", lg: "8px" },
-                            }}
-                            onClick={(event) => event.stopPropagation()}
-                          >
-                            <VisibilityOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-
                         <Tooltip title="Edit">
                           <IconButton
                             onClick={(event) => event.stopPropagation()}
@@ -413,7 +345,7 @@ export default function TableUserDetail() {
         </TableContainer>
 
         <CustomTablePagination
-          count={rows.length}
+          count={data.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}

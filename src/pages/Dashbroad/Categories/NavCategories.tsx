@@ -9,15 +9,15 @@ import { useTheme } from "@mui/material/styles";
 import { GoSearch } from "react-icons/go";
 import useSearchQuery from "../../../hooks/useSearchQuery";
 
-const NavUser = () => {
+const NavCategories = () => {
   const theme = useTheme();
   const { searchText, handleInputChange, handleKeyDown } = useSearchQuery();
 
   return (
-    <div className="flex my-5 items-center justify-between">
+    <div className="flex my-5 items-end justify-between">
       <div>
         <Typography sx={{ fontSize: 24, color: theme.palette.text.primary }}>
-          Users
+          Category
         </Typography>
         <Box
           sx={{
@@ -48,11 +48,11 @@ const NavUser = () => {
           />
         </Box>
       </div>
-      <div>
-        <Button variant="contained">Create User</Button>
+      <div className="mb-2">
+        <Button variant="contained">Create Category</Button>
       </div>
     </div>
   );
 };
 
-export default NavUser;
+export default NavCategories;

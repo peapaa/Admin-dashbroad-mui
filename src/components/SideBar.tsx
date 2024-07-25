@@ -1,7 +1,7 @@
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { Box, Collapse, List, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -13,7 +13,7 @@ import { dashboardList, resourcesList } from "../utils/data";
 const Item = ({ title, to }: { title: string; to: string }) => {
   const theme = useTheme();
   const location = useLocation();
-  const isActive = location.pathname === to;
+  const isActive = location.pathname.startsWith(`/admin/${to}`);
   return (
     <ListItemButton
       component={Link}
@@ -36,17 +36,26 @@ const Item = ({ title, to }: { title: string; to: string }) => {
   );
 };
 const SideBar: React.FC = () => {
-  const [open1, setOpen1] = React.useState(true);
-
+  const [open1, setOpen1] = React.useState(false);
+  const location = useLocation();
   const handleClick1 = () => {
     setOpen1(!open1);
   };
 
-  const [open2, setOpen2] = React.useState(true);
+  const [open2, setOpen2] = React.useState(false);
 
   const handleClick2 = () => {
     setOpen2(!open2);
   };
+  // when login after redirect user of resource, don't open menu dashboard
+  useEffect(() => {
+    if (location.pathname.startsWith("/admin/dashbroad")) {
+      setOpen1(true);
+    } else if (location.pathname.startsWith("/admin/resources")) {
+      setOpen2(true);
+    }
+  }, []);
+
   return (
     <Box className="lg:w-[180px] xl:w-[240px]">
       <Box className="lg:pl-0 xl:pl-4">

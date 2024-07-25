@@ -1,7 +1,7 @@
 import axios from "axios";
 import { refreshAccessToken } from "./services/authService";
 
-const API_URL = "http://192.168.200.189:8001/api";
+const API_URL = "http://192.168.200.189:8001";
 
 // Tạo một instance của axios
 const axiosInstance = axios.create({
@@ -36,7 +36,10 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalConfig = error.config;
 
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response.data.code === "token_not_valid" &&
+      error.response.status === 401
+    ) {
       try {
         const tokenString = localStorage.getItem("token");
         const token = tokenString ? JSON.parse(tokenString) : null;
@@ -44,6 +47,7 @@ axiosInstance.interceptors.response.use(
         if (token && token.refresh) {
           const result = await refreshAccessToken(token.refresh);
 
+          console.log("result", result);
           if (result?.status === 200) {
             localStorage.setItem(
               "token",
@@ -65,10 +69,11 @@ axiosInstance.interceptors.response.use(
         console.error("Failed to refresh access token:", err);
         localStorage.removeItem("token");
         window.location.href = "/login";
+        return Promise.reject(error);
       }
     }
 
-    return Promise.reject(error);
+    return error.response;
   }
 );
 

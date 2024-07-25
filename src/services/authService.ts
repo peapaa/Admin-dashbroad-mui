@@ -2,7 +2,7 @@ import axiosInstance from "../axios";
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axiosInstance.post("/cms/auth/login", {
+    const response = await axiosInstance.post("/api/cms/auth/login", {
       email,
       password,
     });
@@ -19,7 +19,7 @@ export const refreshAccessToken = async (refresh: string) => {
     const response = await axiosInstance.post("/api/refresh-token", {
       refresh,
     });
-    console.log("response.data", response.data);
+
     return response;
   } catch (err) {
     console.error("refresh token fail", err);
