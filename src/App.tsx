@@ -11,6 +11,7 @@ import Tag from "./pages/Dashbroad/Tags/Tag";
 import Login from "./pages/Registration/Login";
 import ProtectedRouter from "./components/ProtectedRouter";
 import Categories from "./pages/Dashbroad/Categories/Categories";
+
 function App() {
   return (
     <div className="flex justify-center app">
@@ -90,7 +91,7 @@ function App() {
               }
             />
             <Route
-              path="resources/categories"
+              path="resources/categories/*"
               element={
                 <ProtectedRouter>
                   <Categories />

@@ -28,6 +28,7 @@ import { ExpandMore } from "@mui/icons-material";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { CiFilter } from "react-icons/ci";
 import { getAllCategories } from "../../../services/materialCategories";
+import useSearchQuery from "../../../hooks/useSearchQuery";
 interface CategoriesProps {
   id: number;
   name: string;
@@ -64,7 +65,7 @@ interface EnhancedTableProps {
   order: Order;
   orderBy: string;
   rowCount: number;
-  selected: number[];
+  selected: string[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -125,7 +126,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "left" : "left"}
+            align={headCell.numeric ? "center" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -154,26 +155,39 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof CategoriesProps>("id");
-  const [selected, setSelected] = React.useState<number[]>([]);
+  const [selected, setSelected] = React.useState<string[]>([]);
   const [page, setPage] = React.useState<number>(0);
   const [dense] = React.useState(false);
   const [rowsPerPage] = React.useState(5);
+  const [totalCategory, setTotalCategory] = React.useState<number>(0);
   const theme = useTheme();
+
+  // get searchText from hooks
+  const { searchText } = useSearchQuery();
+  // console.log("searchText bên component list ", searchText);
 
   const location = useLocation();
   const navigate = useNavigate();
   const [data, setData] = React.useState<CategoriesProps[]>([]);
 
-  // fetch data
-  const x = async () => {
-    const r = await getAllCategories();
-    console.log(r);
-    const data = r.data.results;
-    setData(data);
-  };
+  // fetch data with clean up function
   React.useEffect(() => {
-    x();
-  }, []);
+    let ignore = false;
+    const fetchApiAllCategory = async () => {
+      const response = await getAllCategories(searchText, page);
+      const newData = response.data.results;
+
+      if (!ignore) {
+        setData(newData);
+        setTotalCategory(response.data.count);
+      }
+    };
+    fetchApiAllCategory();
+
+    return () => {
+      ignore = true;
+    };
+  }, [searchText, page]);
 
   React.useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -208,16 +222,16 @@ export default function CategoriesList() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = data.map((row) => row.id);
+      const newSelecteds = data.map((row) => row.id.toString());
       setSelected(newSelecteds);
     } else {
       setSelected([]);
     }
   };
 
-  const handleClick = (_: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (_: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: number[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -235,10 +249,7 @@ export default function CategoriesList() {
     setSelected(newSelected);
   };
 
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -255,16 +266,15 @@ export default function CategoriesList() {
               selected={selected}
             />
             <TableBody>
-              {stableSort(data, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+              {stableSort(data, getComparator(order, orderBy)).map(
+                (row, index) => {
+                  const isItemSelected = isSelected(row.id.toString());
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, Number(row.id))}
+                      onClick={(event) => handleClick(event, row.id.toString())}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -279,7 +289,7 @@ export default function CategoriesList() {
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell>
-                      <TableCell align="left" width="5%">
+                      <TableCell align="center" width="5%">
                         <span
                           className="font-bold"
                           style={{ color: "#0EA5E9" }}
@@ -287,17 +297,21 @@ export default function CategoriesList() {
                           {row.id}
                         </span>
                       </TableCell>
-                      <TableCell align="left" width="10%">
-                        <img src={row.image} alt="avatar" />
+                      <TableCell align="center" width="20%" height="130px">
+                        <img
+                          src={row.image}
+                          alt="avatar"
+                          className="object-cover w-full h-full"
+                        />
                       </TableCell>
-                      <TableCell align="left" width="10%">
+                      <TableCell align="center" width="20%">
                         <Typography
                           sx={{ color: theme.palette.textColor?.main }}
                         >
                           {row.name}
                         </Typography>
                       </TableCell>
-                      <TableCell align="left" width="20%">
+                      <TableCell align="center" width="20%">
                         <Typography
                           sx={{ color: theme.palette.textColor?.main }}
                         >
@@ -330,22 +344,14 @@ export default function CategoriesList() {
                       </TableCell>
                     </TableRow>
                   );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={8} />
-                </TableRow>
+                }
               )}
             </TableBody>
           </Table>
         </TableContainer>
 
         <CustomTablePagination
-          count={data.length}
+          count={totalCategory}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}

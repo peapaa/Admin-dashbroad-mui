@@ -6,7 +6,6 @@ interface protectedRouter {
 }
 const ProtectedRouter: React.FC<protectedRouter> = ({ children }) => {
   const authContext = useContext(AuthContext);
-
   if (!authContext) {
     return null;
   }

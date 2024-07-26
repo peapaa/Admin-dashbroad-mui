@@ -8,11 +8,11 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { GoSearch } from "react-icons/go";
 import useSearchQuery from "../../../hooks/useSearchQuery";
+import { Link } from "react-router-dom";
 
 const NavCategories = () => {
   const theme = useTheme();
   const { searchText, handleInputChange, handleKeyDown } = useSearchQuery();
-
   return (
     <div className="flex my-5 items-end justify-between">
       <div>
@@ -49,7 +49,11 @@ const NavCategories = () => {
         </Box>
       </div>
       <div className="mb-2">
-        <Button variant="contained">Create Category</Button>
+        <Button variant="contained">
+          <Link to="/admin/resources/categories/create-category">
+            Create Category
+          </Link>
+        </Button>
       </div>
     </div>
   );

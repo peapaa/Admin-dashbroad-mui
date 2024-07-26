@@ -16,7 +16,6 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
-  console.log("token", token);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     const getTokenFromLocalStorge = () => {
@@ -25,7 +24,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const token = tokenString ? JSON.parse(tokenString) : null;
         if (token) {
           setToken(token.access);
-          console.log("vào đây");
         }
       } catch (err) {
         console.log(err);
