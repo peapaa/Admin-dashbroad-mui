@@ -1,108 +1,125 @@
-import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, MenuItem, OutlinedInput, Select } from "@mui/material";
-import { useState } from "react";
-const validFileExtensions = {
-  image: ["jpg", "png", "jpeg", "svg"],
-};
+import { Button } from "@mui/material";
+import { createCategories } from "../../../services/materialCategories";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { schema } from "./validateCategory";
 
-type ValidFileType = keyof typeof validFileExtensions;
-function isValidFileType(fileName: string, fileType: ValidFileType) {
-  if (!fileName) {
-    return false;
-  }
-  const extension = fileName.split(".").pop() || "";
-  return validFileExtensions[fileType]?.includes(extension) ?? false;
-}
-
-const MAX_FILE_SIZE = 102400;
-const handleSubmitForm = (values: any) => {
-  console.log(values);
-};
 const CreateCategory = () => {
-  const schema = Yup.object().shape({
-    image: Yup.mixed()
-      .required("Required image")
-      .test("is-valid-type", "Not a valid image type", (value) => {
-        if (value && value instanceof File) {
-          return isValidFileType(value.name.toLowerCase(), "image");
-        }
-        return false;
-      })
-      .test("is-valid-size", "Max allowed size is 100KB", (value) => {
-        if (value && value instanceof File) {
-          return value && value?.size <= MAX_FILE_SIZE;
-        }
-        return false;
-      }),
-    categoryname: Yup.string()
-      .required("Required category name")
-      .max(255, "name max character 255")
-      .min(1, "name min character 1"),
-  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [newImage, setNewImage] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
-  console.log(errors);
-  const [selectedOption, setSelectedOption] = useState(1);
-  console.log("setSelectedOption", selectedOption);
-  const handleChange = (event: any) => {
-    setSelectedOption(event.target.value);
+
+  const [data, setData] = useState({});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (loading) {
+      const handleSubmitForm = async (data: any) => {
+        try {
+          const formData = new FormData();
+          formData.append("image", data.image[0]);
+          formData.append("name", data.name);
+          formData.append("price_type", data.price_type);
+          // formData.forEach((value, key) => {
+          //   console.log(key, value);
+          // });
+          const response = await createCategories(formData);
+          console.log("response vừa gửi  lên", response);
+          toast.success("Add category suscess!");
+
+          navigate("/admin/resources/categories");
+          reset(); // reset form data
+        } catch (error) {
+          console.log(error);
+          toast.error("Add category false!");
+        }
+      };
+      handleSubmitForm(data);
+    }
+  }, [loading]);
+
+  const onSubmit = (data: any) => {
+    setData(data);
+    setLoading(true);
   };
+
+  const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="bg-white w-full rounded-md p-5 ">
-      <form
-        onSubmit={handleSubmit(handleSubmitForm)}
-        className="flex flex-col gap-5 "
-      >
-        <div className="">
-          <label htmlFor="image" className="mr-5">
-            Image:
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 ">
+        <div className="flex flex-col gap-3">
+          <label htmlFor="image" className="mr-5 flex flex-col gap-3">
+            <p>
+              Image<span className="text-red-600">*</span>:
+            </p>
+            {newImage ? (
+              <img
+                src={newImage}
+                alt="image category"
+                className="w-[200px] h-[240px] object-cover rounded-lg"
+              />
+            ) : null}
           </label>
-          <input type="file" {...register("image")} id="image" name="image " />
+          <input
+            type="file"
+            {...register("image")}
+            id="image"
+            multiple={false}
+            onChange={handleChangeImage}
+          />
           {errors.image && (
             <p className="text-red-500">{errors.image.message}</p>
           )}
         </div>
         <div className="">
-          <label htmlFor="categoryname">Name:</label>
+          <label htmlFor="categoryname">
+            Name<span className="text-red-600">*</span>:
+          </label>
           <input
             type="text"
             id="categoryname"
-            className="border outline-none rounded-md ml-5 pl-3 h-8"
-            {...register("categoryname")}
+            className="border outline-none rounded-md ml-5 pl-3 h-8 w-[280px]"
+            {...register("name")}
           />
-          {errors.categoryname && (
-            <p className="text-red-500">{errors.categoryname.message}</p>
-          )}
+          {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         </div>
         <div className="flex items-center ">
-          <label id="custom-dropdown-label" className="mr-5">
+          <label htmlFor="pricetype" className="mr-5">
             Price Type:
           </label>
-          <Select
-            labelId="custom-dropdown-label"
-            value={selectedOption}
-            onChange={handleChange}
-            label="Custom Dropdown"
-            input={<OutlinedInput label="Custom Dropdown" />}
-            className="w-[180px] h-10 "
+          <select
+            {...register("price_type")}
+            className="border outline-none rounded-md px-2 py-1 w-[256px]"
+            id="pricetype"
           >
-            <MenuItem value={1}>per_metter</MenuItem>
-            <MenuItem value={2}>per_quantity</MenuItem>
-          </Select>
+            <option value="per_metter">per_metter</option>
+            <option value="per_quantity">per_quantity</option>
+          </select>
         </div>
-        <div className=""></div>
         <Button className="mt-20 w-40" variant="contained" type="submit">
           Submit
         </Button>
-
-        <div className=""></div>
       </form>
     </div>
   );

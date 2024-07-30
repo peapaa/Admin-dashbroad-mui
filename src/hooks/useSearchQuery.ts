@@ -12,7 +12,7 @@ const useSearchQuery = () => {
   }, [location.search]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(event.target.value.trim());
+    setSearchText(event.target.value);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

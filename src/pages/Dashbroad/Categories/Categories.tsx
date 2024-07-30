@@ -4,6 +4,7 @@ import CategoriesList from "./CategoriesList";
 import CreateCategory from "./CreateCategory";
 import NavCategories from "./NavCategories";
 import ProtectedRouter from "../../../components/ProtectedRouter";
+import EditCategory from "./EditCategory";
 
 function Categories() {
   return (
@@ -14,6 +15,14 @@ function Categories() {
           element={
             <ProtectedRouter>
               <CreateCategory />
+            </ProtectedRouter>
+          }
+        ></Route>
+        <Route
+          path="edit-category/:id"
+          element={
+            <ProtectedRouter>
+              <EditCategory />
             </ProtectedRouter>
           }
         ></Route>

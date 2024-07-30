@@ -36,13 +36,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
     setToken(null);
   };
   if (loading) {
     return <div>Loading...</div>;
   }
+
   return (
     <AuthContext.Provider
       value={{ token, handleLogout, setToken, loading, setLoading }}

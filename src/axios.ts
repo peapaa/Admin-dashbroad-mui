@@ -1,5 +1,6 @@
 import axios from "axios";
 import { refreshAccessToken } from "./services/authService";
+import { jwtDecode } from "jwt-decode";
 
 const API_URL = "http://192.168.200.189:8001";
 
@@ -31,23 +32,32 @@ axiosInstance.interceptors.request.use(
   }
 );
 
+interface jwtPayload {
+  exp: number;
+}
+const isTokenExpired = (token: string) => {
+  if (!token) return true;
+  const { exp } = jwtDecode<jwtPayload>(token);
+  return Date.now() >= exp * 1000;
+};
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalConfig = error.config;
 
-    if (
-      error.response.data.code === "token_not_valid" &&
-      error.response.status === 401
-    ) {
+    if (error.response && error.response.status === 401) {
       try {
         const tokenString = localStorage.getItem("token");
         const token = tokenString ? JSON.parse(tokenString) : null;
-
+        if (!token || !token.refresh || isTokenExpired(token.refresh)) {
+          // check refresh token con han khong
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+          return Promise.reject(error);
+        }
         if (token && token.refresh) {
           const result = await refreshAccessToken(token.refresh);
-
-          console.log("result", result);
           if (result?.status === 200) {
             localStorage.setItem(
               "token",

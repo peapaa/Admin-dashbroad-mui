@@ -19,16 +19,20 @@ import CustomTablePagination from "../../../components/CustomTablePagination";
 import { Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  getComparator,
+  // getComparator,
   Order,
-  stableSort,
+  // stableSort,
 } from "../../../components/CustomTableDetail";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import { HiOutlineVideoCamera } from "react-icons/hi2";
 import { CiFilter } from "react-icons/ci";
-import { getAllCategories } from "../../../services/materialCategories";
+import {
+  deleteOneCategories,
+  getAllCategories,
+} from "../../../services/materialCategories";
 import useSearchQuery from "../../../hooks/useSearchQuery";
+import { toast } from "react-toastify";
 interface CategoriesProps {
   id: number;
   name: string;
@@ -46,10 +50,10 @@ interface HeadCell {
 const headCells: HeadCell[] = [
   { id: "id", numeric: true, disablePadding: false, label: "ID" },
   { id: "image", numeric: true, disablePadding: false, label: "Avatar" },
-  { id: "name", numeric: true, disablePadding: false, label: "Name" },
+  { id: "name", numeric: false, disablePadding: false, label: "Name" },
   {
     id: "price_type",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Price type",
   },
@@ -74,7 +78,10 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
   const createSortHandler =
     (property: keyof CategoriesProps) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+      if (property !== "id") {
+        // remove sort by id
+        onRequestSort(event, property);
+      }
     };
   const handleDeleteSelectedRecord = () => {
     console.log("delete selected", selected);
@@ -126,15 +133,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "center" : "left"}
+            align="center"
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
+            <TableSortLabel onClick={createSortHandler(headCell.id)}>
               <span className="font-bold" style={{ color: "#64748B" }}>
                 {headCell.label}
               </span>
@@ -161,7 +164,8 @@ export default function CategoriesList() {
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
   const theme = useTheme();
-
+  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
+  const [selectedDeleteId, setselectedDeleteId] = React.useState<string>("");
   // get searchText from hooks
   const { searchText } = useSearchQuery();
   // console.log("searchText bên component list ", searchText);
@@ -170,6 +174,25 @@ export default function CategoriesList() {
   const navigate = useNavigate();
   const [data, setData] = React.useState<CategoriesProps[]>([]);
 
+  const sortData = (
+    data: CategoriesProps[],
+    order: "asc" | "desc",
+    orderBy: keyof CategoriesProps
+  ) => {
+    return data.sort((a, b) => {
+      if (orderBy === "name" || orderBy === "price_type") {
+        // So sánh tên
+        return order === "asc"
+          ? a[orderBy].localeCompare(b[orderBy])
+          : b[orderBy].localeCompare(a[orderBy]);
+      } else {
+        // So sánh theo id hoặc các trường khác (chỉ định kiểu số)
+        return order === "asc"
+          ? (a[orderBy] as number) - (b[orderBy] as number)
+          : (b[orderBy] as number) - (a[orderBy] as number);
+      }
+    });
+  };
   // fetch data with clean up function
   React.useEffect(() => {
     let ignore = false;
@@ -187,7 +210,7 @@ export default function CategoriesList() {
     return () => {
       ignore = true;
     };
-  }, [searchText, page]);
+  }, [searchText, page, data]);
 
   React.useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -251,6 +274,29 @@ export default function CategoriesList() {
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
+  // delete selected category
+  React.useEffect(() => {
+    if (deleteLoading) {
+      const fetchDeleteOneCategory = async (id: string) => {
+        try {
+          await deleteOneCategories(id);
+          toast.success("Delete category suscess!");
+          console.log("delete one category");
+        } catch (error) {
+          console.error(error);
+          toast.error("Delete category false!");
+        }
+      };
+      fetchDeleteOneCategory(selectedDeleteId);
+    }
+  }, [deleteLoading]);
+
+  const handleDeleteCategory = (id: string) => {
+    setselectedDeleteId(id);
+    setDeleteLoading(true);
+  };
+
+  const sortedData = sortData(data, order, orderBy);
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -266,86 +312,93 @@ export default function CategoriesList() {
               selected={selected}
             />
             <TableBody>
-              {stableSort(data, getComparator(order, orderBy)).map(
-                (row, index) => {
-                  const isItemSelected = isSelected(row.id.toString());
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              {sortedData.map((row, index) => {
+                const isItemSelected = isSelected(row.id.toString());
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.id.toString())}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell padding="checkbox" width="5%">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-                      <TableCell align="center" width="5%">
-                        <span
-                          className="font-bold"
-                          style={{ color: "#0EA5E9" }}
-                        >
-                          {row.id}
-                        </span>
-                      </TableCell>
-                      <TableCell align="center" width="20%" height="130px">
-                        <img
-                          src={row.image}
-                          alt="avatar"
-                          className="object-cover w-full h-full"
-                        />
-                      </TableCell>
-                      <TableCell align="center" width="20%">
-                        <Typography
-                          sx={{ color: theme.palette.textColor?.main }}
-                        >
-                          {row.name}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center" width="20%">
-                        <Typography
-                          sx={{ color: theme.palette.textColor?.main }}
-                        >
-                          {row.price_type}
-                        </Typography>
-                      </TableCell>
-
-                      <TableCell
-                        align="center"
-                        style={{
-                          paddingLeft: 0,
-                          paddingRight: 0,
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.id.toString())}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell padding="checkbox" width="5%">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                    </TableCell>
+                    <TableCell align="center" width="5%">
+                      <span className="font-bold" style={{ color: "#0EA5E9" }}>
+                        {index + 1 + rowsPerPage * page}
+                      </span>
+                    </TableCell>
+                    <TableCell align="center" width="20%" height="130px">
+                      <img
+                        src={row.image}
+                        alt="avatar"
+                        className="object-cover w-full h-full "
+                      />
+                    </TableCell>
+                    <TableCell align="center" width="20%">
+                      <Typography
+                        sx={{
+                          color: theme.palette.textColor?.main,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          width: "200px",
                         }}
-                        className="icon-options-table"
                       >
-                        <Tooltip title="Edit">
-                          <IconButton
-                            onClick={(event) => event.stopPropagation()}
-                          >
-                            <LiaEditSolid />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                          <IconButton
-                            onClick={(event) => event.stopPropagation()}
-                          >
-                            <RiDeleteBinLine />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }
-              )}
+                        <span>{row.name}</span>
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center" width="20%">
+                      <Typography sx={{ color: theme.palette.textColor?.main }}>
+                        {row.price_type === "per_metter"
+                          ? "Metter"
+                          : "Quantity"}
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell
+                      align="center"
+                      style={{
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                      }}
+                      className="icon-options-table"
+                    >
+                      <Tooltip title="Edit">
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            navigate(`edit-category/${row.id}`);
+                          }}
+                        >
+                          <LiaEditSolid />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteCategory(row.id.toString());
+                          }}
+                        >
+                          <RiDeleteBinLine />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>

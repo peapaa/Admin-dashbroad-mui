@@ -64,12 +64,7 @@ const Login: React.FC = () => {
     if (loader) {
       const handleLogin = async (data: UserLogin) => {
         const checkLogin = await login(data.email, data.password);
-        console.log("checkLogin: ", checkLogin);
-
         setLoader(false);
-
-        console.log("checkLogin", checkLogin.data);
-
         localStorage.setItem(
           "token",
           JSON.stringify({
