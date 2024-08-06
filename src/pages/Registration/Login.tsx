@@ -77,7 +77,7 @@ const Login: React.FC = () => {
 
         if (checkLogin.status === 200) {
           toast.success("Login successful!");
-          navigate("/admin/resources/users");
+          navigate("/admin/resources/categories");
         } else {
           toast.error(checkLogin.data.detail);
         }

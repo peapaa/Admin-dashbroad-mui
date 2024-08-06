@@ -13,7 +13,7 @@ function isValidFileType(fileName: string, fileType: ValidFileType) {
   return validFileExtensions[fileType]?.includes(extension) ?? false;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5; // 5MB
 export const schema = Yup.object().shape({
   image: Yup.mixed()
     .test("is-required-or-exists", "Required image", function (value) {
@@ -31,14 +31,18 @@ export const schema = Yup.object().shape({
       }
       return this.createError({ message: "Required image" });
     })
-    .test("is-valid-size", "Max allowed size is 5MB", function (value) {
-      const files = value as FileList;
-      if (files && files.length > 0) {
-        const file = files[0];
-        return file.size <= MAX_FILE_SIZE;
+    .test(
+      "is-valid-size",
+      `Max allowed size is ${MAX_FILE_SIZE}MB`,
+      function (value) {
+        const files = value as FileList;
+        if (files && files.length > 0) {
+          const file = files[0];
+          return file.size <= MAX_FILE_SIZE * 1024 * 1024;
+        }
+        return this.createError({ message: "Required image" });
       }
-      return this.createError({ message: "Required image" });
-    }),
+    ),
   name: Yup.string()
     .required("Required category name")
     .max(255, "Name can be at most 255 characters")

@@ -5,6 +5,7 @@ const useSearchQuery = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchText, setSearchText] = useState<string>("");
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const searchQuery = queryParams.get("search") || "";
@@ -22,6 +23,7 @@ const useSearchQuery = () => {
         newSearchParams.delete("search");
       } else {
         newSearchParams.set("search", searchText.trim());
+        newSearchParams.set("page", "1"); // enter push page = 0 to url
       }
 
       navigate(`${location.pathname}?${newSearchParams.toString()}`);

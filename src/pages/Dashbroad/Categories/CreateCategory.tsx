@@ -6,7 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { schema } from "./validateCategory";
-
+export interface DataCategory {
+  image: File[];
+  name: string;
+  price_type: string;
+}
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [newImage, setNewImage] = useState<string | null>(null);
@@ -20,7 +24,11 @@ const CreateCategory = () => {
     resolver: yupResolver(schema),
   });
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState<DataCategory>({
+    image: [],
+    name: "",
+    price_type: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -113,13 +121,23 @@ const CreateCategory = () => {
             className="border outline-none rounded-md px-2 py-1 w-[256px]"
             id="pricetype"
           >
-            <option value="per_metter">per_metter</option>
-            <option value="per_quantity">per_quantity</option>
+            <option value="per_metter">Metter</option>
+            <option value="per_quantity">Quantity</option>
           </select>
         </div>
-        <Button className="mt-20 w-40" variant="contained" type="submit">
-          Submit
-        </Button>
+        <div className="flex gap-5">
+          <Button
+            className="mt-20 w-40"
+            type="submit"
+            style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </Button>
+          <Button className="mt-20 w-40" variant="contained" type="submit">
+            Submit
+          </Button>
+        </div>
       </form>
     </div>
   );

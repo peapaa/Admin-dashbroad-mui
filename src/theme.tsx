@@ -12,8 +12,13 @@ declare module "@mui/material/styles" {
     textColor?: {
       main: string;
       secondary: string;
+      thrid: string;
     };
     backgroundColor?: {
+      main: string;
+      secondary: string;
+    };
+    tagColor?: {
       main: string;
       secondary: string;
     };
@@ -36,8 +41,13 @@ declare module "@mui/material/styles" {
     textColor?: {
       main: string;
       secondary: string;
+      thrid: string;
     };
     backgroundColor?: {
+      main: string;
+      secondary: string;
+    };
+    tagColor?: {
       main: string;
       secondary: string;
     };
@@ -55,10 +65,15 @@ const theme = createTheme({
     textColor: {
       main: "#64748B",
       secondary: "#CBD5E1",
+      thrid: "#f90303",
     },
     backgroundColor: {
       main: "#fff",
       secondary: "#F1F5F9",
+    },
+    tagColor: {
+      main: "#e0d885",
+      secondary: "#cbe793",
     },
   },
   typography: {

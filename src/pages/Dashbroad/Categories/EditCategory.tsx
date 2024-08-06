@@ -10,6 +10,7 @@ import {
   editCategory,
   getOneCategory,
 } from "../../../services/materialCategories";
+import { DataCategory } from "./CreateCategory";
 
 const EditCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,7 +20,7 @@ const EditCategory = () => {
   //   price_type: "",
   // });
   const [newImage, setNewImage] = useState<string | null>(null);
-  // const [initialImageBlob, setInitialImageBlob] = useState<Blob | null>(null);
+  const [initialImageBlob, setInitialImageBlob] = useState<Blob | null>(null);
   console.log("newImage", newImage);
   // console.log("data", data);
   const {
@@ -74,20 +75,20 @@ const EditCategory = () => {
   };
   // useEffect(() => {
   //   if (loading) {
-  const handleSubmitForm = async (data: any) => {
+  const handleSubmitForm = async (data: DataCategory) => {
     try {
       if (id) {
         const formData = new FormData();
 
         if (data.image && data.image.length > 0) {
           formData.append("image", data.image[0]);
+        } else if (initialImageBlob && newImage) {
+          const blob = await urlToBlob(newImage);
+          setInitialImageBlob(blob);
+          // const data.image = [File]
+          // formData.append("image", initialImageBlob);
+          // Chuyển đổi URL ảnh thành Blob và lưu vào state
         }
-        // } else if (initialImageBlob && newImage) {
-        // const blob = await urlToBlob(newImage);
-        // setInitialImageBlob(blob);
-        // formData.append("image", initialImageBlob);
-        // Chuyển đổi URL ảnh thành Blob và lưu vào state
-        // }
         formData.append("name", data.name);
         formData.append("price_type", data.price_type);
         formData.forEach((value, key) => {
@@ -155,13 +156,23 @@ const EditCategory = () => {
             className="border outline-none rounded-md px-2 py-1 w-[256px]"
             id="pricetype"
           >
-            <option value="per_metter">per_metter</option>
-            <option value="per_quantity">per_quantity</option>
+            <option value="per_metter">Metter</option>
+            <option value="per_quantity">Quantity</option>
           </select>
         </div>
-        <Button className="mt-20 w-40" variant="contained" type="submit">
-          Submit
-        </Button>
+        <div className="flex gap-5">
+          <Button
+            className="mt-20 w-40"
+            type="submit"
+            style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </Button>
+          <Button className="mt-20 w-40" variant="contained" type="submit">
+            Submit
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -1,12 +1,25 @@
 import axiosInstance from "../axios";
 
-export const getAllCategories = async (searchText: string, page: number) => {
+// export const getAllCategories = async (searchText: string, page: number) => {
+//   const limit = 5;
+//   const offset = page * limit;
+//   const response = await axiosInstance.get("/api/cms/material_categories", {
+//     params: { limit, name: searchText, offset: offset },
+//   });
+//   return response;
+// };
+
+export const getAllCategories = async (
+  url: string,
+  searchText: string,
+  page: number
+) => {
   const limit = 5;
   const offset = page * limit;
-  const response = await axiosInstance.get("/api/cms/material_categories", {
+  const response = await axiosInstance.get(url, {
     params: { limit, name: searchText, offset: offset },
   });
-  return response;
+  return response.data;
 };
 
 export const createCategories = async (formData: FormData) => {

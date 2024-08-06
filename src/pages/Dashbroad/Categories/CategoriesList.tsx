@@ -33,11 +33,15 @@ import {
 } from "../../../services/materialCategories";
 import useSearchQuery from "../../../hooks/useSearchQuery";
 import { toast } from "react-toastify";
+import DeleteCategoryDialog from "../../../components/DeleteCategoryDialog";
+import useSWR from "swr";
+
 interface CategoriesProps {
-  id: number;
+  id: string;
   name: string;
   image: string;
   price_type: string;
+  created_at: string;
 }
 
 interface HeadCell {
@@ -157,18 +161,21 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof CategoriesProps>("id");
+  const [orderBy, setOrderBy] =
+    React.useState<keyof CategoriesProps>("created_at");
   const [selected, setSelected] = React.useState<string[]>([]);
-  const [page, setPage] = React.useState<number>(0);
+
   const [dense] = React.useState(false);
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
   const theme = useTheme();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
   const [selectedDeleteId, setselectedDeleteId] = React.useState<string>("");
+  const [open, setOpen] = React.useState<boolean>(false);
+
   // get searchText from hooks
   const { searchText } = useSearchQuery();
-  // console.log("searchText bên component list ", searchText);
+  const [page, setPage] = React.useState<number>(0);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -180,37 +187,72 @@ export default function CategoriesList() {
     orderBy: keyof CategoriesProps
   ) => {
     return data.sort((a, b) => {
+      let comparisonResult: number;
       if (orderBy === "name" || orderBy === "price_type") {
-        // So sánh tên
-        return order === "asc"
-          ? a[orderBy].localeCompare(b[orderBy])
-          : b[orderBy].localeCompare(a[orderBy]);
+        comparisonResult = a[orderBy].localeCompare(b[orderBy]);
+      } else if (orderBy === "created_at") {
+        const dateA = Date.parse(a[orderBy]);
+        const dateB = Date.parse(b[orderBy]);
+        comparisonResult = dateA - dateB;
       } else {
-        // So sánh theo id hoặc các trường khác (chỉ định kiểu số)
-        return order === "asc"
-          ? (a[orderBy] as number) - (b[orderBy] as number)
-          : (b[orderBy] as number) - (a[orderBy] as number);
+        comparisonResult =
+          (parseInt(a[orderBy]) || 0) - (parseInt(b[orderBy]) || 0);
       }
+      return order === "asc" ? comparisonResult : -comparisonResult;
     });
   };
+
   // fetch data with clean up function
+
+  // React.useEffect(() => {
+  //   let ignore = false;
+  //   const fetchApiAllCategory = async () => {
+  //     try {
+  //       const response = await getAllCategories(searchText, page);
+  //       if (!ignore) {
+  //         setData(response.data.results);
+  //         setTotalCategory(response.data.count);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     }
+  //   };
+
+  //   fetchApiAllCategory();
+
+  //   return () => {
+  //     ignore = true;
+  //   };
+  // }, [searchText, page]);
+
+  // useSWR
+
+  const key = React.useMemo(
+    () => ["/api/cms/material_categories", searchText, page],
+    [searchText, page]
+  );
+  // console.log("SWR key:", key);
+
+  const { data: categoriesData } = useSWR(
+    key,
+    ([url, searchText, page]: [string, string, number]) =>
+      getAllCategories(url, searchText, page),
+    {
+      dedupingInterval: 60000,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
+  console.log("categoriesData", categoriesData);
+
   React.useEffect(() => {
-    let ignore = false;
-    const fetchApiAllCategory = async () => {
-      const response = await getAllCategories(searchText, page);
-      const newData = response.data.results;
-
-      if (!ignore) {
-        setData(newData);
-        setTotalCategory(response.data.count);
-      }
-    };
-    fetchApiAllCategory();
-
-    return () => {
-      ignore = true;
-    };
-  }, [searchText, page, data]);
+    if (categoriesData) {
+      setData(categoriesData.results);
+      setTotalCategory(categoriesData.count);
+    }
+  }, [categoriesData]);
 
   React.useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -219,6 +261,9 @@ export default function CategoriesList() {
       setPage(pageQueryParam - 1);
     }
   }, [location.search]);
+
+  // console.log("searchText", searchText);
+  // console.log("page", page);
 
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement> | null,
@@ -231,7 +276,9 @@ export default function CategoriesList() {
     } else {
       queryParams.set("page", (newPage + 1).toString());
     }
-    navigate(`${location.pathname}?${queryParams.toString()}`);
+    navigate(`${location.pathname}?${queryParams.toString()}`, {
+      replace: true,
+    });
   };
 
   const handleRequestSort = (
@@ -275,28 +322,37 @@ export default function CategoriesList() {
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // delete selected category
-  React.useEffect(() => {
-    if (deleteLoading) {
-      const fetchDeleteOneCategory = async (id: string) => {
-        try {
-          await deleteOneCategories(id);
-          toast.success("Delete category suscess!");
-          console.log("delete one category");
-        } catch (error) {
-          console.error(error);
-          toast.error("Delete category false!");
-        }
-      };
-      fetchDeleteOneCategory(selectedDeleteId);
-    }
-  }, [deleteLoading]);
+  // React.useEffect(() => {
+  //   const fetchDeleteOneCategory = async (id: string) => {
+  //     if (!id) return;
+  //     try {
+  //       await deleteOneCategories(id);
+  //       const fetchApiAllCategory = async () => {
+  //         const response = await getAllCategories(searchText, page);
+  //         setData(response.data.results);
+  //         setTotalCategory(response.data.count);
+  //       };
+  //       fetchApiAllCategory();
+  //       toast.success("Delete category suscess!");
+  //       console.log("delete one category");
+  //     } catch (error) {
+  //       console.error(error);
+  //       toast.error("Delete category false!");
+  //     } finally {
+  //       setDeleteLoading(false);
+  //       setselectedDeleteId("");
+  //     }
+  //   };
+  //   if (deleteLoading && selectedDeleteId) {
+  //     fetchDeleteOneCategory(selectedDeleteId);
+  //   }
+  // }, [deleteLoading, selectedDeleteId]);
 
   const handleDeleteCategory = (id: string) => {
     setselectedDeleteId(id);
-    setDeleteLoading(true);
   };
 
-  const sortedData = sortData(data, order, orderBy);
+  const sortedData = sortData(data, "desc", "created_at");
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -343,27 +399,39 @@ export default function CategoriesList() {
                       <img
                         src={row.image}
                         alt="avatar"
-                        className="object-cover w-full h-full "
+                        className="object-cover w-full h-full rounded-lg "
                       />
                     </TableCell>
                     <TableCell align="center" width="20%">
                       <Typography
                         sx={{
                           color: theme.palette.textColor?.main,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
                           width: "200px",
                         }}
+                        className=" truncate"
                       >
                         <span>{row.name}</span>
                       </Typography>
                     </TableCell>
                     <TableCell align="center" width="20%">
-                      <Typography sx={{ color: theme.palette.textColor?.main }}>
-                        {row.price_type === "per_metter"
-                          ? "Metter"
-                          : "Quantity"}
+                      <Typography
+                        sx={{
+                          color: theme.palette.textColor?.thrid,
+                        }}
+                      >
+                        <span
+                          style={{
+                            backgroundColor:
+                              row.price_type === "per_metter"
+                                ? theme.palette.tagColor?.main
+                                : theme.palette.textColor?.secondary,
+                          }}
+                          className="px-2 py-1 rounded-lg"
+                        >
+                          {row.price_type === "per_metter"
+                            ? "Metter"
+                            : "Quantity"}
+                        </span>
                       </Typography>
                     </TableCell>
 
@@ -390,6 +458,7 @@ export default function CategoriesList() {
                           onClick={(event) => {
                             event.stopPropagation();
                             handleDeleteCategory(row.id.toString());
+                            setOpen(true);
                           }}
                         >
                           <RiDeleteBinLine />
@@ -402,12 +471,16 @@ export default function CategoriesList() {
             </TableBody>
           </Table>
         </TableContainer>
-
         <CustomTablePagination
           count={totalCategory}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
+        />
+        <DeleteCategoryDialog
+          open={open}
+          setOpen={setOpen}
+          setDeleteLoading={setDeleteLoading}
         />
       </Paper>
     </Box>
