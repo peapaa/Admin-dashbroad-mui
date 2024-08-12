@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { schema } from "./validateCategory";
+import { EditCategoryschema } from "./validateCategory";
 import {
   editCategory,
   getOneCategory,
@@ -20,17 +20,14 @@ const EditCategory = () => {
   //   price_type: "",
   // });
   const [newImage, setNewImage] = useState<string | null>(null);
-  const [initialImageBlob, setInitialImageBlob] = useState<Blob | null>(null);
-  console.log("newImage", newImage);
-  // console.log("data", data);
+  // const [initialImageBlob, setInitialImageBlob] = useState<Blob | null>(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
   } = useForm({
-    resolver: yupResolver(schema),
-    // defaultValues: data,
+    resolver: yupResolver(EditCategoryschema),
   });
 
   // Hàm chuyển đổi URL ảnh thành Blob
@@ -82,13 +79,14 @@ const EditCategory = () => {
 
         if (data.image && data.image.length > 0) {
           formData.append("image", data.image[0]);
-        } else if (initialImageBlob && newImage) {
-          const blob = await urlToBlob(newImage);
-          setInitialImageBlob(blob);
-          // const data.image = [File]
-          // formData.append("image", initialImageBlob);
-          // Chuyển đổi URL ảnh thành Blob và lưu vào state
         }
+        // } else if (initialImageBlob && newImage) {
+        //   const blob = await urlToBlob(newImage);
+        //   setInitialImageBlob(blob);
+        // const data.image = [File]
+        // formData.append("image", initialImageBlob);
+        // Chuyển đổi URL ảnh thành Blob và lưu vào state
+        // }
         formData.append("name", data.name);
         formData.append("price_type", data.price_type);
         formData.forEach((value, key) => {
@@ -119,11 +117,13 @@ const EditCategory = () => {
     <div className="bg-white w-full rounded-md p-5 ">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 ">
         <div className="">
-          <img
-            src={newImage || ""}
-            alt="image category"
-            className="w-[200px] h-[240px] object-cover rounded-lg mb-3"
-          />
+          {newImage ? (
+            <img
+              src={newImage}
+              alt="image category"
+              className="w-[200px] h-[240px] object-cover rounded-lg"
+            />
+          ) : null}
           <input
             type="file"
             {...register("image", { required: !newImage })}

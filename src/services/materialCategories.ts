@@ -15,7 +15,7 @@ export const getAllCategories = async (
   page: number
 ) => {
   const limit = 5;
-  const offset = page * limit;
+  const offset = (page - 1) * limit;
   const response = await axiosInstance.get(url, {
     params: { limit, name: searchText, offset: offset },
   });

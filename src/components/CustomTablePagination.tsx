@@ -1,33 +1,44 @@
 import React from "react";
 import { IconButton, Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import useSearchQuery from "../hooks/useSearchQuery";
 
 interface CustomTablePaginationProps {
   count: number;
-  page: number;
+  // page: number;
   rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => void;
+  // onPageChange: (
+  //   event: React.MouseEvent<HTMLButtonElement> | null,
+  //   newPage: number
+  // ) => void;
 }
 
 const CustomTablePagination: React.FC<CustomTablePaginationProps> = ({
   count,
-  page,
+  // page,
   rowsPerPage,
-  onPageChange,
+  // onPageChange,
 }) => {
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, page - 1);
+  // const handleBackButtonClick = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   onPageChange(event, page - 1);
+  // };
+
+  const { handleNextPage, handlePrevPage, page } = useSearchQuery();
+
+  const handleBackButtonClick = () => {
+    handlePrevPage();
   };
 
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    onPageChange(event, page + 1);
+  // const handleNextButtonClick = (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   onPageChange(event, page + 1);
+  // };
+
+  const handleNextButtonClick = () => {
+    handleNextPage();
   };
   const displayRangeStart = page * rowsPerPage + 1;
   const displayRangeEnd = Math.min(count, (page + 1) * rowsPerPage);
@@ -42,7 +53,7 @@ const CustomTablePagination: React.FC<CustomTablePaginationProps> = ({
     >
       <IconButton
         onClick={handleBackButtonClick}
-        disabled={page === 0}
+        disabled={page === 1}
         aria-label="previous page"
       >
         <Typography

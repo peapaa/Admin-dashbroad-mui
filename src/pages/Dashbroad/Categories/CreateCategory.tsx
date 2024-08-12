@@ -1,27 +1,31 @@
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@mui/material";
-import { createCategories } from "../../../services/materialCategories";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { schema } from "./validateCategory";
-export interface DataCategory {
-  image: File[];
-  name: string;
-  price_type: string;
-}
+// mui
+import { Button } from "@mui/material";
+// yup
+import { yupResolver } from "@hookform/resolvers/yup";
+import { createCategoryschema } from "./validateCategory";
+// service
+import { createCategories } from "../../../services/materialCategories";
+// type
+import { DataCategory } from "./type";
+import formDataCategory from "./formDataCategory";
+import { mutate } from "swr";
+
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [newImage, setNewImage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({
-    resolver: yupResolver(schema),
+  } = useForm<DataCategory>({
+    resolver: yupResolver(createCategoryschema),
   });
 
   const [data, setData] = useState<DataCategory>({
@@ -29,35 +33,30 @@ const CreateCategory = () => {
     name: "",
     price_type: "",
   });
-  const navigate = useNavigate();
+
+  console.log("data", data);
 
   useEffect(() => {
-    if (loading) {
-      const handleSubmitForm = async (data: any) => {
-        try {
-          const formData = new FormData();
-          formData.append("image", data.image[0]);
-          formData.append("name", data.name);
-          formData.append("price_type", data.price_type);
-          // formData.forEach((value, key) => {
-          //   console.log(key, value);
-          // });
-          const response = await createCategories(formData);
-          console.log("response vừa gửi  lên", response);
-          toast.success("Add category suscess!");
+    const handleSubmitForm = async (data: DataCategory) => {
+      try {
+        const formData = formDataCategory(data);
+        await createCategories(formData);
+        mutate(["/api/cms/material_categories", "", 1]);
+        toast.success("Add category suscess!");
+        navigate("/admin/resources/categories");
+        reset(); // reset form data
+      } catch (error) {
+        console.log(error);
+        toast.error("Add category false!");
+      }
+    };
 
-          navigate("/admin/resources/categories");
-          reset(); // reset form data
-        } catch (error) {
-          console.log(error);
-          toast.error("Add category false!");
-        }
-      };
+    if (loading) {
       handleSubmitForm(data);
     }
-  }, [loading]);
+  }, [loading, data, navigate, reset]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: DataCategory) => {
     setData(data);
     setLoading(true);
   };
@@ -70,6 +69,10 @@ const CreateCategory = () => {
         setNewImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+      setData((prev) => ({
+        ...prev,
+        image: [file],
+      }));
     }
   };
 
@@ -93,10 +96,11 @@ const CreateCategory = () => {
             type="file"
             {...register("image")}
             id="image"
+            accept=".jpg, .png, .jpeg, .svg"
             multiple={false}
             onChange={handleChangeImage}
           />
-          {errors.image && (
+          {errors.image && data.image.length === 0 && (
             <p className="text-red-500">{errors.image.message}</p>
           )}
         </div>
@@ -128,7 +132,7 @@ const CreateCategory = () => {
         <div className="flex gap-5">
           <Button
             className="mt-20 w-40"
-            type="submit"
+            type="button"
             style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
             onClick={() => navigate(-1)}
           >

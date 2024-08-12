@@ -1,4 +1,8 @@
 import * as React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { LiaEditSolid } from "react-icons/lia";
+// mui
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,45 +15,28 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { visuallyHidden } from "@mui/utils";
-import { useTheme } from "@mui/material/styles";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { LiaEditSolid } from "react-icons/lia";
-import CustomTablePagination from "../../../components/CustomTablePagination";
 import { Typography } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  // getComparator,
-  Order,
-  // stableSort,
-} from "../../../components/CustomTableDetail";
 import { Button } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { HiOutlineVideoCamera } from "react-icons/hi2";
-import { CiFilter } from "react-icons/ci";
+//
+import { visuallyHidden } from "@mui/utils";
+import { useTheme } from "@mui/material/styles";
+// component
+import CustomTablePagination from "../../../components/CustomTablePagination";
+import DeleteCategoryDialog from "../../../components/DeleteCategoryDialog";
+import { Order } from "../../../components/CustomTableDetail";
+//services
 import {
   deleteOneCategories,
   getAllCategories,
 } from "../../../services/materialCategories";
+// hooks
 import useSearchQuery from "../../../hooks/useSearchQuery";
 import { toast } from "react-toastify";
-import DeleteCategoryDialog from "../../../components/DeleteCategoryDialog";
-import useSWR from "swr";
-
-interface CategoriesProps {
-  id: string;
-  name: string;
-  image: string;
-  price_type: string;
-  created_at: string;
-}
-
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof CategoriesProps;
-  label: string;
-  numeric: boolean;
-}
+// useSWR
+import useSWR, { mutate } from "swr";
+// type
+import { CategoriesProps, DeleteCategory, HeadCell } from "./type";
 
 const headCells: HeadCell[] = [
   { id: "id", numeric: true, disablePadding: false, label: "ID" },
@@ -119,16 +106,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 Delete record
               </Button>
             )}
-            <div className="flex">
-              <span className="flex cursor-pointer">
-                <HiOutlineVideoCamera className="w-6 h-6" />
-                <ExpandMore />
-              </span>
-              <span className="flex ml-3 cursor-pointer">
-                <CiFilter className="w-6 h-6" />
-                <ExpandMore />
-              </span>
-            </div>
           </div>
         </TableCell>
       </TableRow>
@@ -169,13 +146,16 @@ export default function CategoriesList() {
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
   const theme = useTheme();
-  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
-  const [selectedDeleteId, setselectedDeleteId] = React.useState<string>("");
-  const [open, setOpen] = React.useState<boolean>(false);
 
+  const [selectedDeleteId, setselectedDeleteId] =
+    React.useState<DeleteCategory>({
+      id: "",
+      loading: false,
+    });
+  const [open, setOpen] = React.useState<boolean>(false);
   // get searchText from hooks
-  const { searchText } = useSearchQuery();
-  const [page, setPage] = React.useState<number>(0);
+  const { searchText, page } = useSearchQuery();
+  // const [page, setPage] = React.useState<number>(0);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -203,7 +183,6 @@ export default function CategoriesList() {
   };
 
   // fetch data with clean up function
-
   // React.useEffect(() => {
   //   let ignore = false;
   //   const fetchApiAllCategory = async () => {
@@ -217,9 +196,7 @@ export default function CategoriesList() {
   //       console.error("Error fetching categories:", error);
   //     }
   //   };
-
   //   fetchApiAllCategory();
-
   //   return () => {
   //     ignore = true;
   //   };
@@ -231,21 +208,18 @@ export default function CategoriesList() {
     () => ["/api/cms/material_categories", searchText, page],
     [searchText, page]
   );
-  // console.log("SWR key:", key);
 
+  console.log("page", page);
   const { data: categoriesData } = useSWR(
     key,
     ([url, searchText, page]: [string, string, number]) =>
       getAllCategories(url, searchText, page),
     {
-      dedupingInterval: 60000,
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
   );
-
-  console.log("categoriesData", categoriesData);
 
   React.useEffect(() => {
     if (categoriesData) {
@@ -254,32 +228,29 @@ export default function CategoriesList() {
     }
   }, [categoriesData]);
 
-  React.useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const pageQueryParam = parseInt(queryParams.get("page") || "1", 10);
-    if (!isNaN(pageQueryParam) && pageQueryParam !== page) {
-      setPage(pageQueryParam - 1);
-    }
-  }, [location.search]);
+  // React.useEffect(() => {
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const pageQueryParam = parseInt(queryParams.get("page") || "1", 10);
+  //   if (!isNaN(pageQueryParam) && pageQueryParam !== page) {
+  //     page = pageQueryParam - 1;
+  //   }
+  // }, [location.search, page]);
 
-  // console.log("searchText", searchText);
-  // console.log("page", page);
-
-  const handleChangePage = (
-    _: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
-  ) => {
-    setPage(newPage);
-    const queryParams = new URLSearchParams(location.search);
-    if (newPage === 0) {
-      queryParams.delete("page");
-    } else {
-      queryParams.set("page", (newPage + 1).toString());
-    }
-    navigate(`${location.pathname}?${queryParams.toString()}`, {
-      replace: true,
-    });
-  };
+  // const handleChangePage = (
+  //   _: React.MouseEvent<HTMLButtonElement> | null,
+  //   newPage: number
+  // ) => {
+  //   setPage(newPage);
+  //   const queryParams = new URLSearchParams(location.search);
+  //   if (newPage === 0) {
+  //     queryParams.delete("page");
+  //   } else {
+  //     queryParams.set("page", (newPage + 1).toString());
+  //   }
+  //   navigate(`${location.pathname}?${queryParams.toString()}`, {
+  //     replace: true,
+  //   });
+  // };
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -320,36 +291,28 @@ export default function CategoriesList() {
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
-
   // delete selected category
-  // React.useEffect(() => {
-  //   const fetchDeleteOneCategory = async (id: string) => {
-  //     if (!id) return;
-  //     try {
-  //       await deleteOneCategories(id);
-  //       const fetchApiAllCategory = async () => {
-  //         const response = await getAllCategories(searchText, page);
-  //         setData(response.data.results);
-  //         setTotalCategory(response.data.count);
-  //       };
-  //       fetchApiAllCategory();
-  //       toast.success("Delete category suscess!");
-  //       console.log("delete one category");
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast.error("Delete category false!");
-  //     } finally {
-  //       setDeleteLoading(false);
-  //       setselectedDeleteId("");
-  //     }
-  //   };
-  //   if (deleteLoading && selectedDeleteId) {
-  //     fetchDeleteOneCategory(selectedDeleteId);
-  //   }
-  // }, [deleteLoading, selectedDeleteId]);
+  React.useEffect(() => {
+    const fetchDeleteOneCategory = async (id: string) => {
+      if (!id) return;
+      try {
+        await deleteOneCategories(id);
+        mutate(key);
+        toast.success("Delete category suscess!");
+      } catch (error) {
+        console.error(error);
+        toast.error("Delete category false!");
+      } finally {
+        setselectedDeleteId((prev) => ({ ...prev, loading: false }));
+      }
+    };
+    if (selectedDeleteId.loading && selectedDeleteId.id) {
+      fetchDeleteOneCategory(selectedDeleteId.id);
+    }
+  }, [selectedDeleteId.loading, selectedDeleteId, key, page, searchText]);
 
   const handleDeleteCategory = (id: string) => {
-    setselectedDeleteId(id);
+    setselectedDeleteId((prev) => ({ ...prev, id: id }));
   };
 
   const sortedData = sortData(data, "desc", "created_at");
@@ -392,7 +355,7 @@ export default function CategoriesList() {
                     </TableCell>
                     <TableCell align="center" width="5%">
                       <span className="font-bold" style={{ color: "#0EA5E9" }}>
-                        {index + 1 + rowsPerPage * page}
+                        {index + 1 + rowsPerPage * (page - 1)}
                       </span>
                     </TableCell>
                     <TableCell align="center" width="20%" height="130px">
@@ -473,14 +436,13 @@ export default function CategoriesList() {
         </TableContainer>
         <CustomTablePagination
           count={totalCategory}
-          page={page}
           rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
+          // onPageChange={handleChangePage}
         />
         <DeleteCategoryDialog
           open={open}
           setOpen={setOpen}
-          setDeleteLoading={setDeleteLoading}
+          setselectedDeleteId={setselectedDeleteId}
         />
       </Paper>
     </Box>

@@ -3,15 +3,16 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import { DeleteCategory } from "../pages/Dashbroad/Categories/type";
 interface DeleteCategoryProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setDeleteLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setselectedDeleteId: React.Dispatch<React.SetStateAction<DeleteCategory>>;
 }
 const DeleteCategoryDialog: React.FC<DeleteCategoryProps> = ({
   open,
   setOpen,
-  setDeleteLoading,
+  setselectedDeleteId,
 }) => {
   const handleClose = () => {
     setOpen(false);
@@ -33,7 +34,7 @@ const DeleteCategoryDialog: React.FC<DeleteCategoryProps> = ({
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
-              setDeleteLoading(true);
+              setselectedDeleteId((prev) => ({ ...prev, loading: true }));
               handleClose();
             }}
             autoFocus

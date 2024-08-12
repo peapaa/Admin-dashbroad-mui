@@ -12,7 +12,7 @@ const schema = yup
   .object({
     email: yup
       .string()
-      .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email address")
+      .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, "Invalid email address")
       .required("Required email"),
     password: yup
       .string()
@@ -37,13 +37,8 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
-
-  if (!authContext) {
-    return null;
-  }
-
-  const { setToken } = authContext;
   const [loader, setLoader] = useState<boolean>(false);
+  const { setToken } = authContext || {};
 
   // create hook useForm
   const {
@@ -54,37 +49,38 @@ const Login: React.FC = () => {
     resolver: yupResolver(schema),
   });
 
+  useEffect(() => {
+    const handleLogin = async (data: UserLogin) => {
+      const checkLogin = await login(data.email, data.password);
+      setLoader(false);
+      localStorage.setItem(
+        "token",
+        JSON.stringify({
+          access: checkLogin.data.access,
+          refresh: checkLogin.data.refresh,
+        })
+      );
+      if (setToken) {
+        setToken(checkLogin.data.access);
+      }
+
+      if (checkLogin.status === 200) {
+        toast.success("Login successful!");
+        navigate("/admin/resources/categories");
+      } else {
+        toast.error(checkLogin.data.detail);
+      }
+    };
+    if (loader) {
+      handleLogin(data);
+    }
+  }, [loader, data, navigate, setToken]);
+
   // submit of react-hook-form
   const onSubmit = (data: UserLogin) => {
     setData(data);
     setLoader(true);
   };
-
-  useEffect(() => {
-    if (loader) {
-      const handleLogin = async (data: UserLogin) => {
-        const checkLogin = await login(data.email, data.password);
-        setLoader(false);
-        localStorage.setItem(
-          "token",
-          JSON.stringify({
-            access: checkLogin.data.access,
-            refresh: checkLogin.data.refresh,
-          })
-        );
-
-        setToken(checkLogin.data.access);
-
-        if (checkLogin.status === 200) {
-          toast.success("Login successful!");
-          navigate("/admin/resources/categories");
-        } else {
-          toast.error(checkLogin.data.detail);
-        }
-      };
-      handleLogin(data);
-    }
-  }, [loader]);
 
   return (
     <div className="flex flex-col items-center mt-20 ">

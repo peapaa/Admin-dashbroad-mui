@@ -215,7 +215,7 @@ export default function TableUserDetail() {
     if (!isNaN(pageQueryParam) && pageQueryParam !== page) {
       setPage(pageQueryParam - 1);
     }
-  }, [location.search]);
+  }, [location.search, page]);
 
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement> | null,

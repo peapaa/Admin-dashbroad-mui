@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 
-interface AuthContextProps {
+interface ContextProps {
   token: string | null;
   setToken: React.Dispatch<React.SetStateAction<string | null>>;
   loading: boolean;
@@ -8,13 +8,13 @@ interface AuthContextProps {
   handleLogout: () => void;
 }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+const AuthContext = createContext<ContextProps | undefined>(undefined);
 
-interface AuthProviderProps {
+interface ProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {

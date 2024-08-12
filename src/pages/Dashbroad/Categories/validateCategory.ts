@@ -3,49 +3,86 @@ const validFileExtensions = {
   image: ["jpg", "png", "jpeg", "svg"],
 };
 
-type ValidFileType = keyof typeof validFileExtensions;
-
-function isValidFileType(fileName: string, fileType: ValidFileType) {
+function isValidFileType(fileName: string) {
   if (!fileName) {
     return false;
   }
   const extension = fileName.split(".").pop() || "";
-  return validFileExtensions[fileType]?.includes(extension) ?? false;
+  return validFileExtensions.image?.includes(extension) ?? false;
 }
 
 const MAX_FILE_SIZE = 5; // 5MB
-export const schema = Yup.object().shape({
-  image: Yup.mixed()
-    .test("is-required-or-exists", "Required image", function (value) {
-      const { createError } = this;
-      if (!value) {
-        return createError({ message: "Required image" });
+
+const nameSchema = Yup.string()
+  .required("Required category name")
+  .max(255, "Name can be at most 255 characters")
+  .min(1, "Name must be at least 1 character");
+
+const priceTypeSchema = Yup.string().required("Price type is required");
+
+const imageCreateCategorySchema = Yup.mixed()
+  .test("is-required-or-exists", "Required image", function (value) {
+    const { createError } = this;
+    const files = value as File[];
+    if (!files || files.length === 0) {
+      return createError({ message: "Required image" });
+    }
+    return true;
+  })
+  .test("is-valid-type", "Not a valid image type", function (value) {
+    const files = value as File[];
+    if (files && files.length > 0) {
+      const file = files[0];
+      const isValid = isValidFileType(file.name.toLowerCase());
+      if (!isValid) {
+        return this.createError({ message: "Not a valid image type" });
       }
-      return true; // Valid if either new image or existing image is provided.
-    })
-    .test("is-valid-type", "Not a valid image type", function (value) {
-      const files = value as FileList;
+    }
+    return true;
+  })
+  .test(
+    "is-valid-size",
+    `Max allowed size is ${MAX_FILE_SIZE}MB`,
+    function (value) {
+      const files = value as File[];
       if (files && files.length > 0) {
         const file = files[0];
-        return isValidFileType(file.name.toLowerCase(), "image");
+        return file.size <= MAX_FILE_SIZE * 1024 * 1024;
       }
       return this.createError({ message: "Required image" });
-    })
-    .test(
-      "is-valid-size",
-      `Max allowed size is ${MAX_FILE_SIZE}MB`,
-      function (value) {
-        const files = value as FileList;
-        if (files && files.length > 0) {
-          const file = files[0];
-          return file.size <= MAX_FILE_SIZE * 1024 * 1024;
-        }
-        return this.createError({ message: "Required image" });
+    }
+  );
+
+const imageEditCategorySchema = Yup.mixed()
+  .test("is-valid-type", "Not a valid image type", function (value) {
+    const files = value as File[];
+    if (files && files.length > 0) {
+      const file = files[0];
+      return isValidFileType(file.name.toLowerCase());
+    }
+    return true;
+  })
+  .test(
+    "is-valid-size",
+    `Max allowed size is ${MAX_FILE_SIZE}MB`,
+    function (value) {
+      const files = value as File[];
+      if (files && files.length > 0) {
+        const file = files[0];
+        return file.size <= MAX_FILE_SIZE * 1024 * 1024;
       }
-    ),
-  name: Yup.string()
-    .required("Required category name")
-    .max(255, "Name can be at most 255 characters")
-    .min(1, "Name must be at least 1 character"),
-  price_type: Yup.string().required("Price type is required"),
+      return true;
+    }
+  );
+
+export const createCategoryschema = Yup.object().shape({
+  image: imageCreateCategorySchema,
+  name: nameSchema,
+  price_type: priceTypeSchema,
+});
+
+export const EditCategoryschema = Yup.object().shape({
+  image: imageEditCategorySchema,
+  name: nameSchema,
+  price_type: priceTypeSchema,
 });
