@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { LiaEditSolid } from "react-icons/lia";
 // mui
@@ -37,6 +37,7 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 // type
 import { CategoriesProps, DeleteCategory, HeadCell } from "./type";
+import { GetKeyUrlCategory } from "../../../utils/keyCategory";
 
 const headCells: HeadCell[] = [
   { id: "id", numeric: true, disablePadding: false, label: "ID" },
@@ -155,9 +156,7 @@ export default function CategoriesList() {
   const [open, setOpen] = React.useState<boolean>(false);
   // get searchText from hooks
   const { searchText, page } = useSearchQuery();
-  // const [page, setPage] = React.useState<number>(0);
 
-  const location = useLocation();
   const navigate = useNavigate();
   const [data, setData] = React.useState<CategoriesProps[]>([]);
 
@@ -202,14 +201,10 @@ export default function CategoriesList() {
   //   };
   // }, [searchText, page]);
 
+  // get key url category
+  const key = GetKeyUrlCategory();
+
   // useSWR
-
-  const key = React.useMemo(
-    () => ["/api/cms/material_categories", searchText, page],
-    [searchText, page]
-  );
-
-  console.log("page", page);
   const { data: categoriesData } = useSWR(
     key,
     ([url, searchText, page]: [string, string, number]) =>
@@ -227,30 +222,6 @@ export default function CategoriesList() {
       setTotalCategory(categoriesData.count);
     }
   }, [categoriesData]);
-
-  // React.useEffect(() => {
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const pageQueryParam = parseInt(queryParams.get("page") || "1", 10);
-  //   if (!isNaN(pageQueryParam) && pageQueryParam !== page) {
-  //     page = pageQueryParam - 1;
-  //   }
-  // }, [location.search, page]);
-
-  // const handleChangePage = (
-  //   _: React.MouseEvent<HTMLButtonElement> | null,
-  //   newPage: number
-  // ) => {
-  //   setPage(newPage);
-  //   const queryParams = new URLSearchParams(location.search);
-  //   if (newPage === 0) {
-  //     queryParams.delete("page");
-  //   } else {
-  //     queryParams.set("page", (newPage + 1).toString());
-  //   }
-  //   navigate(`${location.pathname}?${queryParams.toString()}`, {
-  //     replace: true,
-  //   });
-  // };
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -437,7 +408,6 @@ export default function CategoriesList() {
         <CustomTablePagination
           count={totalCategory}
           rowsPerPage={rowsPerPage}
-          // onPageChange={handleChangePage}
         />
         <DeleteCategoryDialog
           open={open}

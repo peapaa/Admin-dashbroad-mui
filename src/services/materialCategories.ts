@@ -1,5 +1,7 @@
 import axiosInstance from "../axios";
 
+// call api useEffect
+
 // export const getAllCategories = async (searchText: string, page: number) => {
 //   const limit = 5;
 //   const offset = page * limit;

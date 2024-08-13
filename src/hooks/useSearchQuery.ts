@@ -14,6 +14,7 @@ const useSearchQuery = () => {
 
   const queryPageParams = new URLSearchParams(location.search);
   let page = parseInt(queryPageParams.get("page") || "1", 10);
+
   if (page < 1) {
     page = 1;
     queryPageParams.set("page", "1");
@@ -30,7 +31,6 @@ const useSearchQuery = () => {
   };
 
   const handlePrevPage = () => {
-    // Đảm bảo page không âm
     if (page > 0) {
       queryPageParams.set("page", `${page - 1}`);
       navigate(`${location.pathname}?${queryPageParams.toString()}`, {

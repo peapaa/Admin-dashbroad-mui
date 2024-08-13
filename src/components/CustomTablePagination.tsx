@@ -5,43 +5,24 @@ import useSearchQuery from "../hooks/useSearchQuery";
 
 interface CustomTablePaginationProps {
   count: number;
-  // page: number;
   rowsPerPage: number;
-  // onPageChange: (
-  //   event: React.MouseEvent<HTMLButtonElement> | null,
-  //   newPage: number
-  // ) => void;
 }
 
 const CustomTablePagination: React.FC<CustomTablePaginationProps> = ({
   count,
-  // page,
   rowsPerPage,
-  // onPageChange,
 }) => {
-  // const handleBackButtonClick = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   onPageChange(event, page - 1);
-  // };
-
   const { handleNextPage, handlePrevPage, page } = useSearchQuery();
 
   const handleBackButtonClick = () => {
     handlePrevPage();
   };
 
-  // const handleNextButtonClick = (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   onPageChange(event, page + 1);
-  // };
-
   const handleNextButtonClick = () => {
     handleNextPage();
   };
-  const displayRangeStart = page * rowsPerPage + 1;
-  const displayRangeEnd = Math.min(count, (page + 1) * rowsPerPage);
+  const displayRangeStart = (page - 1) * rowsPerPage + 1;
+  const displayRangeEnd = Math.min(count, page * rowsPerPage);
   const theme = useTheme();
 
   return (
@@ -72,7 +53,7 @@ const CustomTablePagination: React.FC<CustomTablePaginationProps> = ({
       </Box>
       <IconButton
         onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        disabled={page > Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
         <Typography

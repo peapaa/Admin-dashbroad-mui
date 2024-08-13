@@ -10,17 +10,18 @@ import {
   editCategory,
   getOneCategory,
 } from "../../../services/materialCategories";
-import { DataCategory } from "./CreateCategory";
+import { DataCategory } from "./type";
+import formDataCategory from "./formDataCategory";
 
 const EditCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  // const [data, setData] = useState({
-  //   image: "",
-  //   name: "",
-  //   price_type: "",
-  // });
+  const [data, setData] = useState<DataCategory>({
+    image: [],
+    name: "",
+    price_type: "",
+  });
   const [newImage, setNewImage] = useState<string | null>(null);
-  // const [initialImageBlob, setInitialImageBlob] = useState<Blob | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -29,13 +30,6 @@ const EditCategory = () => {
   } = useForm({
     resolver: yupResolver(EditCategoryschema),
   });
-
-  // Hàm chuyển đổi URL ảnh thành Blob
-  const urlToBlob = async (url: string): Promise<Blob> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return blob;
-  };
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -50,9 +44,6 @@ const EditCategory = () => {
           setValue("name", name);
           setValue("price_type", price_type);
           setNewImage(image);
-
-          // reset({ name, image, price_type });
-          // setData({ name, image, price_type });
         }
       } catch (error) {
         console.error(error);
@@ -60,6 +51,7 @@ const EditCategory = () => {
     };
     fetchGetOneCategory();
   }, [id, setValue]);
+
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -68,48 +60,36 @@ const EditCategory = () => {
         setNewImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+      setData((prev) => ({
+        ...prev,
+        image: [file],
+      }));
     }
   };
-  // useEffect(() => {
-  //   if (loading) {
-  const handleSubmitForm = async (data: DataCategory) => {
-    try {
-      if (id) {
-        const formData = new FormData();
-
-        if (data.image && data.image.length > 0) {
-          formData.append("image", data.image[0]);
+  useEffect(() => {
+    const handleSubmitForm = async (data: DataCategory) => {
+      try {
+        if (id) {
+          const formData = formDataCategory(data);
+          const response = await editCategory(formData, id);
+          console.log("response of edit category", response);
+          toast.success("Edit category suscess!");
+          navigate("/admin/resources/categories");
         }
-        // } else if (initialImageBlob && newImage) {
-        //   const blob = await urlToBlob(newImage);
-        //   setInitialImageBlob(blob);
-        // const data.image = [File]
-        // formData.append("image", initialImageBlob);
-        // Chuyển đổi URL ảnh thành Blob và lưu vào state
-        // }
-        formData.append("name", data.name);
-        formData.append("price_type", data.price_type);
-        formData.forEach((value, key) => {
-          console.log(key, value);
-        });
-        const response = await editCategory(formData, id);
-        console.log("response of edit category", response);
-        toast.success("Edit category suscess!");
-
-        navigate("/admin/resources/categories");
+      } catch (error) {
+        console.log(error);
+        toast.error("Edit category false!");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Edit category false!");
+    };
+    if (loading) {
+      handleSubmitForm(data);
     }
-  };
+  }, [data, id, loading, navigate]);
 
-  //   }
-  // }, [loading]);
-
-  const onSubmit = (data: any) => {
-    // setData(data);
-    handleSubmitForm(data);
+  const onSubmit = (data: DataCategory) => {
+    setData(data);
     setLoading(true);
   };
 
@@ -126,7 +106,7 @@ const EditCategory = () => {
           ) : null}
           <input
             type="file"
-            {...register("image", { required: !newImage })}
+            {...register("image")}
             id="image"
             multiple={false}
             onChange={handleChangeImage}
@@ -163,7 +143,7 @@ const EditCategory = () => {
         <div className="flex gap-5">
           <Button
             className="mt-20 w-40"
-            type="submit"
+            type="button"
             style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
             onClick={() => navigate(-1)}
           >
