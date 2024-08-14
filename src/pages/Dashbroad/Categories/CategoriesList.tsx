@@ -1,9 +1,14 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { LiaEditSolid } from "react-icons/lia";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 // mui
+import { ExpandMore } from "@mui/icons-material";
+import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,33 +16,27 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { Typography } from "@mui/material";
-import { Button } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
 //
-import { visuallyHidden } from "@mui/utils";
 import { useTheme } from "@mui/material/styles";
+import { visuallyHidden } from "@mui/utils";
 // component
+import { Order } from "../../../components/CustomTableDetail";
 import CustomTablePagination from "../../../components/CustomTablePagination";
 import DeleteCategoryDialog from "../../../components/DeleteCategoryDialog";
-import { Order } from "../../../components/CustomTableDetail";
 //services
 import {
   deleteOneCategories,
   getAllCategories,
 } from "../../../services/materialCategories";
 // hooks
-import useSearchQuery from "../../../hooks/useSearchQuery";
 import { toast } from "react-toastify";
+import useSearchQuery from "../../../hooks/useSearchQuery";
 // useSWR
 import useSWR, { mutate } from "swr";
 // type
-import { CategoriesProps, DeleteCategory, HeadCell } from "./type";
 import { GetKeyUrlCategory } from "../../../utils/keyCategory";
+import { CategoriesProps, DeleteCategory, HeadCell } from "./type";
 
 const headCells: HeadCell[] = [
   { id: "id", numeric: true, disablePadding: false, label: "ID" },
@@ -211,7 +210,7 @@ export default function CategoriesList() {
       getAllCategories(url, searchText, page),
     {
       revalidateIfStale: false,
-      revalidateOnFocus: false,
+      revalidateOnFocus: true,
       revalidateOnReconnect: false,
     }
   );

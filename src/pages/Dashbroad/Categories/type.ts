@@ -1,5 +1,7 @@
+import { FieldErrors, UseFormRegister } from "react-hook-form";
+
 export interface DataCategory {
-  image: File[];
+  image?: File[];
   name: string;
   price_type: string;
 }
@@ -22,4 +24,17 @@ export interface HeadCell {
   id: keyof CategoriesProps;
   label: string;
   numeric: boolean;
+}
+
+export interface InputImageProps {
+  image: string | null;
+  data: DataCategory;
+  errors: FieldErrors<DataCategory>;
+  register: UseFormRegister<DataCategory>;
+  handleChangeImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface InputTextProps {
+  errors: FieldErrors<DataCategory>;
+  register: UseFormRegister<DataCategory>;
 }

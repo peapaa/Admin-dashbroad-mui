@@ -54,11 +54,14 @@ const imageCreateCategorySchema = Yup.mixed()
   );
 
 const imageEditCategorySchema = Yup.mixed()
+  .nullable()
   .test("is-valid-type", "Not a valid image type", function (value) {
     const files = value as File[];
+    console.log("files", files);
+    if (!files || files.length === 0) return true;
     if (files && files.length > 0) {
       const file = files[0];
-      return isValidFileType(file.name.toLowerCase());
+      return isValidFileType(file.name);
     }
     return true;
   })
@@ -67,7 +70,9 @@ const imageEditCategorySchema = Yup.mixed()
     `Max allowed size is ${MAX_FILE_SIZE}MB`,
     function (value) {
       const files = value as File[];
+      if (!files || files.length === 0) return true;
       if (files && files.length > 0) {
+        console.log("files", files);
         const file = files[0];
         return file.size <= MAX_FILE_SIZE * 1024 * 1024;
       }
@@ -81,7 +86,7 @@ export const createCategoryschema = Yup.object().shape({
   price_type: priceTypeSchema,
 });
 
-export const EditCategoryschema = Yup.object().shape({
+export const editCategoryschema = Yup.object().shape({
   image: imageEditCategorySchema,
   name: nameSchema,
   price_type: priceTypeSchema,
