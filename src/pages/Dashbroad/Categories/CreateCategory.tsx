@@ -52,7 +52,10 @@ const CreateCategory = () => {
       try {
         const formData = formDataCategory(data);
         await createCategories(formData);
-        mutate(url);
+
+        // await mutate(url, async () => {
+        //   await getAllCategories(url);
+        // });
         toast.success("Add category suscess!");
         navigate("/admin/resources/categories");
         reset(); // reset form data

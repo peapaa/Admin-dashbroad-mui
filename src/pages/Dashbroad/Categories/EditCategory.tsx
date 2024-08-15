@@ -14,16 +14,13 @@ import { DataCategory } from "@/pages/Dashbroad/Categories/type";
 import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
 
 // service
-import {
-  editCategory,
-  getAllCategories,
-  getOneCategory,
-} from "@/services/materialCategories";
+import { editCategory, getOneCategory } from "@/services/materialCategories";
 
 // utils
 import { GetUrlCategory } from "@/utils/keyCategory";
 
 //swr
+import useSearchQuery from "@/hooks/useSearchQuery";
 import { useSWRConfig } from "swr";
 
 const EditCategory = () => {
@@ -32,7 +29,8 @@ const EditCategory = () => {
   const { id } = useParams<{ id: string }>();
   const { url } = GetUrlCategory();
   const { mutate } = useSWRConfig();
-
+  const { searchText, page } = useSearchQuery();
+  console.log("searchText: ", searchText, "page:", page);
   const [data, setData] = useState<DataCategory>({
     image: [],
     name: "",
@@ -82,11 +80,12 @@ const EditCategory = () => {
         if (id) {
           const formData = formDataCategory(data);
           await editCategory(formData, id);
-          await mutate(url, async () => {
-            await getAllCategories(url);
-          });
+
+          // await mutate(url, async () => {
+          //   await getAllCategories(url);
+          // });
           toast.success("Edit category suscess!");
-          navigate("/admin/resources/categories");
+          navigate(-1);
         }
       } catch (error) {
         console.log(error);
@@ -98,7 +97,7 @@ const EditCategory = () => {
     if (loading) {
       handleSubmitForm(data);
     }
-  }, [data, id, url, loading, mutate, navigate]);
+  }, [data, id, url, loading, mutate, navigate, searchText, page]);
 
   const onSubmit: SubmitHandler<DataCategory> = (data) => {
     setData(data);

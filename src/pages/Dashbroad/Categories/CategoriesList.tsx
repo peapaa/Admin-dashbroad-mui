@@ -133,11 +133,7 @@ export default function CategoriesList() {
   // }
   // );
 
-  const { data: categoriesData } = useSWR(url, getAllCategories, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data: categoriesData } = useSWR(url, getAllCategories, {});
 
   React.useEffect(() => {
     if (categoriesData) {
@@ -183,6 +179,8 @@ export default function CategoriesList() {
   const handleDeleteCategory = (id: string) => {
     setselectedDeleteId((prev) => ({ ...prev, id: id }));
   };
+
+  console.log("searchText: ", searchText, "page:", page);
 
   const sortedData = sortData(data, "desc", "created_at");
   return (
