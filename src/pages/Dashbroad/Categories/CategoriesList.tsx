@@ -42,6 +42,7 @@ import { CategoriesProps, DeleteCategory, Order } from "./type";
 // utils
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 import { headCellCategory } from "@/utils/data";
+import sortData from "@/utils/sortTable";
 
 export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
@@ -70,33 +71,33 @@ export default function CategoriesList() {
   const navigate = useNavigate();
   const [data, setData] = React.useState<CategoriesProps[]>([]);
 
-  const sortData = (
-    data: CategoriesProps[],
-    order: "asc" | "desc",
-    orderBy: keyof CategoriesProps
-  ) => {
-    return data.sort((a, b) => {
-      let comparisonResult: number;
-      if (orderBy === "name" || orderBy === "price_type") {
-        const normalizedA = a[orderBy].toLowerCase().trim();
-        const normalizedB = b[orderBy].toLowerCase().trim();
-        comparisonResult = normalizedA.localeCompare(normalizedB);
-        if (normalizedA === normalizedB) {
-          comparisonResult = 0;
-        } else {
-          comparisonResult = normalizedA.localeCompare(normalizedB);
-        }
-      } else if (orderBy === "created_at") {
-        const dateA = Date.parse(a[orderBy]);
-        const dateB = Date.parse(b[orderBy]);
-        comparisonResult = dateA - dateB;
-      } else {
-        comparisonResult =
-          (parseInt(a[orderBy]) || 0) - (parseInt(b[orderBy]) || 0);
-      }
-      return order === "asc" ? comparisonResult : -comparisonResult;
-    });
-  };
+  // const sortData = (
+  //   data: CategoriesProps[],
+  //   order: "asc" | "desc",
+  //   orderBy: keyof CategoriesProps
+  // ) => {
+  //   return data.sort((a, b) => {
+  //     let comparisonResult: number;
+  //     if (orderBy === "name" || orderBy === "price_type") {
+  //       const normalizedA = a[orderBy].toLowerCase().trim();
+  //       const normalizedB = b[orderBy].toLowerCase().trim();
+  //       comparisonResult = normalizedA.localeCompare(normalizedB);
+  //       if (normalizedA === normalizedB) {
+  //         comparisonResult = 0;
+  //       } else {
+  //         comparisonResult = normalizedA.localeCompare(normalizedB);
+  //       }
+  //     } else if (orderBy === "created_at") {
+  //       const dateA = Date.parse(a[orderBy]);
+  //       const dateB = Date.parse(b[orderBy]);
+  //       comparisonResult = dateA - dateB;
+  //     } else {
+  //       comparisonResult =
+  //         (parseInt(a[orderBy]) || 0) - (parseInt(b[orderBy]) || 0);
+  //     }
+  //     return order === "asc" ? comparisonResult : -comparisonResult;
+  //   });
+  // };
 
   // fetch data with clean up function
   // React.useEffect(() => {
