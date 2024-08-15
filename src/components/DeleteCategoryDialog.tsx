@@ -1,9 +1,14 @@
 import * as React from "react";
+
+//mui
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { DeleteCategory } from "../pages/Dashbroad/Categories/type";
+
+//type
+import { DeleteCategory } from "@/pages/Dashbroad/Categories/type";
+
 interface DeleteCategoryProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,18 +1,26 @@
-import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
-import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
-import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import {
-  editCategory,
-  getOneCategory,
-} from "../../../services/materialCategories";
-import formDataCategory from "./formDataCategory";
-import { DataCategory } from "./type";
+// yup
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// page
+import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
+import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
+import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
+import { DataCategory } from "@/pages/Dashbroad/Categories/type";
+import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
+
+// service
+import { editCategory, getOneCategory } from "@/services/materialCategories";
+
+// utils
+import { GetKeyUrlCategory } from "@/utils/keyCategory";
+
+//swr
+import { useSWRConfig } from "swr";
 
 const EditCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,7 +30,7 @@ const EditCategory = () => {
     price_type: "",
   });
   const [newImage, setNewImage] = useState<string | null>(null);
-  console.log("data", data);
+
   const {
     register,
     handleSubmit,
@@ -34,13 +42,14 @@ const EditCategory = () => {
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const key = GetKeyUrlCategory();
+  const { mutate } = useSWRConfig();
 
   useEffect(() => {
     const fetchGetOneCategory = async () => {
       try {
         if (id) {
           const response = await getOneCategory(id);
-          console.log("response get category", response.data);
           const { name, image, price_type } = response.data;
           setValue("name", name);
           setValue("price_type", price_type); // image not required --> dont setValue to form
@@ -61,10 +70,6 @@ const EditCategory = () => {
         setNewImage(reader.result as string);
       };
       reader.readAsDataURL(file);
-      setData((prev) => ({
-        ...prev,
-        image: [file],
-      }));
     }
   };
   useEffect(() => {
@@ -72,8 +77,8 @@ const EditCategory = () => {
       try {
         if (id) {
           const formData = formDataCategory(data);
-          const response = await editCategory(formData, id);
-          console.log("response of edit category", response);
+          await editCategory(formData, id);
+          mutate(key);
           toast.success("Edit category suscess!");
           navigate("/admin/resources/categories");
         }
@@ -87,7 +92,7 @@ const EditCategory = () => {
     if (loading) {
       handleSubmitForm(data);
     }
-  }, [data, id, loading, navigate]);
+  }, [data, id, key, loading, mutate, navigate]);
 
   const onSubmit: SubmitHandler<DataCategory> = (data) => {
     setData(data);

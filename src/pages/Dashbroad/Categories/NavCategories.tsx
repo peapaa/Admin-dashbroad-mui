@@ -1,3 +1,7 @@
+import { GoSearch } from "react-icons/go";
+import { Link } from "react-router-dom";
+
+// mui
 import {
   Box,
   Button,
@@ -6,9 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { GoSearch } from "react-icons/go";
+
+// hook
 import useSearchQuery from "../../../hooks/useSearchQuery";
-import { Link } from "react-router-dom";
 
 const NavCategories = () => {
   const theme = useTheme();

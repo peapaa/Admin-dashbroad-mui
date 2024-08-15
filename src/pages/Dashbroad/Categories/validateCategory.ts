@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+
 const validFileExtensions = {
   image: ["jpg", "png", "jpeg", "svg"],
 };
@@ -11,6 +12,8 @@ function isValidFileType(fileName: string) {
   return validFileExtensions.image?.includes(extension) ?? false;
 }
 
+const price_type = ["per_metter", "per_quantity"]; // price type only value
+
 const MAX_FILE_SIZE = 5; // 5MB
 
 const nameSchema = Yup.string()
@@ -18,7 +21,9 @@ const nameSchema = Yup.string()
   .max(255, "Name can be at most 255 characters")
   .min(1, "Name must be at least 1 character");
 
-const priceTypeSchema = Yup.string().required("Price type is required");
+const priceTypeSchema = Yup.string()
+  .oneOf(price_type, "Invalid price type selected")
+  .required("Price type is required");
 
 const imageCreateCategorySchema = Yup.mixed()
   .test("is-required-or-exists", "Required image", function (value) {
@@ -57,7 +62,6 @@ const imageEditCategorySchema = Yup.mixed()
   .nullable()
   .test("is-valid-type", "Not a valid image type", function (value) {
     const files = value as File[];
-    console.log("files", files);
     if (!files || files.length === 0) return true;
     if (files && files.length > 0) {
       const file = files[0];
@@ -72,7 +76,6 @@ const imageEditCategorySchema = Yup.mixed()
       const files = value as File[];
       if (!files || files.length === 0) return true;
       if (files && files.length > 0) {
-        console.log("files", files);
         const file = files[0];
         return file.size <= MAX_FILE_SIZE * 1024 * 1024;
       }

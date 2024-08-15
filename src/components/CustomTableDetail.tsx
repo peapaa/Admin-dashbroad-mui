@@ -1,3 +1,5 @@
+import { Order } from "@/pages/Dashbroad/Categories/type";
+
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -8,9 +10,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-export type Order = "asc" | "desc";
-
-export function getComparator<Key extends keyof any>(
+export function getComparator<Key extends keyof Order>(
   order: Order,
   orderBy: Key
 ): (
@@ -35,21 +35,4 @@ export function stableSort<T>(
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-}
-
-interface Data {
-  id: number;
-  name: string;
-  avatar: string;
-  email?: string;
-  admin?: string | number;
-  fa?: string | number;
-  price_type?: string;
-}
-
-export interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Data;
-  label: string;
-  numeric: boolean;
 }

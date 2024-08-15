@@ -6,8 +6,8 @@ export interface DataCategory {
   price_type: string;
 }
 
-export interface DeleteCategory {
-  id: string;
+export interface DeleteCategory<T = string> {
+  id: T;
   loading: boolean;
 }
 
@@ -37,4 +37,24 @@ export interface InputImageProps {
 export interface InputTextProps {
   errors: FieldErrors<DataCategory>;
   register: UseFormRegister<DataCategory>;
+}
+
+export type Order = "asc" | "desc";
+
+export interface EnhancedTableProps {
+  numSelected: number;
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof CategoriesProps
+  ) => void;
+  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  order: Order;
+  orderBy: string;
+  rowCount: number;
+  selected: string[];
+  headCells: HeadCell[];
+}
+
+export interface GenericData {
+  id: string;
 }

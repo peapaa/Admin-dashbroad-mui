@@ -1,14 +1,20 @@
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { useTheme } from "@mui/material/styles";
-import { Box, Collapse, List, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+
+// mui
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Box, Collapse, List, Typography } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import dashbroadLogo from "../assets/images/sidebar-logo/view-grid.svg";
-import resourceLogo from "../assets/images/sidebar-logo/Vector.svg";
-import { dashboardList, resourcesList } from "../utils/data";
+import { useTheme } from "@mui/material/styles";
+
+// logo
+import resourceLogo from "@/assets/images/sidebar-logo/Vector.svg";
+import dashbroadLogo from "@/assets/images/sidebar-logo/view-grid.svg";
+
+// utils
+import { dashboardList, resourcesList } from "@/utils/data";
 
 const Item = ({ title, to }: { title: string; to: string }) => {
   const theme = useTheme();
@@ -54,7 +60,7 @@ const SideBar: React.FC = () => {
     } else if (location.pathname.startsWith("/admin/resources")) {
       setOpen2(true);
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <Box className="lg:w-[180px] xl:w-[240px]">

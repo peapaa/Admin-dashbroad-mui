@@ -1,10 +1,13 @@
+// router
 import { Route, Routes } from "react-router-dom";
-import LayoutContent from "../LayoutContent/LayoutContent";
-import CategoriesList from "./CategoriesList";
-import CreateCategory from "./CreateCategory";
-import NavCategories from "./NavCategories";
-import ProtectedRouter from "../../../components/ProtectedRouter";
-import EditCategory from "./EditCategory";
+
+// page
+import ProtectedRouter from "@/components/ProtectedRouter";
+import CategoriesList from "@/pages/Dashbroad/Categories/CategoriesList";
+import CreateCategory from "@/pages/Dashbroad/Categories/CreateCategory";
+import EditCategory from "@/pages/Dashbroad/Categories/EditCategory";
+import NavCategories from "@/pages/Dashbroad/Categories/NavCategories";
+import LayoutContent from "@/pages/Dashbroad/LayoutContent/LayoutContent";
 
 function Categories() {
   return (

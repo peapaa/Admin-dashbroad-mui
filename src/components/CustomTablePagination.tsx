@@ -1,7 +1,11 @@
 import React from "react";
-import { IconButton, Box, Typography } from "@mui/material";
+
+// mui
+import { Box, IconButton, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import useSearchQuery from "../hooks/useSearchQuery";
+
+// hooks
+import useSearchQuery from "@/hooks/useSearchQuery";
 
 interface CustomTablePaginationProps {
   count: number;

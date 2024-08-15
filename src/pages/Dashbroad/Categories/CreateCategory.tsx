@@ -2,20 +2,26 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-// mui
+
 // yup
 import { createCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 // service
 import { createCategories } from "@/services/materialCategories";
+
 // type
 import { DataCategory } from "@/pages/Dashbroad/Categories/type";
+
 // swr
 import { useSWRConfig } from "swr";
-//
+
+//page
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
 import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
+
+// utils
 import { GetKeyUrlCategory } from "@/utils/keyCategory";
 
 const CreateCategory = () => {
@@ -68,8 +74,7 @@ const CreateCategory = () => {
     setData(data);
     setLoading(true);
   };
-  console.log("xxx", data);
-
+  console.log("data", data);
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {

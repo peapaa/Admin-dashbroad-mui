@@ -1,20 +1,25 @@
+//router
 import { Navigate, Route, Routes } from "react-router-dom";
-import Dashbroad from "./pages/Dashbroad/Dashbroad";
-import Content from "./pages/Dashbroad/UserManager/Content";
-import Main from "./pages/Dashbroad/Main/Main";
-import UserInsight from "./pages/Dashbroad/UserInsight/UserInsight";
-import Address from "./pages/Dashbroad/Address/Address";
-import Posts from "./pages/Dashbroad/Posts/Posts";
-import Purchars from "./pages/Dashbroad/Purchars/Purchars";
-import Roles from "./pages/Dashbroad/Roles/Roles";
-import Tag from "./pages/Dashbroad/Tags/Tag";
-import Login from "./pages/Registration/Login";
+
+//component
 import ProtectedRouter from "./components/ProtectedRouter";
-import Categories from "./pages/Dashbroad/Categories/Categories";
+
+//page
+import Address from "@/pages/Dashbroad/Address/Address";
+import Categories from "@/pages/Dashbroad/Categories/Categories";
+import Dashbroad from "@/pages/Dashbroad/Dashbroad";
+import Main from "@/pages/Dashbroad/Main/Main";
+import Posts from "@/pages/Dashbroad/Posts/Posts";
+import Purchars from "@/pages/Dashbroad/Purchars/Purchars";
+import Roles from "@/pages/Dashbroad/Roles/Roles";
+import Tag from "@/pages/Dashbroad/Tags/Tag";
+import UserInsight from "@/pages/Dashbroad/UserInsight/UserInsight";
+import Content from "@/pages/Dashbroad/UserManager/Content";
+import Login from "@/pages/Registration/Login";
 
 function App() {
   return (
-    <div className="flex justify-center app bg-backgroundColor">
+    <div className="flex justify-center app bg-backgroundColor ">
       <div className="min-w-[1024px] max-w-[1440px] border w-full container">
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />

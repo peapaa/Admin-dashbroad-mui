@@ -1,3 +1,13 @@
+import React, { useContext } from "react";
+import { GoSearch } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
+
+// mui
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import {
   Box,
   Button,
@@ -7,17 +17,13 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import logo from "../assets/images/header-logo/logo.png";
-import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import React, { useContext } from "react";
 import { useTheme } from "@mui/material/styles";
-import { GoSearch } from "react-icons/go";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+
+// logo
+import logo from "@/assets/images/header-logo/logo.png";
+
+// context
+import AuthContext from "@/context/AuthContext";
 
 const Header: React.FC = () => {
   const theme = useTheme();

@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
 import React from "react";
+// mui
+import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 const Footer: React.FC = () => {

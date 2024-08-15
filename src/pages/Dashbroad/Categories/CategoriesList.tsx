@@ -2,9 +2,9 @@ import * as React from "react";
 import { LiaEditSolid } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+
 // mui
-import { ExpandMore } from "@mui/icons-material";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -13,135 +13,46 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
 import Tooltip from "@mui/material/Tooltip";
-//
 import { useTheme } from "@mui/material/styles";
-import { visuallyHidden } from "@mui/utils";
+
 // component
-import { Order } from "../../../components/CustomTableDetail";
-import CustomTablePagination from "../../../components/CustomTablePagination";
-import DeleteCategoryDialog from "../../../components/DeleteCategoryDialog";
+import CustomTablePagination from "@/components/CustomTablePagination";
+import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
+import EnhancedTableHead from "@/components/EnhancedTableHead";
+
 //services
 import {
   deleteOneCategories,
   getAllCategories,
-} from "../../../services/materialCategories";
+} from "@/services/materialCategories";
+
 // hooks
+import useSearchQuery from "@/hooks/useSearchQuery";
+import useSelectedItem from "@/hooks/useSelectedItem";
 import { toast } from "react-toastify";
-import useSearchQuery from "../../../hooks/useSearchQuery";
+
 // useSWR
 import useSWR, { mutate } from "swr";
+
 // type
-import { GetKeyUrlCategory } from "../../../utils/keyCategory";
-import { CategoriesProps, DeleteCategory, HeadCell } from "./type";
+import { CategoriesProps, DeleteCategory, Order } from "./type";
 
-const headCells: HeadCell[] = [
-  { id: "id", numeric: true, disablePadding: false, label: "ID" },
-  { id: "image", numeric: true, disablePadding: false, label: "Avatar" },
-  { id: "name", numeric: false, disablePadding: false, label: "Name" },
-  {
-    id: "price_type",
-    numeric: false,
-    disablePadding: false,
-    label: "Price type",
-  },
-];
-
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof CategoriesProps
-  ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-  selected: string[];
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort, numSelected, rowCount, selected } =
-    props;
-
-  const createSortHandler =
-    (property: keyof CategoriesProps) => (event: React.MouseEvent<unknown>) => {
-      if (property !== "id") {
-        // remove sort by id
-        onRequestSort(event, property);
-      }
-    };
-  const handleDeleteSelectedRecord = () => {
-    console.log("delete selected", selected);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell
-          colSpan={headCells.length + 2}
-          style={{ paddingLeft: "4px" }}
-        >
-          <div className="flex items-center  justify-between w-full">
-            <span>
-              <Checkbox
-                color="primary"
-                indeterminate={numSelected > 0 && numSelected < rowCount}
-                checked={numSelected === rowCount}
-                onChange={props.onSelectAllClick}
-                inputProps={{
-                  "aria-label": "select all desserts",
-                }}
-              />
-              <ExpandMore className="cursor-pointer" />
-            </span>
-            {numSelected > 0 && (
-              <Button
-                variant="contained"
-                onClick={() => handleDeleteSelectedRecord()}
-              >
-                Delete record
-              </Button>
-            )}
-          </div>
-        </TableCell>
-      </TableRow>
-      <TableRow sx={{ backgroundColor: "#F1F5F9" }}>
-        <TableCell></TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel onClick={createSortHandler(headCell.id)}>
-              <span className="font-bold" style={{ color: "#64748B" }}>
-                {headCell.label}
-              </span>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-        <TableCell></TableCell>
-      </TableRow>
-    </TableHead>
-  );
-}
+// utils
+import { headCellCategory } from "@/utils/data";
+import { GetKeyUrlCategory } from "@/utils/keyCategory";
 
 export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] =
     React.useState<keyof CategoriesProps>("created_at");
-  const [selected, setSelected] = React.useState<string[]>([]);
-
+  const {
+    selected,
+    handleSlectedItem,
+    handleSelectAllClick,
+    // handleClearSelected,
+  } = useSelectedItem();
   const [dense] = React.useState(false);
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
@@ -167,7 +78,14 @@ export default function CategoriesList() {
     return data.sort((a, b) => {
       let comparisonResult: number;
       if (orderBy === "name" || orderBy === "price_type") {
-        comparisonResult = a[orderBy].localeCompare(b[orderBy]);
+        const normalizedA = a[orderBy].toLowerCase().trim();
+        const normalizedB = b[orderBy].toLowerCase().trim();
+        comparisonResult = normalizedA.localeCompare(normalizedB);
+        if (normalizedA === normalizedB) {
+          comparisonResult = 0;
+        } else {
+          comparisonResult = normalizedA.localeCompare(normalizedB);
+        }
       } else if (orderBy === "created_at") {
         const dateA = Date.parse(a[orderBy]);
         const dateB = Date.parse(b[orderBy]);
@@ -221,43 +139,18 @@ export default function CategoriesList() {
       setTotalCategory(categoriesData.count);
     }
   }, [categoriesData]);
+  console.log("categoriesData", categoriesData);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
     property: keyof CategoriesProps
   ) => {
+    if (property === "id" || property === "image") {
+      return;
+    }
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelecteds = data.map((row) => row.id.toString());
-      setSelected(newSelecteds);
-    } else {
-      setSelected([]);
-    }
-  };
-
-  const handleClick = (_: React.MouseEvent<unknown>, id: string) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
@@ -273,7 +166,7 @@ export default function CategoriesList() {
         console.error(error);
         toast.error("Delete category false!");
       } finally {
-        setselectedDeleteId((prev) => ({ ...prev, loading: false }));
+        setselectedDeleteId((prev) => ({ ...prev, id: "", loading: false }));
       }
     };
     if (selectedDeleteId.loading && selectedDeleteId.id) {
@@ -295,10 +188,11 @@ export default function CategoriesList() {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
+              onSelectAllClick={(event) => handleSelectAllClick(event, data)}
               onRequestSort={handleRequestSort}
               rowCount={data.length}
               selected={selected}
+              headCells={headCellCategory}
             />
             <TableBody>
               {sortedData.map((row, index) => {
@@ -308,7 +202,7 @@ export default function CategoriesList() {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id.toString())}
+                    onClick={() => handleSlectedItem(row.id.toString())}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}

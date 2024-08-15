@@ -1,4 +1,6 @@
 import * as React from "react";
+
+// hook
 import useSearchQuery from "../hooks/useSearchQuery";
 
 export const GetKeyUrlCategory = () => {
