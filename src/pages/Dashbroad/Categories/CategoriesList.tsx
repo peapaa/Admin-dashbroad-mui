@@ -40,8 +40,8 @@ import useSWR, { mutate } from "swr";
 import { CategoriesProps, DeleteCategory, Order } from "./type";
 
 // utils
+import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 import { headCellCategory } from "@/utils/data";
-import { GetUrlCategory } from "@/utils/keyCategory";
 
 export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
@@ -119,7 +119,7 @@ export default function CategoriesList() {
   // }, [searchText, page]);
 
   // get key url category
-  const { url } = GetUrlCategory();
+  const { url } = useGetUrlCategory();
 
   // useSWR
   // const { data: categoriesData } = useSWR(

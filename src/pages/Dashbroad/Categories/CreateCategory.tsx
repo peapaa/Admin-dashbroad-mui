@@ -22,7 +22,7 @@ import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
 import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
 
 // utils
-import { GetUrlCategory } from "@/utils/keyCategory";
+import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,7 +45,7 @@ const CreateCategory = () => {
   });
 
   // get key url category
-  const { url } = GetUrlCategory();
+  const { url } = useGetUrlCategory();
 
   useEffect(() => {
     const handleSubmitForm = async (data: DataCategory) => {

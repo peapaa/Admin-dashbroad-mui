@@ -17,7 +17,7 @@ import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategor
 import { editCategory, getOneCategory } from "@/services/materialCategories";
 
 // utils
-import { GetUrlCategory } from "@/utils/keyCategory";
+import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 
 //swr
 import useSearchQuery from "@/hooks/useSearchQuery";
@@ -27,7 +27,7 @@ const EditCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { url } = GetUrlCategory();
+  const { url } = useGetUrlCategory();
   const { mutate } = useSWRConfig();
   const { searchText, page } = useSearchQuery();
   console.log("searchText: ", searchText, "page:", page);
