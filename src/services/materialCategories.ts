@@ -11,16 +11,24 @@ import axiosInstance from "../axios";
 //   return response;
 // };
 
-export const getAllCategories = async (
-  url: string,
-  searchText: string,
-  page: number
-) => {
-  const limit = 5;
-  const offset = (page - 1) * limit;
-  const response = await axiosInstance.get(url, {
-    params: { limit, name: searchText, offset: offset },
-  });
+// call with useSWR form basic ==> key was changed --> don't use
+
+// export const getAllCategories = async (
+//   url: string,
+//   searchText: string,
+//   page: number
+// ) => {
+//   const limit = 5;
+//   const offset = (page - 1) * limit;
+//   const response = await axiosInstance.get(url, {
+//     params: { limit, name: searchText, offset: offset },
+//   });
+//   return response.data;
+// };
+
+// useSWR --> oke
+export const getAllCategories = async (url: string) => {
+  const response = await axiosInstance.get(url);
   return response.data;
 };
 

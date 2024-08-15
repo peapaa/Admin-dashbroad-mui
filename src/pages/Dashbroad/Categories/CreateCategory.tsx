@@ -22,7 +22,7 @@ import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
 import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
 
 // utils
-import { GetKeyUrlCategory } from "@/utils/keyCategory";
+import { GetUrlCategory } from "@/utils/keyCategory";
 
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,14 +45,14 @@ const CreateCategory = () => {
   });
 
   // get key url category
-  const key = GetKeyUrlCategory();
+  const { url } = GetUrlCategory();
 
   useEffect(() => {
     const handleSubmitForm = async (data: DataCategory) => {
       try {
         const formData = formDataCategory(data);
         await createCategories(formData);
-        mutate(key);
+        mutate(url);
         toast.success("Add category suscess!");
         navigate("/admin/resources/categories");
         reset(); // reset form data
@@ -67,7 +67,7 @@ const CreateCategory = () => {
     if (loading) {
       handleSubmitForm(data);
     }
-  }, [loading, data, navigate, reset, key, mutate]);
+  }, [loading, data, navigate, reset, url, mutate]);
 
   const onSubmit = (data: DataCategory) => {
     console.log("data", data);

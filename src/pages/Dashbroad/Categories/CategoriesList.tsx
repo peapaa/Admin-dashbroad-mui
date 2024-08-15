@@ -41,7 +41,7 @@ import { CategoriesProps, DeleteCategory, Order } from "./type";
 
 // utils
 import { headCellCategory } from "@/utils/data";
-import { GetKeyUrlCategory } from "@/utils/keyCategory";
+import { GetUrlCategory } from "@/utils/keyCategory";
 
 export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
@@ -119,19 +119,25 @@ export default function CategoriesList() {
   // }, [searchText, page]);
 
   // get key url category
-  const key = GetKeyUrlCategory();
+  const { url } = GetUrlCategory();
 
   // useSWR
-  const { data: categoriesData } = useSWR(
-    key,
-    ([url, searchText, page]: [string, string, number]) =>
-      getAllCategories(url, searchText, page),
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: true,
-      revalidateOnReconnect: false,
-    }
-  );
+  // const { data: categoriesData } = useSWR(
+  //   key,
+  //   ([url, searchText, page]: [string, string, number]) =>
+  //     getAllCategories(url, searchText, page),
+  // {
+  //   revalidateIfStale: false,
+  //   revalidateOnFocus: true,
+  //   revalidateOnReconnect: false,
+  // }
+  // );
+
+  const { data: categoriesData } = useSWR(url, getAllCategories, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   React.useEffect(() => {
     if (categoriesData) {
@@ -139,7 +145,6 @@ export default function CategoriesList() {
       setTotalCategory(categoriesData.count);
     }
   }, [categoriesData]);
-  console.log("categoriesData", categoriesData);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -154,13 +159,14 @@ export default function CategoriesList() {
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
+
   // delete selected category
   React.useEffect(() => {
     const fetchDeleteOneCategory = async (id: string) => {
       if (!id) return;
       try {
         await deleteOneCategories(id);
-        mutate(key);
+        mutate(url);
         toast.success("Delete category suscess!");
       } catch (error) {
         console.error(error);
@@ -172,7 +178,7 @@ export default function CategoriesList() {
     if (selectedDeleteId.loading && selectedDeleteId.id) {
       fetchDeleteOneCategory(selectedDeleteId.id);
     }
-  }, [selectedDeleteId.loading, selectedDeleteId, key, page, searchText]);
+  }, [selectedDeleteId.loading, selectedDeleteId, url, page, searchText]);
 
   const handleDeleteCategory = (id: string) => {
     setselectedDeleteId((prev) => ({ ...prev, id: id }));

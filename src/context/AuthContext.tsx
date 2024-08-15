@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import * as React from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 interface ContextProps {
   token: string | null;
@@ -41,6 +42,12 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  // const { searchText, page } = useSearchQuery();
+  // const key = React.useMemo(
+  //   () => ["/api/cms/material_categories", searchText, page],
+  //   [searchText, page]
+  // );
 
   return (
     <AuthContext.Provider

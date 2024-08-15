@@ -14,16 +14,25 @@ import { DataCategory } from "@/pages/Dashbroad/Categories/type";
 import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
 
 // service
-import { editCategory, getOneCategory } from "@/services/materialCategories";
+import {
+  editCategory,
+  getAllCategories,
+  getOneCategory,
+} from "@/services/materialCategories";
 
 // utils
-import { GetKeyUrlCategory } from "@/utils/keyCategory";
+import { GetUrlCategory } from "@/utils/keyCategory";
 
 //swr
 import { useSWRConfig } from "swr";
 
 const EditCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { url } = GetUrlCategory();
+  const { mutate } = useSWRConfig();
+
   const [data, setData] = useState<DataCategory>({
     image: [],
     name: "",
@@ -39,11 +48,6 @@ const EditCategory = () => {
   } = useForm<DataCategory>({
     resolver: yupResolver(editCategoryschema),
   });
-
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const key = GetKeyUrlCategory();
-  const { mutate } = useSWRConfig();
 
   useEffect(() => {
     const fetchGetOneCategory = async () => {
@@ -78,7 +82,9 @@ const EditCategory = () => {
         if (id) {
           const formData = formDataCategory(data);
           await editCategory(formData, id);
-          mutate(key);
+          await mutate(url, async () => {
+            await getAllCategories(url);
+          });
           toast.success("Edit category suscess!");
           navigate("/admin/resources/categories");
         }
@@ -92,7 +98,7 @@ const EditCategory = () => {
     if (loading) {
       handleSubmitForm(data);
     }
-  }, [data, id, key, loading, mutate, navigate]);
+  }, [data, id, url, loading, mutate, navigate]);
 
   const onSubmit: SubmitHandler<DataCategory> = (data) => {
     setData(data);
