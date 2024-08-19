@@ -36,7 +36,6 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
     };
   };
 
-  console.log("selected", selected);
   const handleDeleteSelectedRecord = () => {
     console.log("delete selected", selected);
   };

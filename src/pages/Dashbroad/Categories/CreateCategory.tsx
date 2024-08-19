@@ -52,10 +52,6 @@ const CreateCategory = () => {
       try {
         const formData = formDataCategory(data);
         await createCategories(formData);
-
-        // await mutate(url, async () => {
-        //   await getAllCategories(url);
-        // });
         toast.success("Add category suscess!");
         navigate("/admin/resources/categories");
         reset(); // reset form data
@@ -73,11 +69,10 @@ const CreateCategory = () => {
   }, [loading, data, navigate, reset, url, mutate]);
 
   const onSubmit = (data: DataCategory) => {
-    console.log("data", data);
     setData(data);
     setLoading(true);
   };
-  console.log("data", data);
+
   const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {

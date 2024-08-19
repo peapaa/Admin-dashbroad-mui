@@ -7,21 +7,28 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 
 //type
-import { DeleteCategory } from "@/pages/Dashbroad/Categories/type";
+import {
+  DeleteCategory,
+  DeleteCategoryHandleProps,
+} from "@/pages/Dashbroad/Categories/type";
 
 interface DeleteCategoryProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setselectedDeleteId: React.Dispatch<React.SetStateAction<DeleteCategory>>;
 }
-const DeleteCategoryDialog: React.FC<DeleteCategoryProps> = ({
-  open,
-  setOpen,
-  setselectedDeleteId,
-}) => {
+
+const DeleteCategoryDialog = React.forwardRef<
+  DeleteCategoryHandleProps,
+  DeleteCategoryProps
+>(({ setselectedDeleteId }, ref) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+
   const handleClose = () => {
     setOpen(false);
   };
+
+  React.useImperativeHandle(ref, () => ({
+    openModal: () => setOpen(true),
+  }));
 
   return (
     <React.Fragment>
@@ -50,6 +57,6 @@ const DeleteCategoryDialog: React.FC<DeleteCategoryProps> = ({
       </Dialog>
     </React.Fragment>
   );
-};
+});
 
 export default DeleteCategoryDialog;

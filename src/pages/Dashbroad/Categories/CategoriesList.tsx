@@ -38,7 +38,12 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 
 // type
-import { CategoriesProps, DeleteCategory, Order } from "./type";
+import {
+  CategoriesProps,
+  DeleteCategory,
+  DeleteCategoryHandleProps,
+  Order,
+} from "./type";
 
 // utils
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
@@ -53,52 +58,34 @@ export default function CategoriesList() {
     selected,
     handleSlectedItem,
     handleSelectAllClick,
-    // handleClearSelected,
+    handleClearSelected,
   } = useSelectedItem();
   const [dense] = React.useState(false);
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
   const theme = useTheme();
 
+  const modalRef = React.useRef<DeleteCategoryHandleProps | null>(null);
+  const pageRef = React.useRef<number | undefined>(undefined);
+
   const [selectedDeleteId, setselectedDeleteId] =
     React.useState<DeleteCategory>({
       id: "",
       loading: false,
     });
-  const [open, setOpen] = React.useState<boolean>(false);
+
   // get searchText from hooks
   const { searchText, page } = useSearchQuery();
 
+  React.useEffect(() => {
+    if (pageRef.current !== page) {
+      handleClearSelected();
+      pageRef.current = page;
+    }
+  }, [handleClearSelected, page]);
+
   const navigate = useNavigate();
   const [data, setData] = React.useState<CategoriesProps[]>([]);
-
-  // const sortData = (
-  //   data: CategoriesProps[],
-  //   order: "asc" | "desc",
-  //   orderBy: keyof CategoriesProps
-  // ) => {
-  //   return data.sort((a, b) => {
-  //     let comparisonResult: number;
-  //     if (orderBy === "name" || orderBy === "price_type") {
-  //       const normalizedA = a[orderBy].toLowerCase().trim();
-  //       const normalizedB = b[orderBy].toLowerCase().trim();
-  //       comparisonResult = normalizedA.localeCompare(normalizedB);
-  //       if (normalizedA === normalizedB) {
-  //         comparisonResult = 0;
-  //       } else {
-  //         comparisonResult = normalizedA.localeCompare(normalizedB);
-  //       }
-  //     } else if (orderBy === "created_at") {
-  //       const dateA = Date.parse(a[orderBy]);
-  //       const dateB = Date.parse(b[orderBy]);
-  //       comparisonResult = dateA - dateB;
-  //     } else {
-  //       comparisonResult =
-  //         (parseInt(a[orderBy]) || 0) - (parseInt(b[orderBy]) || 0);
-  //     }
-  //     return order === "asc" ? comparisonResult : -comparisonResult;
-  //   });
-  // };
 
   // fetch data with clean up function
   // React.useEffect(() => {
@@ -182,8 +169,6 @@ export default function CategoriesList() {
     setselectedDeleteId((prev) => ({ ...prev, id: id }));
   };
 
-  console.log("searchText: ", searchText, "page:", page);
-
   if (totalCategory > 0 && page) {
     // check totalCategory vs page
     if (page > Math.ceil(totalCategory / rowsPerPage)) {
@@ -191,6 +176,9 @@ export default function CategoriesList() {
     }
   }
 
+  const handleOpenModal = () => {
+    modalRef.current?.openModal();
+  };
   const sortedData = sortData(data, "desc", "created_at");
   return (
     <Box sx={{ width: "100%" }}>
@@ -298,7 +286,7 @@ export default function CategoriesList() {
                           onClick={(event) => {
                             event.stopPropagation();
                             handleDeleteCategory(row.id.toString());
-                            setOpen(true);
+                            handleOpenModal();
                           }}
                         >
                           <RiDeleteBinLine />
@@ -316,8 +304,7 @@ export default function CategoriesList() {
           rowsPerPage={rowsPerPage}
         />
         <DeleteCategoryDialog
-          open={open}
-          setOpen={setOpen}
+          ref={modalRef}
           setselectedDeleteId={setselectedDeleteId}
         />
       </Paper>

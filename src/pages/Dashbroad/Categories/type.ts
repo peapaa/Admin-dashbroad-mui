@@ -58,3 +58,7 @@ export interface EnhancedTableProps {
 export interface GenericData {
   id: string;
 }
+
+export interface DeleteCategoryHandleProps {
+  openModal: () => void;
+}

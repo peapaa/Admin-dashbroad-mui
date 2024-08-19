@@ -30,7 +30,6 @@ const EditCategory = () => {
   const { url } = useGetUrlCategory();
   const { mutate } = useSWRConfig();
   const { searchText, page } = useSearchQuery();
-  console.log("searchText: ", searchText, "page:", page);
   const [data, setData] = useState<DataCategory>({
     image: [],
     name: "",
@@ -80,7 +79,6 @@ const EditCategory = () => {
         if (id) {
           const formData = formDataCategory(data);
           await editCategory(formData, id);
-
           // await mutate(url, async () => {
           //   await getAllCategories(url);
           // });
