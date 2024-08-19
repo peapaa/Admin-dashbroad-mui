@@ -71,3 +71,10 @@ export const editCategory = async (formData: FormData, id: string) => {
   );
   return response;
 };
+
+export const deleteSelectedMutilpleCategories = async (id: string[]) => {
+  const response = await axiosInstance.delete(
+    `/api/cms/material_categories/bulk/${id}`
+  );
+  return response;
+};

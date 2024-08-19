@@ -13,7 +13,9 @@ import {
 } from "@/pages/Dashbroad/Categories/type";
 
 interface DeleteCategoryProps {
-  setselectedDeleteId: React.Dispatch<React.SetStateAction<DeleteCategory>>;
+  setselectedDeleteId: React.Dispatch<
+    React.SetStateAction<DeleteCategory<string>>
+  >;
 }
 
 const DeleteCategoryDialog = React.forwardRef<

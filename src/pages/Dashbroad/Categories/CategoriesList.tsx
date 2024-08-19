@@ -26,6 +26,7 @@ import NotFound from "@/components/NotFound";
 //services
 import {
   deleteOneCategories,
+  deleteSelectedMutilpleCategories,
   getAllCategories,
 } from "@/services/materialCategories";
 
@@ -54,36 +55,25 @@ export default function CategoriesList() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] =
     React.useState<keyof CategoriesProps>("created_at");
-  const {
-    selected,
-    handleSlectedItem,
-    handleSelectAllClick,
-    handleClearSelected,
-  } = useSelectedItem();
-  const [dense] = React.useState(false);
+  const { selected, handleSlectedItem, handleSelectAllClick, setSelected } =
+    useSelectedItem();
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
+
   const theme = useTheme();
 
   const modalRef = React.useRef<DeleteCategoryHandleProps | null>(null);
-  const pageRef = React.useRef<number | undefined>(undefined);
-
-  const [selectedDeleteId, setselectedDeleteId] =
-    React.useState<DeleteCategory>({
-      id: "",
-      loading: false,
-    });
+  const [loadingDeleteCategoies, setLoadingDeleteCategoies] =
+    React.useState<boolean>(false);
+  const [selectedDeleteId, setselectedDeleteId] = React.useState<
+    DeleteCategory<string>
+  >({
+    id: "",
+    loading: false,
+  });
 
   // get searchText from hooks
   const { searchText, page } = useSearchQuery();
-
-  React.useEffect(() => {
-    if (pageRef.current !== page) {
-      handleClearSelected();
-      pageRef.current = page;
-    }
-  }, [handleClearSelected, page]);
-
   const navigate = useNavigate();
   const [data, setData] = React.useState<CategoriesProps[]>([]);
 
@@ -128,8 +118,9 @@ export default function CategoriesList() {
     if (categoriesData) {
       setData(categoriesData.results);
       setTotalCategory(categoriesData.count);
+      setSelected([]);
     }
-  }, [categoriesData, setTotalCategory]);
+  }, [categoriesData, setSelected, setTotalCategory]);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -169,6 +160,29 @@ export default function CategoriesList() {
     setselectedDeleteId((prev) => ({ ...prev, id: id }));
   };
 
+  // delete multiple categories
+  React.useEffect(() => {
+    const handleDeleteSelectedRecord = async (id: string[]) => {
+      console.log("id", id);
+      console.log("loadingDeleteCategoies", loadingDeleteCategoies);
+      if (id.length === 0) return;
+      try {
+        console.log("delete selected", selected);
+        await deleteSelectedMutilpleCategories(id);
+        mutate(url);
+        toast.success("Delete multiple category susscess!");
+      } catch (err) {
+        console.error(err);
+        toast.error("Delete multiple category false!");
+      } finally {
+        setLoadingDeleteCategoies(false);
+      }
+    };
+    if (loadingDeleteCategoies) {
+      handleDeleteSelectedRecord(selected);
+    }
+  }, [loadingDeleteCategoies, selected, url]);
+
   if (totalCategory > 0 && page) {
     // check totalCategory vs page
     if (page > Math.ceil(totalCategory / rowsPerPage)) {
@@ -179,12 +193,13 @@ export default function CategoriesList() {
   const handleOpenModal = () => {
     modalRef.current?.openModal();
   };
+
   const sortedData = sortData(data, "desc", "created_at");
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
-          <Table aria-labelledby="tableTitle" size={dense ? "small" : "medium"}>
+          <Table aria-labelledby="tableTitle">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -194,6 +209,7 @@ export default function CategoriesList() {
               rowCount={data.length}
               selected={selected}
               headCells={headCellCategory}
+              setLoadingDeleteCategoies={setLoadingDeleteCategoies}
             />
             <TableBody>
               {sortedData.map((row, index) => {

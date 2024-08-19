@@ -28,16 +28,13 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
     rowCount,
     selected,
     headCells,
+    setLoadingDeleteCategoies,
   } = props;
 
   const createSortHandler = (property: keyof CategoriesProps) => {
     return (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
-  };
-
-  const handleDeleteSelectedRecord = () => {
-    console.log("delete selected", selected);
   };
 
   return (
@@ -66,7 +63,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
             {numSelected > 0 && (
               <Button
                 variant="contained"
-                onClick={() => handleDeleteSelectedRecord()}
+                onClick={() => setLoadingDeleteCategoies(true)}
               >
                 Delete record
               </Button>

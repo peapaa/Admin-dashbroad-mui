@@ -36,14 +36,11 @@ const useSelectedItem = () => {
     }
   };
 
-  const handleClearSelected = () => {
-    setSelected([]);
-  };
   return {
     selected,
     handleSlectedItem,
     handleSelectAllClick,
-    handleClearSelected,
+    setSelected,
   };
 };
 

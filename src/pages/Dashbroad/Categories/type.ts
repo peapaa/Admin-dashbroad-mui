@@ -6,7 +6,7 @@ export interface DataCategory {
   price_type: string;
 }
 
-export interface DeleteCategory<T = string> {
+export interface DeleteCategory<T> {
   id: T;
   loading: boolean;
 }
@@ -53,6 +53,7 @@ export interface EnhancedTableProps {
   rowCount: number;
   selected: string[];
   headCells: HeadCell[];
+  setLoadingDeleteCategoies: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface GenericData {
