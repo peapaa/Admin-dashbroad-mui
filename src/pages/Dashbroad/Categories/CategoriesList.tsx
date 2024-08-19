@@ -21,6 +21,7 @@ import { useTheme } from "@mui/material/styles";
 import CustomTablePagination from "@/components/CustomTablePagination";
 import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
 import EnhancedTableHead from "@/components/EnhancedTableHead";
+import NotFound from "@/components/NotFound";
 
 //services
 import {
@@ -141,7 +142,7 @@ export default function CategoriesList() {
       setData(categoriesData.results);
       setTotalCategory(categoriesData.count);
     }
-  }, [categoriesData]);
+  }, [categoriesData, setTotalCategory]);
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -182,6 +183,13 @@ export default function CategoriesList() {
   };
 
   console.log("searchText: ", searchText, "page:", page);
+
+  if (totalCategory > 0 && page) {
+    // check totalCategory vs page
+    if (page > Math.ceil(totalCategory / rowsPerPage)) {
+      return <NotFound />;
+    }
+  }
 
   const sortedData = sortData(data, "desc", "created_at");
   return (

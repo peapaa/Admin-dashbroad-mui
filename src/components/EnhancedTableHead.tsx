@@ -36,6 +36,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
     };
   };
 
+  console.log("selected", selected);
   const handleDeleteSelectedRecord = () => {
     console.log("delete selected", selected);
   };
@@ -59,6 +60,9 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
                 }}
               />
               <ExpandMore className="cursor-pointer" />
+              {selected.length > 0 ? (
+                <span>{selected.length} selected</span>
+              ) : null}
             </span>
             {numSelected > 0 && (
               <Button

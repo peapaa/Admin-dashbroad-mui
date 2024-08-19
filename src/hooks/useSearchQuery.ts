@@ -1,41 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const useSearchQuery = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState<string>("");
-
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const searchQuery = queryParams.get("search") || "";
+    const searchQuery = searchParams.get("search") || "";
     setSearchText(searchQuery);
-  }, [location.search]);
+  }, [searchParams]);
 
-  const queryPageParams = new URLSearchParams(location.search);
-  let page = parseInt(queryPageParams.get("page") || "1", 10);
+  let page = parseInt(searchParams.get("page") || "1", 10);
 
   if (page < 1) {
     page = 1;
-    queryPageParams.set("page", "1");
-    navigate(`${location.pathname}?${queryPageParams.toString()}`, {
-      replace: true,
-    });
+    searchParams.set("page", "1");
+    setSearchParams(searchParams);
   }
 
   const handleNextPage = () => {
-    queryPageParams.set("page", `${page + 1}`);
-    navigate(`${location.pathname}?${queryPageParams.toString()}`, {
-      replace: true,
-    });
+    searchParams.set("page", `${page + 1}`);
+    setSearchParams(searchParams);
   };
 
   const handlePrevPage = () => {
     if (page > 0) {
-      queryPageParams.set("page", `${page - 1}`);
-      navigate(`${location.pathname}?${queryPageParams.toString()}`, {
-        replace: true,
-      });
+      searchParams.set("page", `${page - 1}`);
+      setSearchParams(searchParams);
     }
   };
 
@@ -45,15 +35,13 @@ const useSearchQuery = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      const newSearchParams = new URLSearchParams(location.search);
       if (searchText.trim() === "") {
-        newSearchParams.delete("search");
+        searchParams.delete("search");
       } else {
-        newSearchParams.set("search", searchText.trim());
-        newSearchParams.set("page", "1"); // enter push page = 0 to url
+        searchParams.set("search", searchText.trim());
+        searchParams.set("page", "1"); // enter push page = 0 to url
       }
-
-      navigate(`${location.pathname}?${newSearchParams.toString()}`);
+      setSearchParams(searchParams);
     }
   };
   return {
@@ -63,6 +51,9 @@ const useSearchQuery = () => {
     handleNextPage,
     handlePrevPage,
     page,
+    // rowsPerPage,
+    // totalCategory,
+    // setTotalCategory,
   };
 };
 
