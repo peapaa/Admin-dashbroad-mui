@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // yup
-import { createCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 // service
 import { createCategories } from "@/services/materialCategories";
@@ -23,6 +21,8 @@ import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
 
 // utils
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
+import { createCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -52,6 +52,7 @@ const CreateCategory = () => {
     const handleSubmitForm = async (data: DataCategory) => {
       try {
         const formData = formDataCategory(data);
+        console.log("formData", formData);
         await createCategories(formData);
         toast.success("Add category suscess!");
         navigate("/admin/resources/categories");
@@ -70,6 +71,7 @@ const CreateCategory = () => {
   }, [loading, data, navigate, reset, url, mutate]);
 
   const onSubmit = (data: DataCategory) => {
+    console.log("submit");
     setData(data);
     setLoading(true);
   };
@@ -78,10 +80,15 @@ const CreateCategory = () => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
       setData((prev) => ({
         ...prev,
         image: [file],
+      }));
+      reader.readAsDataURL(file);
+    } else if (!file && data.image && data.image?.length > 0) {
+      setData((prev) => ({
+        ...prev,
+        image: [],
       }));
     }
   };

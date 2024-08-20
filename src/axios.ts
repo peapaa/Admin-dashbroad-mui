@@ -86,6 +86,10 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
       }
     }
+    if (error.response.status === 400) {
+      console.error("Bad request:", error.response.data);
+      return Promise.reject(error);
+    }
 
     return error.response;
   }
