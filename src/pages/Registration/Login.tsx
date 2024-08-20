@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import AuthContext from "../../context/AuthContext";
-import { toast } from "react-toastify";
-import { login } from "../../services/authService";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as yup from "yup";
+import AuthContext from "../../context/AuthContext";
+import { login } from "../../services/authService";
 
 // create schema
 const schema = yup
@@ -48,6 +48,10 @@ const Login: React.FC = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const location = useLocation();
+  console.log("location", location);
+
+  const from = location?.state?.from?.pathname || "/admin/resources/categories";
 
   useEffect(() => {
     const handleLogin = async (data: UserLogin) => {
@@ -66,7 +70,7 @@ const Login: React.FC = () => {
 
       if (checkLogin.status === 200) {
         toast.success("Login successful!");
-        navigate("/admin/resources/categories");
+        navigate(from, { replace: true });
       } else {
         toast.error(checkLogin.data.detail);
       }
@@ -74,7 +78,7 @@ const Login: React.FC = () => {
     if (loader) {
       handleLogin(data);
     }
-  }, [loader, data, navigate, setToken]);
+  }, [loader, data, navigate, setToken, from]);
 
   // submit of react-hook-form
   const onSubmit = (data: UserLogin) => {

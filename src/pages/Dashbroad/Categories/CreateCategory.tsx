@@ -44,6 +44,7 @@ const CreateCategory = () => {
     price_type: "",
   });
 
+  console.log("errors", errors);
   // get key url category
   const { url } = useGetUrlCategory();
 
@@ -80,11 +81,13 @@ const CreateCategory = () => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      setData((prev) => ({
-        ...prev,
-        image: [file],
-      }));
       reader.readAsDataURL(file);
+      reader.onload = () => {
+        setData((prev) => ({
+          ...prev,
+          image: [file],
+        }));
+      };
     } else if (!file && data.image && data.image?.length > 0) {
       setData((prev) => ({
         ...prev,

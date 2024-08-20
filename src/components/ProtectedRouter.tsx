@@ -1,5 +1,5 @@
 import { ReactNode, useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 // context
 import AuthContext from "@/context/AuthContext";
@@ -9,6 +9,8 @@ interface protectedRouter {
 }
 const ProtectedRouter: React.FC<protectedRouter> = ({ children }) => {
   const authContext = useContext(AuthContext);
+  const location = useLocation();
+  console.log("location", location.pathname);
   if (!authContext) {
     return null;
   }
@@ -17,7 +19,7 @@ const ProtectedRouter: React.FC<protectedRouter> = ({ children }) => {
   if (token) {
     return children;
   } else {
-    return <Navigate to={"/login"} />;
+    return <Navigate to={"/login"} state={{ from: location }} replace />;
   }
 };
 
