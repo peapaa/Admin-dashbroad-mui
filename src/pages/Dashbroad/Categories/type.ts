@@ -53,7 +53,7 @@ export interface EnhancedTableProps {
   rowCount: number;
   selected: string[];
   headCells: HeadCell[];
-  setLoadingDeleteCategoies: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenModal: () => void;
 }
 
 export interface GenericData {

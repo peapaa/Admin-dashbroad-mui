@@ -47,6 +47,7 @@ const CreateCategory = () => {
   // get key url category
   const { url } = useGetUrlCategory();
 
+  console.log("data upload", data);
   useEffect(() => {
     const handleSubmitForm = async (data: DataCategory) => {
       try {

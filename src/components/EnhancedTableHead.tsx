@@ -28,7 +28,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
     rowCount,
     selected,
     headCells,
-    setLoadingDeleteCategoies,
+    handleOpenModal,
   } = props;
 
   const createSortHandler = (property: keyof CategoriesProps) => {
@@ -61,10 +61,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
               ) : null}
             </span>
             {numSelected > 0 && (
-              <Button
-                variant="contained"
-                onClick={() => setLoadingDeleteCategoies(true)}
-              >
+              <Button variant="contained" onClick={() => handleOpenModal()}>
                 Delete record
               </Button>
             )}

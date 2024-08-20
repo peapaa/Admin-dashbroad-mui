@@ -57,12 +57,17 @@ export default function CategoriesList() {
     React.useState<keyof CategoriesProps>("created_at");
   const { selected, handleSlectedItem, handleSelectAllClick, setSelected } =
     useSelectedItem();
+
   const [rowsPerPage] = React.useState(5);
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
 
   const theme = useTheme();
 
+  //ref
   const modalRef = React.useRef<DeleteCategoryHandleProps | null>(null);
+  const modalRefDeleteCategories =
+    React.useRef<DeleteCategoryHandleProps | null>(null);
+
   const [loadingDeleteCategoies, setLoadingDeleteCategoies] =
     React.useState<boolean>(false);
   const [selectedDeleteId, setselectedDeleteId] = React.useState<
@@ -163,17 +168,14 @@ export default function CategoriesList() {
   // delete multiple categories
   React.useEffect(() => {
     const handleDeleteSelectedRecord = async (id: string[]) => {
-      console.log("id", id);
-      console.log("loadingDeleteCategoies", loadingDeleteCategoies);
       if (id.length === 0) return;
       try {
-        console.log("delete selected", selected);
         await deleteSelectedMutilpleCategories(id);
         mutate(url);
-        toast.success("Delete multiple category susscess!");
+        toast.success(`Delete ${selected.length} category susscess!`);
       } catch (err) {
         console.error(err);
-        toast.error("Delete multiple category false!");
+        toast.error("Delete list category false!");
       } finally {
         setLoadingDeleteCategoies(false);
       }
@@ -182,6 +184,14 @@ export default function CategoriesList() {
       handleDeleteSelectedRecord(selected);
     }
   }, [loadingDeleteCategoies, selected, url]);
+
+  const handleClickDeleteOneCategory = () => {
+    setselectedDeleteId((prev) => ({ ...prev, loading: true }));
+  };
+
+  const handleClickDeleteCategories = () => {
+    setLoadingDeleteCategoies(true);
+  };
 
   if (totalCategory > 0 && page) {
     // check totalCategory vs page
@@ -192,6 +202,10 @@ export default function CategoriesList() {
 
   const handleOpenModal = () => {
     modalRef.current?.openModal();
+  };
+
+  const handleOpenModalDeleteCategories = () => {
+    modalRefDeleteCategories.current?.openModal();
   };
 
   const sortedData = sortData(data, "desc", "created_at");
@@ -209,7 +223,7 @@ export default function CategoriesList() {
               rowCount={data.length}
               selected={selected}
               headCells={headCellCategory}
-              setLoadingDeleteCategoies={setLoadingDeleteCategoies}
+              handleOpenModal={handleOpenModalDeleteCategories}
             />
             <TableBody>
               {sortedData.map((row, index) => {
@@ -321,7 +335,13 @@ export default function CategoriesList() {
         />
         <DeleteCategoryDialog
           ref={modalRef}
-          setselectedDeleteId={setselectedDeleteId}
+          handleClickDeleteCategory={handleClickDeleteOneCategory}
+          content=" You want to delete category ?"
+        />
+        <DeleteCategoryDialog
+          ref={modalRefDeleteCategories}
+          handleClickDeleteCategory={handleClickDeleteCategories}
+          content={`You want to delete ${selected.length} category ?`}
         />
       </Paper>
     </Box>

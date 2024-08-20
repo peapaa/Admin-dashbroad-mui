@@ -7,21 +7,18 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 
 //type
-import {
-  DeleteCategory,
-  DeleteCategoryHandleProps,
-} from "@/pages/Dashbroad/Categories/type";
+import { DeleteCategoryHandleProps } from "@/pages/Dashbroad/Categories/type";
+import { DialogContent } from "@mui/material";
 
 interface DeleteCategoryProps {
-  setselectedDeleteId: React.Dispatch<
-    React.SetStateAction<DeleteCategory<string>>
-  >;
+  handleClickDeleteCategory: () => void;
+  content: string;
 }
 
 const DeleteCategoryDialog = React.forwardRef<
   DeleteCategoryHandleProps,
   DeleteCategoryProps
->(({ setselectedDeleteId }, ref) => {
+>(({ handleClickDeleteCategory, content }, ref) => {
   const [open, setOpen] = React.useState<boolean>(false);
 
   const handleClose = () => {
@@ -40,18 +37,22 @@ const DeleteCategoryDialog = React.forwardRef<
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {" You want to delete category ?"}
-        </DialogTitle>
-
+        <DialogTitle id="alert-dialog-title">{"Delete category"}</DialogTitle>
+        <DialogContent>{content}</DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleClose}
+            className="hover:!bg-blue-300 hover:text-black"
+          >
+            Cancel
+          </Button>
           <Button
             onClick={() => {
-              setselectedDeleteId((prev) => ({ ...prev, loading: true }));
+              handleClickDeleteCategory();
               handleClose();
             }}
             autoFocus
+            className="hover:!bg-red-400 hover:text-black"
           >
             Delete
           </Button>
