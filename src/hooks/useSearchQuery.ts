@@ -11,6 +11,10 @@ const useSearchQuery = () => {
 
   let page = parseInt(searchParams.get("page") || "1", 10);
 
+  if (isNaN(page)) {
+    page = 1;
+  }
+
   if (page < 1) {
     page = 1;
     searchParams.set("page", "1");
@@ -51,9 +55,6 @@ const useSearchQuery = () => {
     handleNextPage,
     handlePrevPage,
     page,
-    // rowsPerPage,
-    // totalCategory,
-    // setTotalCategory,
   };
 };
 

@@ -1,5 +1,3 @@
-import { FieldErrors, UseFormRegister } from "react-hook-form";
-
 export interface DataCategory {
   image?: File[];
   name: string;
@@ -27,16 +25,22 @@ export interface HeadCell {
 }
 
 export interface InputImageProps {
-  image: string | null;
-  data: DataCategory;
-  errors: FieldErrors<DataCategory>;
-  register: UseFormRegister<DataCategory>;
-  handleChangeImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value: File[] | undefined;
+  error: string | undefined;
+  onChange: (value: File[] | undefined) => void;
+  imageUrl?: string | null;
 }
 
 export interface InputTextProps {
-  errors: FieldErrors<DataCategory>;
-  register: UseFormRegister<DataCategory>;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string | undefined;
+}
+
+export interface SelectOptionProps {
+  value: string;
+  onChange: (value: string) => void;
+  error?: string | undefined;
 }
 
 export type Order = "asc" | "desc";

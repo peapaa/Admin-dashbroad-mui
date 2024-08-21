@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+// mui
+import { Button } from "@mui/material";
+
 // yup
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // service
 import { createCategories } from "@/services/materialCategories";
@@ -11,48 +15,37 @@ import { createCategories } from "@/services/materialCategories";
 // type
 import { DataCategory } from "@/pages/Dashbroad/Categories/type";
 
-// swr
-import { useSWRConfig } from "swr";
-
 //page
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
 import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
 
 // utils
-import { useGetUrlCategory } from "@/hooks/useKeyCategory";
+import SelectOption from "@/pages/Dashbroad/Categories/components/Select/SelectOption";
 import { createCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
-import { yupResolver } from "@hookform/resolvers/yup";
 
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { mutate } = useSWRConfig();
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<DataCategory>({
     resolver: yupResolver(createCategoryschema),
+    defaultValues: {
+      image: [],
+      name: "",
+      price_type: "per_metter",
+    },
   });
 
-  const [data, setData] = useState<DataCategory>({
-    image: [],
-    name: "",
-    price_type: "",
-  });
-
-  // get key url category
-  const { url } = useGetUrlCategory();
-
-  console.log("data upload", data);
-  useEffect(() => {
-    const handleSubmitForm = async (data: DataCategory) => {
+  const onSubmit = useCallback(
+    async (data: DataCategory) => {
       try {
         const formData = formDataCategory(data);
-        console.log("formData", formData);
         await createCategories(formData);
         toast.success("Add category suscess!");
         navigate("/admin/resources/categories");
@@ -63,52 +56,88 @@ const CreateCategory = () => {
       } finally {
         setLoading(false);
       }
-    };
+    },
+    [navigate, reset]
+  );
 
+  useEffect(() => {
     if (loading) {
-      handleSubmitForm(data);
+      handleSubmit(onSubmit)();
     }
-  }, [loading, data, navigate, reset, url, mutate]);
-
-  const onSubmit = (data: DataCategory) => {
-    console.log("submit");
-    setData(data);
-    setLoading(true);
-  };
-
-  const handleChangeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setData((prev) => ({
-          ...prev,
-          image: [file],
-        }));
-      };
-    } else if (!file && data.image && data.image?.length > 0) {
-      setData((prev) => ({
-        ...prev,
-        image: [],
-      }));
-    }
-  };
+  }, [handleSubmit, loading, onSubmit]);
 
   return (
     <div className="bg-white w-full rounded-md p-5 ">
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          e.preventDefault();
+          setLoading(true);
+        }}
         className="flex gap-10 h-[400px] items-center justify-center"
       >
-        <InputImage
-          data={data}
-          image=""
-          register={register}
-          handleChangeImage={handleChangeImage}
-          errors={errors}
+        <Controller
+          control={control}
+          name="image"
+          render={({ field: { onChange, value } }) => {
+            return (
+              <InputImage
+                value={value as File[] | undefined}
+                onChange={onChange}
+                error={errors.image?.message}
+              />
+            );
+          }}
         />
-        <InputText register={register} errors={errors} />
+        <div className="flex flex-col items-center justify-center gap-5">
+          <div className=" flex flex-col gap-5 items-center justify-center shadow-shadowCategory px-20 py-10 rounded-md">
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <InputText
+                    value={value as string}
+                    onChange={onChange}
+                    error={errors.name?.message}
+                  />
+                );
+              }}
+            />
+            <Controller
+              control={control}
+              name="price_type"
+              render={({ field: { onChange, value } }) => {
+                return (
+                  <SelectOption
+                    value={value as string}
+                    onChange={onChange}
+                    error={errors.price_type?.message}
+                  />
+                );
+              }}
+            />
+          </div>
+          <div className=" flex items-center justify-center gap-5 ">
+            <Button
+              className="mt-20 w-40"
+              type="button"
+              style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              Back
+            </Button>
+            <Button
+              className="mt-20 w-40"
+              variant="contained"
+              type="submit"
+              disabled={loading}
+            >
+              Submit
+            </Button>
+          </div>
+        </div>
       </form>
     </div>
   );
