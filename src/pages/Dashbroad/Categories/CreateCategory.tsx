@@ -44,7 +44,6 @@ const CreateCategory = () => {
     price_type: "",
   });
 
-  console.log("errors", errors);
   // get key url category
   const { url } = useGetUrlCategory();
 

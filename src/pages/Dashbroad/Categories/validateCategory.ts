@@ -29,7 +29,6 @@ const imageCreateCategorySchema = Yup.mixed()
   .test("is-required-or-exists", "Required image", function (value) {
     const { createError } = this;
     const files = value as File[];
-    console.log("Files in validation:", files);
     if (!files || files.length === 0) {
       return createError({ message: "Required image" });
     }

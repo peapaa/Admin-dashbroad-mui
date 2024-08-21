@@ -52,6 +52,7 @@ const EditCategory = () => {
         if (id) {
           const response = await getOneCategory(id);
           const { name, image, price_type } = response.data;
+          console.log("response.data", response.data);
           setValue("name", name);
           setValue("price_type", price_type); // image not required --> dont setValue to form
           setNewImage(image);

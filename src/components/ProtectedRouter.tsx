@@ -10,7 +10,7 @@ interface protectedRouter {
 const ProtectedRouter: React.FC<protectedRouter> = ({ children }) => {
   const authContext = useContext(AuthContext);
   const location = useLocation();
-  console.log("location", location.pathname);
+
   if (!authContext) {
     return null;
   }
