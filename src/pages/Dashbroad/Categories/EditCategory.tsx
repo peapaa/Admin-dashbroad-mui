@@ -15,7 +15,7 @@ import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategor
 
 // service
 import SelectOption from "@/pages/Dashbroad/Categories/components/Select/SelectOption";
-import { editCategory, getOneCategory } from "@/services/materialCategories";
+import { editCategory, getOneCategory } from "@/services/categoriesService";
 import { Button } from "@mui/material";
 
 const EditCategory = () => {

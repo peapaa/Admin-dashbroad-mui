@@ -50,7 +50,12 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalConfig = error.config;
 
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data.messages[0].token_type === "access"
+      // check type of refresh token
+    ) {
       try {
         const tokenString = localStorage.getItem("token");
         const token = tokenString ? JSON.parse(tokenString) : null;
@@ -86,12 +91,7 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
       }
     }
-    if (error.response.status === 400) {
-      console.error("Bad request:", error.response.data);
-      return Promise.reject(error);
-    }
-
-    return error.response;
+    return Promise.reject(error);
   }
 );
 

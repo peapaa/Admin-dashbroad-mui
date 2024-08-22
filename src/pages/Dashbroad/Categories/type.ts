@@ -13,15 +13,20 @@ export interface CategoriesProps {
   id: string;
   name: string;
   image: string;
-  price_type: string;
-  created_at: string;
+  price_type?: string;
+  created_at?: string;
+  part_number?: string;
+  type?: string;
+  large_title?: string;
+  category?: string;
+  small_title?: string;
+  basic_price?: string;
+  supplier_name?: string;
 }
 
 export interface HeadCell {
-  disablePadding: boolean;
   id: keyof CategoriesProps;
   label: string;
-  numeric: boolean;
 }
 
 export interface InputImageProps {

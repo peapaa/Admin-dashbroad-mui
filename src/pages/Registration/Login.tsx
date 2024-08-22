@@ -49,7 +49,6 @@ const Login: React.FC = () => {
     resolver: yupResolver(schema),
   });
   const location = useLocation();
-  console.log("location", location);
 
   const from = location?.state?.from?.pathname || "/admin/resources/categories";
 

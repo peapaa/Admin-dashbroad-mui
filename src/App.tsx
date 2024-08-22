@@ -9,6 +9,7 @@ import Address from "@/pages/Dashbroad/Address/Address";
 import Categories from "@/pages/Dashbroad/Categories/Categories";
 import Dashbroad from "@/pages/Dashbroad/Dashbroad";
 import Main from "@/pages/Dashbroad/Main/Main";
+import MarterialCategories from "@/pages/Dashbroad/MaterialCategories/MarterialCategories";
 import Posts from "@/pages/Dashbroad/Posts/Posts";
 import Purchars from "@/pages/Dashbroad/Purchars/Purchars";
 import Roles from "@/pages/Dashbroad/Roles/Roles";
@@ -101,6 +102,14 @@ function App() {
               element={
                 <ProtectedRouter>
                   <Categories />
+                </ProtectedRouter>
+              }
+            />
+            <Route
+              path="resources/material-categories/*"
+              element={
+                <ProtectedRouter>
+                  <MarterialCategories />
                 </ProtectedRouter>
               }
             />

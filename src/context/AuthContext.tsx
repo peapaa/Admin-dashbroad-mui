@@ -20,6 +20,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     const getTokenFromLocalStorge = () => {
+      setLoading(true);
       try {
         const tokenString = localStorage.getItem("token");
         const token = tokenString ? JSON.parse(tokenString) : null;

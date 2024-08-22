@@ -10,7 +10,7 @@ import { Button } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 // service
-import { createCategories } from "@/services/materialCategories";
+import { createCategories } from "@/services/categoriesService";
 
 // type
 import { DataCategory } from "@/pages/Dashbroad/Categories/type";

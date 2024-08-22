@@ -4,9 +4,13 @@ import { useSearchParams } from "react-router-dom";
 const useSearchQuery = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState<string>("");
+  const [searchCategory, setSearchCategory] = useState<string>("");
+
   useEffect(() => {
     const searchQuery = searchParams.get("search") || "";
     setSearchText(searchQuery);
+    const searchCategoryQuery = searchParams.get("category") || "";
+    setSearchCategory(searchCategoryQuery);
   }, [searchParams]);
 
   let page = parseInt(searchParams.get("page") || "1", 10);
@@ -35,6 +39,13 @@ const useSearchQuery = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
+    // setSearchCategory(event.target.value);
+  };
+
+  const handleInputChangeCategory = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSearchCategory(event.target.value);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -48,10 +59,28 @@ const useSearchQuery = () => {
       setSearchParams(searchParams);
     }
   };
+
+  const handleKeyDownInputCategory = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter") {
+      if (searchCategory.trim() === "") {
+        searchParams.delete("category");
+      } else {
+        searchParams.set("category", searchCategory.trim());
+        searchParams.set("page", "1"); // enter push page = 0 to url
+      }
+      setSearchParams(searchParams);
+    }
+  };
+
   return {
     searchText,
+    searchCategory,
     handleInputChange,
+    handleInputChangeCategory,
     handleKeyDown,
+    handleKeyDownInputCategory,
     handleNextPage,
     handlePrevPage,
     page,

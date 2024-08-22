@@ -14,17 +14,50 @@ export const resourcesList = [
   { href: "resources/tags", title: "Tags" },
   { href: "resources/users", title: "Users" },
   { href: "resources/categories", title: "Categories" },
+  { href: "resources/material-categories", title: "Material Categories" },
 ];
 
 // headCell category
 export const headCellCategory: HeadCell[] = [
-  { id: "id", numeric: true, disablePadding: false, label: "ID" },
-  { id: "image", numeric: true, disablePadding: false, label: "Avatar" },
-  { id: "name", numeric: false, disablePadding: false, label: "Name" },
+  { id: "id", label: "ID" },
+  { id: "image", label: "Avatar" },
+  { id: "name", label: "Name" },
   {
     id: "price_type",
-    numeric: false,
-    disablePadding: false,
     label: "Price type",
+  },
+];
+
+export const headCellMaterialCategory: HeadCell[] = [
+  { id: "id", label: "ID" },
+  { id: "image", label: "Image" },
+  { id: "name", label: "Name" },
+  {
+    id: "part_number",
+    label: "Part number",
+  },
+  {
+    id: "type",
+    label: "Type",
+  },
+  {
+    id: "category",
+    label: "Category",
+  },
+  {
+    id: "large_title",
+    label: "Large_title",
+  },
+  {
+    id: "small_title",
+    label: "Small title",
+  },
+  {
+    id: "basic_price",
+    label: "Basic Price",
+  },
+  {
+    id: "supplier_name",
+    label: "Supplier Name",
   },
 ];

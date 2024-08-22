@@ -28,7 +28,7 @@ import {
   deleteOneCategories,
   deleteSelectedMutilpleCategories,
   getAllCategories,
-} from "@/services/materialCategories";
+} from "@/services/categoriesService";
 
 // hooks
 import useSearchQuery from "@/hooks/useSearchQuery";
