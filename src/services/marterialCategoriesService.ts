@@ -1,5 +1,10 @@
 import axiosInstance from "@/axios";
 
+export const getAllCategoriesForMaterial = async () => {
+  const response = await axiosInstance.get("/api/cms/material_categories");
+  return response;
+};
+
 export const getAllMarterialCategories = async (
   searchText: string,
   searchCategory: string,

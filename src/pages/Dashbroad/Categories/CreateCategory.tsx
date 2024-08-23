@@ -95,11 +95,16 @@ const CreateCategory = () => {
               name="name"
               render={({ field: { onChange, value } }) => {
                 return (
-                  <InputText
-                    value={value as string}
-                    onChange={onChange}
-                    error={errors.name?.message}
-                  />
+                  <div className="flex">
+                    <label htmlFor="name">
+                      Name<span className="text-red-600"> *</span>:
+                    </label>
+                    <InputText
+                      value={value as string}
+                      onChange={onChange}
+                      error={errors.name?.message}
+                    />
+                  </div>
                 );
               }}
             />
@@ -123,7 +128,12 @@ const CreateCategory = () => {
               type="button"
               style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
               onClick={() => {
-                navigate(-1);
+                if (localStorage.getItem("redirectPath")) {
+                  navigate("/admin/resources/categories");
+                  localStorage.removeItem("redirectPath");
+                } else {
+                  navigate(-1);
+                }
               }}
             >
               Back

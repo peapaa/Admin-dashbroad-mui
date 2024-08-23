@@ -116,11 +116,16 @@ const EditCategory = () => {
               name="name"
               render={({ field: { onChange, value } }) => {
                 return (
-                  <InputText
-                    value={value as string}
-                    onChange={onChange}
-                    error={errors.name?.message}
-                  />
+                  <div className="flex">
+                    <label htmlFor="name">
+                      Name<span className="text-red-600"> *</span>:
+                    </label>
+                    <InputText
+                      value={value as string}
+                      onChange={onChange}
+                      error={errors.name?.message}
+                    />
+                  </div>
                 );
               }}
             />

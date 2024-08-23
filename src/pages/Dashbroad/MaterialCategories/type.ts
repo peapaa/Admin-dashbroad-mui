@@ -1,4 +1,4 @@
-export interface MarterialCategoriesProps {
+export interface GetAllMarterialCategoriesProps {
   basic_price: number;
   category: {
     name: string;
@@ -13,4 +13,16 @@ export interface MarterialCategoriesProps {
     name: string;
   };
   type: number;
+}
+
+export interface MarterialCategoriesProps {
+  image: File[];
+  part_number: string;
+  name?: string;
+  type?: string;
+  large_title: string;
+  small_title: string;
+  basic_price: string;
+  category: string;
+  supplier: string;
 }

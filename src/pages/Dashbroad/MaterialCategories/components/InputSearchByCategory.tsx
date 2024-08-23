@@ -7,7 +7,7 @@ import useSearchQuery from "@/hooks/useSearchQuery";
 const InputSearchByCategory = () => {
   const {
     searchCategory,
-    handleInputChangeCategory,
+    // handleInputChangeCategory,
     handleKeyDownInputCategory,
   } = useSearchQuery();
 
@@ -22,7 +22,7 @@ const InputSearchByCategory = () => {
       <InputBase
         placeholder="Search category"
         value={searchCategory}
-        onChange={handleInputChangeCategory}
+        // onChange={handleInputChangeCategory}
         onKeyDown={handleKeyDownInputCategory}
         sx={{
           width: "320px",

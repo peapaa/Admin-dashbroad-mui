@@ -40,6 +40,7 @@ export interface InputTextProps {
   value: string;
   onChange: (value: string) => void;
   error?: string | undefined;
+  placeholder?: string;
 }
 
 export interface SelectOptionProps {

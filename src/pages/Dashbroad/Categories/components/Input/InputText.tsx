@@ -4,9 +4,6 @@ import { InputTextProps } from "@/pages/Dashbroad/Categories/type";
 const InputText: React.FC<InputTextProps> = ({ value, onChange, error }) => {
   return (
     <div className="">
-      <label htmlFor="name">
-        Name<span className="text-red-600"> *</span>:
-      </label>
       <input
         type="text"
         id="name"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const useSearchQuery = () => {
@@ -39,13 +39,15 @@ const useSearchQuery = () => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
-    // setSearchCategory(event.target.value);
   };
 
   const handleInputChangeCategory = (
-    event: React.ChangeEvent<HTMLInputElement>
+    _event: SyntheticEvent<Element, Event>,
+    value: string | null
   ) => {
-    setSearchCategory(event.target.value);
+    if (value !== null) {
+      setSearchCategory(value);
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

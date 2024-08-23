@@ -3,7 +3,7 @@ import EnhancedTableHead from "@/components/EnhancedTableHead";
 import useSearchQuery from "@/hooks/useSearchQuery";
 import useSelectedItem from "@/hooks/useSelectedItem";
 import { CategoriesProps, Order } from "@/pages/Dashbroad/Categories/type";
-import { MarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
+import { GetAllMarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
 import { getAllMarterialCategories } from "@/services/marterialCategoriesService";
 import { headCellMaterialCategory } from "@/utils/data";
 
@@ -31,13 +31,13 @@ const MarterialCategoriesList = () => {
   const navigate = useNavigate();
   const [order] = React.useState<Order>("asc");
   const [orderBy] = React.useState<keyof CategoriesProps>("created_at");
-  const { selected, handleSelectAllClick, handleSlectedItem } =
+  const { selected, setSelected, handleSelectAllClick, handleSlectedItem } =
     useSelectedItem();
   const [totalMarterialCategory, setTotalMarterialCategory] =
     React.useState<number>(0);
   const [rowsPerPage] = React.useState<number>(5);
   const { searchText, searchCategory, page } = useSearchQuery();
-  const [data, setData] = React.useState<MarterialCategoriesProps[]>([]);
+  const [data, setData] = React.useState<GetAllMarterialCategoriesProps[]>([]);
 
   const handleOpenModalDeleteCategories = () => {};
   const handleRequestSort = () => {};
@@ -55,6 +55,7 @@ const MarterialCategoriesList = () => {
         if (!ignore) {
           setData(response.data.results);
           setTotalMarterialCategory(response.data.count);
+          setSelected([]);
         }
       } catch (error) {
         console.log(error);
@@ -64,7 +65,9 @@ const MarterialCategoriesList = () => {
     return () => {
       ignore = true;
     };
-  }, [page, searchCategory, searchText]);
+  }, [page, searchCategory, searchText, setSelected]);
+
+  console.log("marterial", data);
 
   return (
     <Box
@@ -78,9 +81,6 @@ const MarterialCategoriesList = () => {
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer
           sx={{
-            minWidth: "840px",
-            maxWidth: "100%",
-            overflowX: "auto",
             scrollbarWidth: "thin",
             "&::-webkit-scrollbar": {
               height: "8px",
