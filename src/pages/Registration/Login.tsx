@@ -49,29 +49,38 @@ const Login: React.FC = () => {
     resolver: yupResolver(schema),
   });
   const location = useLocation();
-
   const from = location?.state?.from?.pathname || "/admin/resources/categories";
 
   useEffect(() => {
     const handleLogin = async (data: UserLogin) => {
-      const checkLogin = await login(data.email, data.password);
-      setLoader(false);
-      localStorage.setItem(
-        "token",
-        JSON.stringify({
-          access: checkLogin.data.access,
-          refresh: checkLogin.data.refresh,
-        })
-      );
-      if (setToken) {
-        setToken(checkLogin.data.access);
-      }
+      try {
+        const checkLogin = await login(data.email, data.password);
+        localStorage.setItem(
+          "token",
+          JSON.stringify({
+            access: checkLogin.data.access,
+            refresh: checkLogin.data.refresh,
+          })
+        );
 
-      if (checkLogin.status === 200) {
-        toast.success("Login successful!");
-        navigate(from, { replace: true });
-      } else {
-        toast.error(checkLogin.data.detail);
+        if (location?.state?.from?.pathname) {
+          localStorage.setItem("redirectPath", location.state.from.pathname);
+        }
+
+        if (setToken) {
+          setToken(checkLogin.data.access);
+        }
+
+        if (checkLogin.status === 200) {
+          toast.success("Login successful!");
+          navigate(from, { replace: true });
+        } else {
+          toast.error(checkLogin.data.detail);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoader(false);
       }
     };
     if (loader) {

@@ -63,7 +63,12 @@ const EditCategory = () => {
           const formData = formDataCategory(data);
           await editCategory(formData, id);
           toast.success("Edit category suscess!");
-          navigate(-1);
+          if (localStorage.getItem("redirectPath")) {
+            navigate("/admin/resources/categories");
+            localStorage.removeItem("redirectPath");
+          } else {
+            navigate(-1);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -139,7 +144,12 @@ const EditCategory = () => {
               type="button"
               style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
               onClick={() => {
-                navigate(-1);
+                if (localStorage.getItem("redirectPath")) {
+                  navigate("/admin/resources/categories");
+                  localStorage.removeItem("redirectPath");
+                } else {
+                  navigate(-1);
+                }
               }}
             >
               Back
