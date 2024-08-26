@@ -1,47 +1,65 @@
+import { imageCreateCategorySchema } from "@/pages/Dashbroad/Categories/validateCategory";
 import * as Yup from "yup";
 
-const validFileExtensions = {
-  image: ["jpg", "png", "jpeg", "svg"],
-};
+const partNumberSchema = Yup.string()
+  .required("Required part number")
+  .max(100, "Part number can be at most 100 characters")
+  .min(1, "Name must be at least 1 character");
 
-function isValidFileType(fileName: string) {
-  if (!fileName) {
-    return false;
-  }
-  const extension = fileName.split(".").pop() || "";
-  return validFileExtensions.image?.includes(extension) ?? false;
-}
-const MAX_FILE_SIZE = 5; // 5MB
+const nameSchema = Yup.string()
+  .nullable()
+  .max(255, "Name can be at most 100 characters");
 
-const imageCreateCategorySchema = Yup.mixed()
-  .test("is-required-or-exists", "Required image", function (value) {
-    const { createError } = this;
-    const files = value as File[];
-    if (!files || files.length === 0) {
-      return createError({ message: "Required image" });
+const typeSchema = Yup.number()
+  .nullable()
+  .typeError("Type must be a number")
+  .test("is integer", "Type can't include a decimal point", function (value) {
+    if (value) {
+      return Number.isInteger(value);
     }
     return true;
   })
-  .test("is-valid-type", "Not a valid image type", function (value) {
-    const files = value as File[];
-    if (files && files.length > 0) {
-      const file = files[0];
-      const isValid = isValidFileType(file.name.toLowerCase());
-      if (!isValid) {
-        return this.createError({ message: "Not a valid image type" });
-      }
-    }
-    return true;
-  })
+  .max(2147483647, "Type can be at most 2147483647 number")
+  .min(-2147483648, "Type be at least -2147483648 number");
+
+const largeTitleSchema = Yup.string()
+  .required("Required large title")
+  .max(500, "Large titler can be at most 100 characters")
+  .min(1, "Large title can be at most 100 characters");
+
+const smallTitleSchema = Yup.string()
+  .required("Required small title")
+  .max(500, "small title can be at most 100 characters")
+  .min(1, "Smail title can be at most 100 characters");
+
+const basicPriceSchema = Yup.number()
+  .typeError("Basic price must be a number")
+  .required("Required basic price")
+  .max(2147483647, "Basic price can be at most 2147483647 number")
+  .min(0, "Basic price be at least 0 number")
   .test(
-    "is-valid-size",
-    `Max allowed size is ${MAX_FILE_SIZE}MB`,
+    "is integer",
+    "Basic price can't include a decimal point",
     function (value) {
-      const files = value as File[];
-      if (files && files.length > 0) {
-        const file = files[0];
-        return file.size <= MAX_FILE_SIZE * 1024 * 1024;
+      if (value) {
+        return Number.isInteger(value);
       }
-      return this.createError({ message: "Required image" });
+      return true;
     }
   );
+
+const categorySchema = Yup.string().required("Required category");
+
+const supplierSchema = Yup.string().required("Required supplier");
+
+export const createMaterialSchema = Yup.object().shape({
+  image: imageCreateCategorySchema,
+  part_number: partNumberSchema,
+  name: nameSchema,
+  type: typeSchema,
+  large_title: largeTitleSchema,
+  small_title: smallTitleSchema,
+  basic_price: basicPriceSchema,
+  category: categorySchema,
+  supplier: supplierSchema,
+});

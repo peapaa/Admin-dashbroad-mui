@@ -23,6 +23,7 @@ import formDataCategory from "@/pages/Dashbroad/Categories/formDataCategory";
 // utils
 import SelectOption from "@/pages/Dashbroad/Categories/components/Select/SelectOption";
 import { createCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
+import { price_types } from "@/utils/data";
 
 const CreateCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -103,24 +104,32 @@ const CreateCategory = () => {
                       value={value as string}
                       onChange={onChange}
                       error={errors.name?.message}
+                      typeInput="text"
                     />
                   </div>
                 );
               }}
             />
-            <Controller
-              control={control}
-              name="price_type"
-              render={({ field: { onChange, value } }) => {
-                return (
-                  <SelectOption
-                    value={value as string}
-                    onChange={onChange}
-                    error={errors.price_type?.message}
-                  />
-                );
-              }}
-            />
+            <div className="flex items-center justify-center">
+              <label htmlFor="price_type" className="mr-5">
+                Price Type:
+              </label>
+              <Controller
+                control={control}
+                name="price_type"
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <SelectOption
+                      value={value as string}
+                      onChange={onChange}
+                      error={errors.price_type?.message}
+                      optionValues={price_types}
+                      id="price_type"
+                    />
+                  );
+                }}
+              />
+            </div>
           </div>
           <div className=" flex items-center justify-center gap-5 ">
             <Button
@@ -142,7 +151,7 @@ const CreateCategory = () => {
               className="mt-20 w-40"
               variant="contained"
               type="submit"
-              disabled={loading}
+              // disabled={loading}
             >
               Submit
             </Button>

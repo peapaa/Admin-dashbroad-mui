@@ -22,3 +22,12 @@ export const getAllMarterialCategories = async (
   });
   return response;
 };
+
+export const createMaterialCategory = async (formData: FormData) => {
+  const response = await axiosInstance.post("/api/cms/material", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response;
+};

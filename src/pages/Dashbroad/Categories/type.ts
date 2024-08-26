@@ -1,3 +1,5 @@
+import { priceTypesProps } from "@/utils/data";
+
 export interface DataCategory {
   image?: File[];
   name: string;
@@ -41,12 +43,15 @@ export interface InputTextProps {
   onChange: (value: string) => void;
   error?: string | undefined;
   placeholder?: string;
+  typeInput?: string;
 }
 
 export interface SelectOptionProps {
   value: string;
   onChange: (value: string) => void;
   error?: string | undefined;
+  optionValues: priceTypesProps[];
+  id: string;
 }
 
 export type Order = "asc" | "desc";

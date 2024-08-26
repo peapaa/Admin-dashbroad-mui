@@ -1,10 +1,10 @@
 import * as Yup from "yup";
 
-const validFileExtensions = {
+export const validFileExtensions = {
   image: ["jpg", "png", "jpeg", "svg"],
 };
 
-function isValidFileType(fileName: string) {
+export function isValidFileType(fileName: string) {
   if (!fileName) {
     return false;
   }
@@ -14,7 +14,7 @@ function isValidFileType(fileName: string) {
 
 const price_type = ["per_metter", "per_quantity"]; // price type only value
 
-const MAX_FILE_SIZE = 5; // 5MB
+export const MAX_FILE_SIZE = 5; // 5MB
 
 const nameSchema = Yup.string()
   .required("Required category name")
@@ -22,10 +22,10 @@ const nameSchema = Yup.string()
   .min(1, "Name must be at least 1 character");
 
 const priceTypeSchema = Yup.string()
-  .oneOf(price_type, "Invalid price type selected")
-  .required("Price type is required");
+  .required("Price type is required")
+  .oneOf(price_type, "Invalid price type selected");
 
-const imageCreateCategorySchema = Yup.mixed()
+export const imageCreateCategorySchema = Yup.mixed()
   .test("is-required-or-exists", "Required image", function (value) {
     const { createError } = this;
     const files = value as File[];

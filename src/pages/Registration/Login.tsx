@@ -86,7 +86,7 @@ const Login: React.FC = () => {
     if (loader) {
       handleLogin(data);
     }
-  }, [loader, data, navigate, setToken, from]);
+  }, [loader, data, navigate, setToken, from]); // don't add dependencies location.state.from.pathname
 
   // submit of react-hook-form
   const onSubmit = (data: UserLogin) => {

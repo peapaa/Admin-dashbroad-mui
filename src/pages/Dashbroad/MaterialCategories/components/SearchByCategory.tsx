@@ -35,7 +35,7 @@ const SearchByCategory = ({
           height: 40,
           padding: 0,
         },
-        "& .MuiInputLabel-sizeMedium": {
+        "& .MuiInputLabel-root": {
           position: "absolute",
           top: "-6px",
         },

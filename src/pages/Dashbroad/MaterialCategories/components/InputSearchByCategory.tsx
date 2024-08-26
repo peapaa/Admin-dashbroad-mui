@@ -5,11 +5,7 @@ import { Box, InputAdornment, InputBase } from "@mui/material";
 import useSearchQuery from "@/hooks/useSearchQuery";
 
 const InputSearchByCategory = () => {
-  const {
-    searchCategory,
-    // handleInputChangeCategory,
-    handleKeyDownInputCategory,
-  } = useSearchQuery();
+  const { searchCategory, handleKeyDownInputCategory } = useSearchQuery();
 
   return (
     <Box
@@ -22,7 +18,6 @@ const InputSearchByCategory = () => {
       <InputBase
         placeholder="Search category"
         value={searchCategory}
-        // onChange={handleInputChangeCategory}
         onKeyDown={handleKeyDownInputCategory}
         sx={{
           width: "320px",

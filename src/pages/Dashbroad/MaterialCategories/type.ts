@@ -1,3 +1,7 @@
+import { WithCategoriesProps } from "@/hoc/type";
+import { priceTypesProps } from "@/utils/data";
+import { Control, FieldErrors } from "react-hook-form";
+
 export interface GetAllMarterialCategoriesProps {
   basic_price: number;
   category: {
@@ -19,10 +23,25 @@ export interface MarterialCategoriesProps {
   image: File[];
   part_number: string;
   name?: string;
-  type?: string;
+  type?: number;
   large_title: string;
   small_title: string;
-  basic_price: string;
+  basic_price: number;
   category: string;
   supplier: string;
+}
+
+export interface ControllerFormProps {
+  control: Control<MarterialCategoriesProps, unknown>;
+  errors: FieldErrors<MarterialCategoriesProps>;
+  name: string;
+  title: string;
+  typeInput?: string;
+  OptionValues?: priceTypesProps[];
+}
+
+export interface ControllerFormSelectWithCategoriesProps
+  extends WithCategoriesProps {
+  control: Control<MarterialCategoriesProps, unknown>;
+  errorForm: FieldErrors<MarterialCategoriesProps>;
 }

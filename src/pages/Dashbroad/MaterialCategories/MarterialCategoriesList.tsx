@@ -202,12 +202,7 @@ const MarterialCategoriesList = () => {
                           color: theme.palette.textColor?.main,
                         }}
                       >
-                        <span
-                          style={{
-                            backgroundColor: theme.palette.tagColor?.secondary,
-                          }}
-                          className="px-2 py-1 rounded-md"
-                        >
+                        <span className="px-2 py-1 rounded-md">
                           {row.large_title}
                         </span>
                       </Typography>
@@ -219,12 +214,7 @@ const MarterialCategoriesList = () => {
                           width: "100px",
                         }}
                       >
-                        <span
-                          style={{
-                            backgroundColor: theme.palette.tagColor?.secondary,
-                          }}
-                          className="px-2 py-1 rounded-md"
-                        >
+                        <span className="px-2 py-1 rounded-md">
                           {row.small_title}
                         </span>
                       </Typography>

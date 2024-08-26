@@ -61,3 +61,18 @@ export const headCellMaterialCategory: HeadCell[] = [
     label: "Supplier Name",
   },
 ];
+
+export interface priceTypesProps {
+  value: string;
+  option: string;
+}
+export const price_types: priceTypesProps[] = [
+  {
+    value: "per_metter",
+    option: "Metter",
+  },
+  {
+    value: "per_quantity",
+    option: "Quantity",
+  },
+];

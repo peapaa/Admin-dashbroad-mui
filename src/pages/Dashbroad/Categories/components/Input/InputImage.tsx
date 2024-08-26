@@ -53,6 +53,7 @@ const InputImage: React.FC<InputImageProps> = ({
         id="image"
         className="w-0 h-0 opacity-0"
         accept=".jpg, .png, .jpeg, .svg"
+        // accept="image/*"
         multiple={false}
         onChange={handleChangeImage}
       />

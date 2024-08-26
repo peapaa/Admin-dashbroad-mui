@@ -16,6 +16,7 @@ import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategor
 // service
 import SelectOption from "@/pages/Dashbroad/Categories/components/Select/SelectOption";
 import { editCategory, getOneCategory } from "@/services/categoriesService";
+import { price_types } from "@/utils/data";
 import { Button } from "@mui/material";
 
 const EditCategory = () => {
@@ -32,11 +33,6 @@ const EditCategory = () => {
     control,
   } = useForm<DataCategory>({
     resolver: yupResolver(editCategoryschema),
-    defaultValues: {
-      image: [],
-      name: "",
-      price_type: "price_type",
-    },
   });
 
   useEffect(() => {
@@ -124,24 +120,32 @@ const EditCategory = () => {
                       value={value as string}
                       onChange={onChange}
                       error={errors.name?.message}
+                      typeInput="text"
                     />
                   </div>
                 );
               }}
             />
-            <Controller
-              control={control}
-              name="price_type"
-              render={({ field: { onChange, value } }) => {
-                return (
-                  <SelectOption
-                    value={value as string}
-                    onChange={onChange}
-                    error={errors.price_type?.message}
-                  />
-                );
-              }}
-            />
+            <div className="flex items-center justify-center">
+              <label htmlFor="price_type" className="mr-5">
+                Price Type:
+              </label>
+              <Controller
+                control={control}
+                name="price_type"
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <SelectOption
+                      value={value as string}
+                      onChange={onChange}
+                      error={errors.price_type?.message}
+                      optionValues={price_types}
+                      id="price_type"
+                    />
+                  );
+                }}
+              />
+            </div>
           </div>
           <div className=" flex items-center justify-center gap-5">
             <Button
@@ -163,7 +167,7 @@ const EditCategory = () => {
               className="mt-20 w-40"
               variant="contained"
               type="submit"
-              disabled={loading}
+              // disabled={loading}
             >
               Submit
             </Button>
