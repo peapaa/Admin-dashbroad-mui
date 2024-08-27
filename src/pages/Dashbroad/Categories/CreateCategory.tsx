@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -32,7 +32,6 @@ const CreateCategory = () => {
   const {
     handleSubmit,
     formState: { errors },
-    reset,
     control,
   } = useForm<DataCategory>({
     resolver: yupResolver(createCategoryschema),
@@ -43,14 +42,16 @@ const CreateCategory = () => {
     },
   });
 
+  // if don't have state data --> don't block case $0.click() double create category
+
   const onSubmit = useCallback(
     async (data: DataCategory) => {
+      setLoading(true);
       try {
         const formData = formDataCategory(data);
         await createCategories(formData);
         toast.success("Add category suscess!");
         navigate("/admin/resources/categories");
-        reset(); // reset form data
       } catch (error) {
         console.log(error);
         toast.error("Add category false!");
@@ -58,22 +59,13 @@ const CreateCategory = () => {
         setLoading(false);
       }
     },
-    [navigate, reset]
+    [navigate]
   );
-
-  useEffect(() => {
-    if (loading) {
-      handleSubmit(onSubmit)();
-    }
-  }, [handleSubmit, loading, onSubmit]);
 
   return (
     <div className="bg-white w-full rounded-md p-5 ">
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setLoading(true);
-        }}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex gap-10 h-[400px] items-center justify-center"
       >
         <Controller
@@ -151,7 +143,7 @@ const CreateCategory = () => {
               className="mt-20 w-40"
               variant="contained"
               type="submit"
-              // disabled={loading}
+              disabled={loading}
             >
               Submit
             </Button>

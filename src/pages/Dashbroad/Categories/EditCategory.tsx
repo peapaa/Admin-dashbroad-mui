@@ -54,6 +54,7 @@ const EditCategory = () => {
 
   const onSubmit: SubmitHandler<DataCategory> = useCallback(
     async (data) => {
+      setLoading(true);
       try {
         if (id) {
           const formData = formDataCategory(data);
@@ -76,19 +77,10 @@ const EditCategory = () => {
     [id, navigate]
   );
 
-  useEffect(() => {
-    if (loading) {
-      handleSubmit(onSubmit)();
-    }
-  }, [handleSubmit, loading, onSubmit]);
-
   return (
     <div className="bg-white w-full rounded-md p-5 ">
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setLoading(true);
-        }}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex gap-10 h-[400px] items-center justify-center"
       >
         <Controller
@@ -167,7 +159,7 @@ const EditCategory = () => {
               className="mt-20 w-40"
               variant="contained"
               type="submit"
-              // disabled={loading}
+              disabled={loading}
             >
               Submit
             </Button>
