@@ -1,4 +1,4 @@
-import { WithCategoriesProps } from "@/hoc/type";
+import { WithCategoriesProps, withSupplierProps } from "@/hoc/type";
 import { priceTypesProps } from "@/utils/data";
 import { Control, FieldErrors } from "react-hook-form";
 
@@ -42,6 +42,12 @@ export interface ControllerFormProps {
 
 export interface ControllerFormSelectWithCategoriesProps
   extends WithCategoriesProps {
+  control: Control<MarterialCategoriesProps, unknown>;
+  errorForm: FieldErrors<MarterialCategoriesProps>;
+}
+
+export interface ControllerFormSelectWithSupplierProps
+  extends withSupplierProps {
   control: Control<MarterialCategoriesProps, unknown>;
   errorForm: FieldErrors<MarterialCategoriesProps>;
 }

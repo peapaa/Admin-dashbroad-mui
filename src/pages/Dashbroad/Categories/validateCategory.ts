@@ -12,7 +12,7 @@ export function isValidFileType(fileName: string) {
   return validFileExtensions.image?.includes(extension) ?? false;
 }
 
-const price_type = ["per_metter", "per_quantity"]; // price type only value
+const price_type = ["per_metter", "per_quantity", ""]; // price type only value
 
 export const MAX_FILE_SIZE = 5; // 5MB
 

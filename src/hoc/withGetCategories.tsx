@@ -12,10 +12,8 @@ function withGetCategories<T>(
     useEffect(() => {
       const getCategories = async () => {
         setLoading(true);
-        setErrors("");
         try {
           const response = await getAllCategoriesForMaterial();
-          console.log("response", response);
           setCategories(response.data.results as CategoriesProps[]);
         } catch (error) {
           console.log("error", error);

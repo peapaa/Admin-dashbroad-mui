@@ -38,7 +38,7 @@ const CreateCategory = () => {
     defaultValues: {
       image: [],
       name: "",
-      price_type: "per_metter",
+      price_type: "",
     },
   });
 
@@ -102,10 +102,11 @@ const CreateCategory = () => {
                 );
               }}
             />
-            <div className="flex items-center justify-center">
-              <label htmlFor="price_type" className="mr-5">
+            <div className="flex">
+              <label htmlFor="price_type" className="mr-5 mt-1">
                 Price Type:
               </label>
+
               <Controller
                 control={control}
                 name="price_type"

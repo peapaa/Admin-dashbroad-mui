@@ -1,13 +1,14 @@
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import ControllerFormInput from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormInput";
 import ControllerFormSelectWithCategories from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormSelectWithCategories";
+import ControllerFormSelectWithSupplier from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormSelectWithSupplier";
 import formDataMaterial from "@/pages/Dashbroad/MaterialCategories/formDataMaterial";
 import { MarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
 import { createMaterialSchema } from "@/pages/Dashbroad/MaterialCategories/validateMaterial";
 import { createMaterialCategory } from "@/services/marterialCategoriesService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -19,22 +20,28 @@ const CreateMarterialCategory = () => {
   const {
     handleSubmit,
     formState: { errors },
-    reset,
     control,
   } = useForm<MarterialCategoriesProps>({
     resolver: yupResolver(createMaterialSchema),
+    defaultValues: {
+      image: [],
+      part_number: "",
+      large_title: "",
+      small_title: "",
+      basic_price: 0,
+      category: "",
+      supplier: "",
+    },
   });
 
   const onSubmit = useCallback(
     async (data: MarterialCategoriesProps) => {
+      setLoading(true);
       try {
-        console.log("data");
         const formData = formDataMaterial(data);
         await createMaterialCategory(formData);
-        console.log("data", data);
         toast.success("Add Material category suscess!");
         navigate("/admin/resources/material-categories");
-        reset(); // reset form data
       } catch (error) {
         console.log(error);
         toast.error("Add material category false!");
@@ -42,24 +49,12 @@ const CreateMarterialCategory = () => {
         setLoading(false);
       }
     },
-    [navigate, reset]
+    [navigate]
   );
 
-  useEffect(() => {
-    if (loading) {
-      handleSubmit(onSubmit)();
-    }
-  }, [handleSubmit, loading, onSubmit]);
-
-  console.log("error", errors);
   return (
     <div className="bg-white w-full rounded-md p-5 ">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setLoading(true);
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-10 my-10 h-[400px] items-center justify-center">
           {/* image required */}
           <Controller
@@ -142,12 +137,12 @@ const CreateMarterialCategory = () => {
                   errors={""}
                 />
                 {/* supplier  required */}
-                <ControllerFormInput
+                <ControllerFormSelectWithSupplier
                   control={control}
-                  name="supplier"
-                  errors={errors}
-                  title="Supplier"
-                  typeInput="string"
+                  errorForm={errors}
+                  supplier={[]}
+                  loading={false}
+                  errors={""}
                 />
               </div>
               {/* basic_price don't required */}
@@ -170,7 +165,12 @@ const CreateMarterialCategory = () => {
           >
             Back
           </Button>
-          <Button className="mt-20 w-40" variant="contained" type="submit">
+          <Button
+            className="mt-20 w-40"
+            variant="contained"
+            type="submit"
+            disabled={loading}
+          >
             Submit
           </Button>
         </div>

@@ -14,14 +14,12 @@ const SearchByCategory = ({
   console.log("loading", loading);
   console.log("errors", errors);
   const categoriesName = categories.map((category) => category.name);
-  console.log("categoriesName", categoriesName);
   const {
     searchCategory,
     handleInputChangeCategory,
     handleKeyDownInputCategory,
   } = useSearchQuery();
 
-  console.log("searchCategory", searchCategory);
   return (
     <Autocomplete
       disablePortal

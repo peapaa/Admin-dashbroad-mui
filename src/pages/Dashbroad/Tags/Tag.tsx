@@ -1,10 +1,12 @@
-import { WithCategoriesProps } from "@/hoc/type";
-import withGetCategories from "@/hoc/withGetCategories";
+import { withSupplierProps } from "@/hoc/type";
+import withGetSupplier from "@/hoc/withGetSupplier";
 import { getAllCategoriesForMaterial } from "@/services/marterialCategoriesService";
 import { useEffect } from "react";
-const Tag = ({ categories }: WithCategoriesProps) => {
+// eslint-disable-next-line react-refresh/only-export-components
+const Tag = ({ supplier }: withSupplierProps) => {
   // if (loading) return <div>Loading...</div>;
   // if (errors) return <div>errors...</div>;
+  console.log("supplier from tag", supplier);
   useEffect(() => {
     const fetch = async () => {
       const response = await getAllCategoriesForMaterial(); // test HOC
@@ -12,14 +14,15 @@ const Tag = ({ categories }: WithCategoriesProps) => {
     };
     fetch();
   }, []);
-  console.log(categories);
+  console.log("supplier", supplier);
   return (
     <div>
-      {categories.map((category, index) => (
-        <div key={index}>{category.name}</div>
+      {supplier.map((supplier, index) => (
+        <div key={index}>{supplier.name}</div>
       ))}
     </div>
   );
 };
 
-export default withGetCategories(Tag);
+// eslint-disable-next-line react-refresh/only-export-components
+export default withGetSupplier(Tag);

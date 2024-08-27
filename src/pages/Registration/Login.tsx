@@ -128,6 +128,7 @@ const Login: React.FC = () => {
           <button
             type="submit"
             className="mt-6 w-full flex items-center justify-center  py-2 border border-transparent text-base font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            disabled={loader}
           >
             Login
           </button>

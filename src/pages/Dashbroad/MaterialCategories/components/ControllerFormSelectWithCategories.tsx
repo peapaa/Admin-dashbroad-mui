@@ -12,11 +12,14 @@ const ControllerFormSelectWithCategories = ({
 }: ControllerFormSelectWithCategoriesProps) => {
   console.log("loading", loading);
   console.log("errors", errors);
-  console.log("categories", categories);
-  const OptionValues = categories.map((category) => ({
-    value: category.id,
-    option: category.name,
-  }));
+
+  const OptionValues =
+    categories.length > 0
+      ? categories.map((category) => ({
+          value: category.id,
+          option: category.name,
+        }))
+      : [];
   return (
     <ControllerFormSelect
       control={control}

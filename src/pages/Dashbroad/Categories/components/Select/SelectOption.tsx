@@ -8,7 +8,7 @@ const SelectOption: React.FC<SelectOptionProps> = ({
   id,
 }) => {
   return (
-    <div className="flex items-center flex-col">
+    <div className="flex justify-center flex-col">
       <div>
         <select
           className="border outline-none rounded-md px-2 py-1 w-[280px] truncate"
@@ -16,6 +16,9 @@ const SelectOption: React.FC<SelectOptionProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
         >
+          <option value="" disabled>
+            Select option
+          </option>
           {optionValues.map((optionValues, index) => (
             <option
               value={optionValues.value}
@@ -28,7 +31,7 @@ const SelectOption: React.FC<SelectOptionProps> = ({
         </select>
       </div>
       <div className="h-5">
-        {error && <p className="text-red-500 ml-5 mt-2">{error}</p>}
+        {error && <p className="text-red-500 ">{error}</p>}
       </div>
     </div>
   );
