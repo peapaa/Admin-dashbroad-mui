@@ -22,7 +22,12 @@ const NavMaterialCategories = () => {
           </Typography>
           <InputSearchByName />
         </div>
-        <div>
+        <div className="flex gap-2 items-center">
+          <Typography
+            sx={{ fontSize: 18, color: theme.palette.text.secondary }}
+          >
+            Category
+          </Typography>
           <SearchByCategory />
         </div>
         <div>

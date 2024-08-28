@@ -22,24 +22,21 @@ const SearchByCategory = ({
 
   return (
     <Autocomplete
-      disablePortal
-      id="combo-box-demo"
+      freeSolo
+      id="free-solo-2-demo"
+      disableClearable
       options={categoriesName}
+      className="shadow-shadowInput"
       sx={{
         width: 300,
-        height: 40,
         backgroundColor: "white",
+        borderRadius: 999,
         "& .MuiOutlinedInput-root": {
-          height: 40,
-          padding: 0,
+          height: 32,
+          paddingLeft: 1,
         },
-        "& .MuiInputLabel-root": {
-          position: "absolute",
-          top: "-6px",
-        },
-        scrollbarWidth: "thin",
-        "&::-webkit-scrollbar": {
-          width: "8px",
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: "none",
         },
       }}
       value={searchCategory}
@@ -58,8 +55,7 @@ const SearchByCategory = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Category"
-          sx={{ height: 40 }}
+          placeholder="Search Category"
           onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) =>
             handleKeyDownInputCategory(event)
           }

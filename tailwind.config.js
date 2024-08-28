@@ -7,6 +7,7 @@ export default {
       },
       boxShadow: {
         shadowCategory: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+        shadowInput: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
       },
     },
   },

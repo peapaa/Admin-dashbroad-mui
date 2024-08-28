@@ -28,9 +28,8 @@ const InputSearchByName = () => {
           borderRadius: "25px",
           paddingLeft: "8px",
           color: "#94A3B8",
-          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
         }}
-        className="bg-white"
+        className="bg-white shadow-shadowInput"
         startAdornment={
           <InputAdornment position="start">
             <GoSearch style={{ color: "#94A3B8" }} />
