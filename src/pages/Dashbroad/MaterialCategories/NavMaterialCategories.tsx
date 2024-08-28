@@ -3,7 +3,7 @@ import { Button, Typography, useTheme } from "@mui/material";
 
 // components
 import InputSearchByName from "@/pages/Dashbroad/Categories/components/Input/InputSearchByName";
-import SearchByCategory from "@/pages/Dashbroad/MaterialCategories/components/SearchByCategory";
+import SearchByCategory from "@/pages/Dashbroad/MaterialCategories/components/inputSearch/SearchByCategory";
 import { Link } from "react-router-dom";
 
 const NavMaterialCategories = () => {

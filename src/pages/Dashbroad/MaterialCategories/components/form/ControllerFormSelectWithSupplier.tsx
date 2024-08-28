@@ -1,5 +1,5 @@
 import withGetSupplier from "@/hoc/withGetSupplier";
-import ControllerFormSelect from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormSelect";
+import ControllerFormSelect from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormSelect";
 import { ControllerFormSelectWithSupplierProps } from "@/pages/Dashbroad/MaterialCategories/type";
 
 // eslint-disable-next-line react-refresh/only-export-components

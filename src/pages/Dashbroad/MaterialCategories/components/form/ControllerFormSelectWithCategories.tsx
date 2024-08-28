@@ -1,5 +1,5 @@
 import withGetCategories from "@/hoc/withGetCategories";
-import ControllerFormSelect from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormSelect";
+import ControllerFormSelect from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormSelect";
 import { ControllerFormSelectWithCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
 
 // eslint-disable-next-line react-refresh/only-export-components
