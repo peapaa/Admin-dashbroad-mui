@@ -1,3 +1,4 @@
+import ButtonForm from "@/components/ButtonForm";
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import ControllerFormInput from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormInput";
 import ControllerFormSelectWithCategories from "@/pages/Dashbroad/MaterialCategories/components/ControllerFormSelectWithCategories";
@@ -7,7 +8,6 @@ import { MarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/t
 import { createMaterialSchema } from "@/pages/Dashbroad/MaterialCategories/validateMaterial";
 import { createMaterialCategory } from "@/services/marterialCategoriesService";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button } from "@mui/material";
 import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -149,31 +149,7 @@ const CreateMarterialCategory = () => {
             </div>
           </div>
         </div>
-        <div className=" flex items-center justify-center gap-5 py-5">
-          <Button
-            className="mt-20 w-40"
-            type="button"
-            style={{ border: "1px solid rgb(187 181 181 / 14%)" }}
-            onClick={() => {
-              if (localStorage.getItem("redirectPath")) {
-                navigate("/admin/resources/material-categories");
-                localStorage.removeItem("redirectPath");
-              } else {
-                navigate(-1);
-              }
-            }}
-          >
-            Back
-          </Button>
-          <Button
-            className="mt-20 w-40"
-            variant="contained"
-            type="submit"
-            disabled={loading}
-          >
-            Submit
-          </Button>
-        </div>
+        <ButtonForm loading={loading} />
       </form>
     </div>
   );

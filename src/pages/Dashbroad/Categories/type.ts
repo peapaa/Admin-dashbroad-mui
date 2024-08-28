@@ -1,4 +1,5 @@
 import { priceTypesProps } from "@/utils/data";
+import { UseFormReturn } from "react-hook-form";
 
 export interface DataCategory {
   image?: File[];
@@ -77,4 +78,11 @@ export interface GenericData {
 
 export interface DeleteCategoryHandleProps {
   openModal: () => void;
+}
+
+export interface FormActionProps {
+  onSubmit: (data: DataCategory) => Promise<void>;
+  formMethod: UseFormReturn<DataCategory, unknown, undefined>;
+  newImage: string | null;
+  loading: boolean;
 }
