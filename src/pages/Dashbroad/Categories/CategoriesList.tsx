@@ -44,7 +44,6 @@ import { CategoriesProps, DeleteCategory, DeleteHandleProps } from "./type";
 // utils
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 import { headCellCategory } from "@/utils/data";
-import sortData from "@/utils/sortTable";
 
 export default function CategoriesList() {
   const { selected, handleSlectedItem, handleSelectAllClick, setSelected } =
@@ -186,7 +185,6 @@ export default function CategoriesList() {
     modalRefDeleteCategories.current?.openModal();
   };
 
-  const sortedData = sortData(data, "desc", "created_at");
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -201,7 +199,7 @@ export default function CategoriesList() {
               handleOpenModal={handleOpenModalDeleteCategories}
             />
             <TableBody>
-              {sortedData.map((row, index) => {
+              {data.map((row, index) => {
                 const isItemSelected = isSelected(row.id.toString());
                 const labelId = `enhanced-table-checkbox-${index}`;
 
