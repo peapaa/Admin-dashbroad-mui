@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading";
 import * as React from "react";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -41,7 +42,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
     setToken(null);
   };
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   // const { searchText, page } = useSearchQuery();

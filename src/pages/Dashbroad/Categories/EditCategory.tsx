@@ -12,6 +12,7 @@ import { DataCategory } from "@/pages/Dashbroad/Categories/type";
 import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
 
 // service
+import Loading from "@/components/Loading";
 import FormActionCategory from "@/pages/Dashbroad/Categories/components/FormAction/FormActionCategory";
 import { editCategory, getOneCategory } from "@/services/categoriesService";
 
@@ -29,16 +30,19 @@ const EditCategory = () => {
 
   useEffect(() => {
     const fetchGetOneCategory = async () => {
+      setLoading(true);
       try {
         if (id) {
           const response = await getOneCategory(id);
           const { name, image, price_type } = response.data;
           setValue("name", name);
-          setValue("price_type", price_type); // image not required --> dont setValue to form
-          setNewImage(image);
+          setValue("price_type", price_type);
+          setNewImage(image); // image not required --> dont setValue to form
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchGetOneCategory();
@@ -68,6 +72,10 @@ const EditCategory = () => {
     },
     [id, navigate]
   );
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <FormActionCategory
