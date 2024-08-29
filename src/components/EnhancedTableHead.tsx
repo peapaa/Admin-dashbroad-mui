@@ -1,13 +1,9 @@
 // type
-import {
-  CategoriesProps,
-  EnhancedTableProps,
-} from "@/pages/Dashbroad/Categories/type";
+import { EnhancedTableProps } from "@/pages/Dashbroad/Categories/type";
 
 // mui
 import { ExpandMore } from "@mui/icons-material";
 import {
-  Box,
   Button,
   Checkbox,
   TableCell,
@@ -17,25 +13,9 @@ import {
 } from "@mui/material";
 
 // utils
-import { visuallyHidden } from "@mui/utils";
 
 const EnhancedTableHead = (props: EnhancedTableProps) => {
-  const {
-    order,
-    orderBy,
-    onRequestSort,
-    numSelected,
-    rowCount,
-    selected,
-    headCells,
-    handleOpenModal,
-  } = props;
-
-  const createSortHandler = (property: keyof CategoriesProps) => {
-    return (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-  };
+  const { numSelected, rowCount, selected, headCells, handleOpenModal } = props;
 
   return (
     <TableHead>
@@ -44,7 +24,7 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
           colSpan={headCells.length + 2}
           style={{ paddingLeft: "4px" }}
         >
-          <div className="flex items-center  justify-between w-full">
+          <div className="flex items-center  justify-between w-[1024px]">
             <span>
               <Checkbox
                 color="primary"
@@ -71,24 +51,11 @@ const EnhancedTableHead = (props: EnhancedTableProps) => {
       <TableRow sx={{ backgroundColor: "#F1F5F9" }}>
         <TableCell></TableCell>
         {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="center"
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              onClick={createSortHandler(headCell.id)}
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-            >
+          <TableCell key={headCell.id} align="center">
+            <TableSortLabel>
               <span className="font-bold" style={{ color: "#64748B" }}>
                 {headCell.label}
               </span>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}

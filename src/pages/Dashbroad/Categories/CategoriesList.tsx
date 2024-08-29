@@ -39,12 +39,7 @@ import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 
 // type
-import {
-  CategoriesProps,
-  DeleteCategory,
-  DeleteCategoryHandleProps,
-  Order,
-} from "./type";
+import { CategoriesProps, DeleteCategory, DeleteHandleProps } from "./type";
 
 // utils
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
@@ -52,9 +47,6 @@ import { headCellCategory } from "@/utils/data";
 import sortData from "@/utils/sortTable";
 
 export default function CategoriesList() {
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] =
-    React.useState<keyof CategoriesProps>("created_at");
   const { selected, handleSlectedItem, handleSelectAllClick, setSelected } =
     useSelectedItem();
 
@@ -62,11 +54,9 @@ export default function CategoriesList() {
   const [totalCategory, setTotalCategory] = React.useState<number>(0);
 
   const theme = useTheme();
-
   //ref
-  const modalRef = React.useRef<DeleteCategoryHandleProps | null>(null);
-  const modalRefDeleteCategories =
-    React.useRef<DeleteCategoryHandleProps | null>(null);
+  const modalRef = React.useRef<DeleteHandleProps | null>(null);
+  const modalRefDeleteCategories = React.useRef<DeleteHandleProps | null>(null);
 
   const [loadingDeleteCategoies, setLoadingDeleteCategoies] =
     React.useState<boolean>(false);
@@ -126,18 +116,6 @@ export default function CategoriesList() {
       setSelected([]);
     }
   }, [categoriesData, setSelected, setTotalCategory]);
-
-  const handleRequestSort = (
-    _: React.MouseEvent<unknown>,
-    property: keyof CategoriesProps
-  ) => {
-    if (property === "id" || property === "image") {
-      return;
-    }
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
@@ -216,10 +194,7 @@ export default function CategoriesList() {
           <Table aria-labelledby="tableTitle">
             <EnhancedTableHead
               numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
               onSelectAllClick={(event) => handleSelectAllClick(event, data)}
-              onRequestSort={handleRequestSort}
               rowCount={data.length}
               selected={selected}
               headCells={headCellCategory}
@@ -335,13 +310,15 @@ export default function CategoriesList() {
         />
         <DeleteCategoryDialog
           ref={modalRef}
-          handleClickDeleteCategory={handleClickDeleteOneCategory}
+          onClick={handleClickDeleteOneCategory}
           content=" You want to delete category ?"
+          title="Delete category"
         />
         <DeleteCategoryDialog
           ref={modalRefDeleteCategories}
-          handleClickDeleteCategory={handleClickDeleteCategories}
+          onClick={handleClickDeleteCategories}
           content={`You want to delete ${selected.length} category ?`}
+          title="Delete category"
         />
       </Paper>
     </Box>
