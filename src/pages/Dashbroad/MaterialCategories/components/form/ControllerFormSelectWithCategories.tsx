@@ -1,4 +1,6 @@
+// HOC
 import withGetCategories from "@/hoc/withGetCategories";
+// pages
 import ControllerFormSelect from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormSelect";
 import { ControllerFormSelectWithCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
 
@@ -10,9 +12,6 @@ const ControllerFormSelectWithCategories = ({
   control,
   errorForm,
 }: ControllerFormSelectWithCategoriesProps) => {
-  console.log("loading", loading);
-  console.log("errors", errors);
-
   const OptionValues =
     categories.length > 0
       ? categories.map((category) => ({

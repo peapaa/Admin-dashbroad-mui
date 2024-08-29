@@ -1,10 +1,12 @@
+import { Controller } from "react-hook-form";
+// components
 import ButtonForm from "@/components/ButtonForm";
+// pages
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import ControllerFormInput from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormInput";
 import ControllerFormSelectWithCategories from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormSelectWithCategories";
 import ControllerFormSelectWithSupplier from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormSelectWithSupplier";
 import { FormActionMateriaProps } from "@/pages/Dashbroad/MaterialCategories/type";
-import { Controller } from "react-hook-form";
 
 const FormActionMaterial: React.FC<FormActionMateriaProps> = ({
   onSubmit,

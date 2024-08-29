@@ -1,9 +1,12 @@
+import { SyntheticEvent } from "react";
+// HOC
 import { WithCategoriesProps } from "@/hoc/type";
 import withGetCategories from "@/hoc/withGetCategories";
+// hooks
 import useSearchQuery from "@/hooks/useSearchQuery";
+// mui
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import { SyntheticEvent } from "react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 const SearchByCategory = ({
@@ -11,8 +14,6 @@ const SearchByCategory = ({
   loading,
   errors,
 }: WithCategoriesProps) => {
-  console.log("loading", loading);
-  console.log("errors", errors);
   const categoriesName = categories.map((category) => category.name);
   const {
     searchCategory,

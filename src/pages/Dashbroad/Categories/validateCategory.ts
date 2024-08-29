@@ -58,7 +58,7 @@ export const imageCreateCategorySchema = Yup.mixed()
     }
   );
 
-const imageEditCategorySchema = Yup.mixed()
+export const imageEditCategorySchema = Yup.mixed()
   .nullable()
   .test("is-valid-type", "Not a valid image type", function (value) {
     const files = value as File[];

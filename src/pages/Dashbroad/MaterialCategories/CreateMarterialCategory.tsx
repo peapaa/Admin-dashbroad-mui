@@ -1,13 +1,16 @@
-import FormActionMaterial from "@/pages/Dashbroad/MaterialCategories/components/form/FormActionMaterial";
-import formDataMaterial from "@/pages/Dashbroad/MaterialCategories/formDataMaterial";
-import { MarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
-import { createMaterialSchema } from "@/pages/Dashbroad/MaterialCategories/validateMaterial";
-import { createMaterialCategory } from "@/services/marterialCategoriesService";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+// pages
+import FormActionMaterial from "@/pages/Dashbroad/MaterialCategories/components/form/FormActionMaterial";
+import formDataMaterial from "@/pages/Dashbroad/MaterialCategories/components/form/formDataMaterial";
+import { MarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
+import { createMaterialSchema } from "@/pages/Dashbroad/MaterialCategories/validateMaterial";
+// service
+import { createMaterialCategory } from "@/services/marterialCategoriesService";
+// yup
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const CreateMarterialCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);

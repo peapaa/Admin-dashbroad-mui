@@ -1,9 +1,12 @@
+import { Route, Routes } from "react-router-dom";
+// components
 import ProtectedRouter from "@/components/ProtectedRouter";
+// pages
 import LayoutContent from "@/pages/Dashbroad/LayoutContent/LayoutContent";
 import CreateMarterialCategory from "@/pages/Dashbroad/MaterialCategories/CreateMarterialCategory";
+import EditMaterialCategory from "@/pages/Dashbroad/MaterialCategories/EditMaterialCategory";
 import MarterialCategoriesList from "@/pages/Dashbroad/MaterialCategories/MarterialCategoriesList";
 import NavMaterialCategories from "@/pages/Dashbroad/MaterialCategories/NavMaterialCategories";
-import { Route, Routes } from "react-router-dom";
 
 const MarterialCategories = () => {
   return (
@@ -19,10 +22,18 @@ const MarterialCategories = () => {
           }
         ></Route>
         <Route
-          path="/create-marterial-category"
+          path="create-marterial-category"
           element={
             <ProtectedRouter>
               <CreateMarterialCategory />
+            </ProtectedRouter>
+          }
+        ></Route>
+        <Route
+          path="edit-marterial-category/:id"
+          element={
+            <ProtectedRouter>
+              <EditMaterialCategory />
             </ProtectedRouter>
           }
         ></Route>

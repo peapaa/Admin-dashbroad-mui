@@ -1,4 +1,6 @@
+// HOC
 import withGetSupplier from "@/hoc/withGetSupplier";
+// pages
 import ControllerFormSelect from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormSelect";
 import { ControllerFormSelectWithSupplierProps } from "@/pages/Dashbroad/MaterialCategories/type";
 
@@ -10,9 +12,6 @@ const ControllerFormSelectWithSupplier = ({
   control,
   errorForm,
 }: ControllerFormSelectWithSupplierProps) => {
-  console.log("loading", loading);
-  console.log("errors", errors);
-  console.log("supplier from controller", supplier);
   const OptionValueSupplier =
     supplier.length > 0
       ? supplier.map((item) => ({
@@ -20,7 +19,6 @@ const ControllerFormSelectWithSupplier = ({
           option: item.name,
         }))
       : [];
-  console.log("options", OptionValueSupplier);
   return (
     <ControllerFormSelect
       control={control}

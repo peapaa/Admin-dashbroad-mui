@@ -1,9 +1,10 @@
+import { Controller } from "react-hook-form";
+// pages
 import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
 import {
   ControllerFormProps,
   MarterialCategoriesProps,
 } from "@/pages/Dashbroad/MaterialCategories/type";
-import { Controller } from "react-hook-form";
 
 const ControllerFormInput: React.FC<ControllerFormProps> = ({
   control,
