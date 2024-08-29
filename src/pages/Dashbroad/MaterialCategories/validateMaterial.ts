@@ -1,4 +1,7 @@
-import { imageCreateCategorySchema } from "@/pages/Dashbroad/Categories/validateCategory";
+import {
+  imageCreateCategorySchema,
+  imageEditCategorySchema,
+} from "@/pages/Dashbroad/Categories/validateCategory";
 import * as Yup from "yup";
 
 const partNumberSchema = Yup.string()
@@ -54,6 +57,18 @@ const supplierSchema = Yup.string().required("Required supplier");
 
 export const createMaterialSchema = Yup.object().shape({
   image: imageCreateCategorySchema,
+  part_number: partNumberSchema,
+  name: nameSchema,
+  type: typeSchema,
+  large_title: largeTitleSchema,
+  small_title: smallTitleSchema,
+  basic_price: basicPriceSchema,
+  category: categorySchema,
+  supplier: supplierSchema,
+});
+
+export const editMaterialSchema = Yup.object().shape({
+  image: imageEditCategorySchema,
   part_number: partNumberSchema,
   name: nameSchema,
   type: typeSchema,
