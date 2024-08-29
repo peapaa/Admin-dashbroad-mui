@@ -56,7 +56,8 @@ const MarterialCategoriesList = () => {
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
   const modalRefDeleteOne = useRef<DeleteHandleProps | null>(null);
   const modalRefDeleteMaterials = useRef<DeleteHandleProps | null>(null);
-
+  const [reload, setReload] = React.useState<boolean>(false);
+  console.log("reload", reload);
   useEffect(() => {
     let ignore = false;
     const fetchAllMaterialCategories = async () => {
@@ -79,7 +80,7 @@ const MarterialCategoriesList = () => {
     return () => {
       ignore = true;
     };
-  }, [page, searchCategory, searchText, setSelected]);
+  }, [page, searchCategory, searchText, setSelected, reload]);
 
   if (totalMarterialCategory > 0 && page) {
     if (page > Math.ceil(totalMarterialCategory / rowsPerPage)) {
@@ -100,6 +101,7 @@ const MarterialCategoriesList = () => {
     try {
       await deleteOneMaterial(idDeleteMaterial);
       toast.success("delete material successfully");
+      setReload((prev) => !prev);
     } catch (error) {
       console.error("error", error);
       toast.error("Delete material failed");
@@ -117,6 +119,7 @@ const MarterialCategoriesList = () => {
     try {
       await deleteSelectedMutilpleMaterials(selected);
       toast.success(`Delete ${selected.length} materials`);
+      setReload((prev) => !prev);
     } catch (error) {
       console.error("error", error);
       toast.error("delete material failed");
