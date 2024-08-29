@@ -57,7 +57,7 @@ const MarterialCategoriesList = () => {
   const modalRefDeleteOne = useRef<DeleteHandleProps | null>(null);
   const modalRefDeleteMaterials = useRef<DeleteHandleProps | null>(null);
   const [reload, setReload] = React.useState<boolean>(false);
-  console.log("reload", reload);
+
   useEffect(() => {
     let ignore = false;
     const fetchAllMaterialCategories = async () => {

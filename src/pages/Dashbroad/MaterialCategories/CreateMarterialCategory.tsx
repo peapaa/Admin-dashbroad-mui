@@ -11,6 +11,7 @@ import { createMaterialSchema } from "@/pages/Dashbroad/MaterialCategories/valid
 import { createMaterialCategory } from "@/services/marterialCategoriesService";
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 
 const CreateMarterialCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +41,12 @@ const CreateMarterialCategory = () => {
         navigate("/admin/resources/material-categories");
       } catch (error) {
         console.log(error);
-        toast.error("Add material category false!");
+        if (axios.isAxiosError(error)) {
+          const partNumber = error.response?.data?.part_number;
+          if (partNumber && partNumber.length > 0) {
+            toast.error("Already part number!");
+          } else toast.error("Add material category false!");
+        }
       } finally {
         setLoading(false);
       }

@@ -16,6 +16,7 @@ import {
 } from "@/services/marterialCategoriesService";
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 
 const EditMaterialCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -88,7 +89,12 @@ const EditMaterialCategory = () => {
       }
     } catch (error) {
       console.error("error", error);
-      toast.error("updated material failed");
+      if (axios.isAxiosError(error)) {
+        const partNumber = error.response?.data?.part_number;
+        if (partNumber && partNumber.length > 0) {
+          toast.error("Already part number!");
+        } else toast.error("Add material category false!");
+      }
     } finally {
       setLoading(false);
     }
