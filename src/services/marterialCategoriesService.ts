@@ -31,3 +31,27 @@ export const createMaterialCategory = async (formData: FormData) => {
   });
   return response;
 };
+
+export const getOneMaterial = async (id: string) => {
+  const response = await axiosInstance.get(`/api/cms/material/${id}`);
+  return response;
+};
+
+export const updateMaterial = async (formData: FormData, id: string) => {
+  const response = await axiosInstance.put(
+    `/api/cms/material/${id}`,
+    formData,
+    { headers: { "Content-Type": " multipart/form-data" } }
+  );
+  return response;
+};
+
+export const deleteOneMaterial = async (id: string) => {
+  const response = await axiosInstance.delete(`/api/cms/material/${id}`);
+  return response;
+};
+
+export const deleteSelectedMutilpleMaterials = async (id: string[]) => {
+  const response = await axiosInstance.delete(`/api/cms/material/bulk/${id}`);
+  return response;
+};
