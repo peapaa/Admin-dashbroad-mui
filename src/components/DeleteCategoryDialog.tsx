@@ -7,18 +7,19 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
 
 //type
-import { DeleteCategoryHandleProps } from "@/pages/Dashbroad/Categories/type";
-import { DialogContent } from "@mui/material";
+import { DeleteHandleProps } from "@/pages/Dashbroad/Categories/type";
+import { Box, DialogContent } from "@mui/material";
 
 interface DeleteCategoryProps {
-  handleClickDeleteCategory: () => void;
+  onClick: () => void;
   content: string;
+  title: string;
 }
 
 const DeleteCategoryDialog = React.forwardRef<
-  DeleteCategoryHandleProps,
+  DeleteHandleProps,
   DeleteCategoryProps
->(({ handleClickDeleteCategory, content }, ref) => {
+>(({ onClick, content, title }, ref) => {
   const [open, setOpen] = React.useState<boolean>(false);
 
   const handleClose = () => {
@@ -37,26 +38,30 @@ const DeleteCategoryDialog = React.forwardRef<
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Delete category"}</DialogTitle>
-        <DialogContent>{content}</DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleClose}
-            className="hover:!bg-blue-300 hover:text-black"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              handleClickDeleteCategory();
-              handleClose();
-            }}
-            autoFocus
-            className="hover:!bg-red-400 hover:text-black"
-          >
-            Delete
-          </Button>
-        </DialogActions>
+        <Box className="px-5">
+          <DialogTitle id="alert-dialog-title" sx={{ paddingBottom: "10px" }}>
+            {title}
+          </DialogTitle>
+          <DialogContent sx={{ paddingBottom: 0 }}>{content}</DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleClose}
+              className="hover:!bg-blue-300 hover:text-black"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                onClick();
+                handleClose();
+              }}
+              autoFocus
+              className="hover:!bg-red-400 hover:text-black"
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Box>
       </Dialog>
     </React.Fragment>
   );
