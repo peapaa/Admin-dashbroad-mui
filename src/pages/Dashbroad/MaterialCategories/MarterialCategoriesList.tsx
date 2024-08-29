@@ -1,10 +1,22 @@
+// component
 import CustomTablePagination from "@/components/CustomTablePagination";
+import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
 import EnhancedTableHead from "@/components/EnhancedTableHead";
+import Loading from "@/components/Loading";
+import NotFound from "@/components/NotFound";
+// hooks
 import useSearchQuery from "@/hooks/useSearchQuery";
 import useSelectedItem from "@/hooks/useSelectedItem";
-import { CategoriesProps, Order } from "@/pages/Dashbroad/Categories/type";
+// pages
+import { DeleteHandleProps } from "@/pages/Dashbroad/Categories/type";
 import { GetAllMarterialCategoriesProps } from "@/pages/Dashbroad/MaterialCategories/type";
-import { getAllMarterialCategories } from "@/services/marterialCategoriesService";
+// service
+import {
+  deleteOneMaterial,
+  deleteSelectedMutilpleMaterials,
+  getAllMarterialCategories,
+} from "@/services/marterialCategoriesService";
+// utils
 import { headCellMaterialCategory } from "@/utils/data";
 
 import {
@@ -21,16 +33,15 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { LiaEditSolid } from "react-icons/lia";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const MarterialCategoriesList = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [order] = React.useState<Order>("asc");
-  const [orderBy] = React.useState<keyof CategoriesProps>("created_at");
   const { selected, setSelected, handleSelectAllClick, handleSlectedItem } =
     useSelectedItem();
   const [totalMarterialCategory, setTotalMarterialCategory] =
@@ -38,10 +49,13 @@ const MarterialCategoriesList = () => {
   const [rowsPerPage] = React.useState<number>(5);
   const { searchText, searchCategory, page } = useSearchQuery();
   const [data, setData] = React.useState<GetAllMarterialCategoriesProps[]>([]);
+  const location = useLocation();
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [idDeleteMaterial, setIdDeleteMaterial] = React.useState<string>("");
 
-  const handleOpenModalDeleteCategories = () => {};
-  const handleRequestSort = () => {};
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const modalRefDeleteOne = useRef<DeleteHandleProps | null>(null);
+  const modalRefDeleteMaterials = useRef<DeleteHandleProps | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -58,7 +72,7 @@ const MarterialCategoriesList = () => {
           setSelected([]);
         }
       } catch (error) {
-        console.log(error);
+        console.error("error", error);
       }
     };
     fetchAllMaterialCategories();
@@ -67,7 +81,53 @@ const MarterialCategoriesList = () => {
     };
   }, [page, searchCategory, searchText, setSelected]);
 
-  console.log("marterial", data);
+  if (totalMarterialCategory > 0 && page) {
+    if (page > Math.ceil(totalMarterialCategory / rowsPerPage)) {
+      return <NotFound />;
+    }
+  }
+
+  const handleOpenModal = () => {
+    modalRefDeleteOne.current?.openModal();
+  };
+
+  const handleDeleteOneMaterial = async (id: string) => {
+    setIdDeleteMaterial(id);
+  };
+
+  const handleClickDeleteOneMaterial = async () => {
+    setLoading(true);
+    try {
+      await deleteOneMaterial(idDeleteMaterial);
+      toast.success("delete material successfully");
+    } catch (error) {
+      console.error("error", error);
+      toast.error("Delete material failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOpenModalDeleteMaterials = () => {
+    modalRefDeleteMaterials.current?.openModal();
+  };
+
+  const handleClickDeleteMaterials = async () => {
+    setLoading(true);
+    try {
+      await deleteSelectedMutilpleMaterials(selected);
+      toast.success(`Delete ${selected.length} materials`);
+    } catch (error) {
+      console.error("error", error);
+      toast.error("delete material failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Box
@@ -90,14 +150,11 @@ const MarterialCategoriesList = () => {
           <Table aria-labelledby="tableTitle">
             <EnhancedTableHead
               numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
               onSelectAllClick={(event) => handleSelectAllClick(event, data)}
-              onRequestSort={handleRequestSort}
               rowCount={data.length}
               selected={selected}
               headCells={headCellMaterialCategory}
-              handleOpenModal={handleOpenModalDeleteCategories}
+              handleOpenModal={handleOpenModalDeleteMaterials}
             />
             <TableBody>
               {data.map((row, index) => {
@@ -252,7 +309,9 @@ const MarterialCategoriesList = () => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation();
-                              navigate(`edit-category/${row.id}`);
+                              navigate(
+                                `${location.pathname}/edit-marterial-category/${row.id}`
+                              );
                             }}
                           >
                             <LiaEditSolid />
@@ -262,8 +321,8 @@ const MarterialCategoriesList = () => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation();
-                              // handleDeleteCategory(row.id.toString());
-                              // handleOpenModal();
+                              handleDeleteOneMaterial(row.id);
+                              handleOpenModal();
                             }}
                           >
                             <RiDeleteBinLine />
@@ -281,16 +340,18 @@ const MarterialCategoriesList = () => {
           count={totalMarterialCategory}
           rowsPerPage={rowsPerPage}
         />
-        {/* <DeleteCategoryDialog
-          ref={modalRef}
-          handleClickDeleteCategory={handleClickDeleteOneCategory}
-          content=" You want to delete category ?"
+        <DeleteCategoryDialog
+          ref={modalRefDeleteOne}
+          onClick={handleClickDeleteOneMaterial}
+          content=" You want to delete material ?"
+          title="Delete material"
         />
         <DeleteCategoryDialog
-          ref={modalRefDeleteCategories}
-          handleClickDeleteCategory={handleClickDeleteCategories}
-          content={`You want to delete ${selected.length} category ?`}
-        /> */}
+          ref={modalRefDeleteMaterials}
+          onClick={handleClickDeleteMaterials}
+          content={`You want to delete ${selected.length} material ?`}
+          title="Delete material"
+        />
       </Paper>
     </Box>
   );
