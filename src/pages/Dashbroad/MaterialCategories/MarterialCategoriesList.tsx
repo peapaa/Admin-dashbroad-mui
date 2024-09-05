@@ -4,6 +4,7 @@ import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
 import EnhancedTableHead from "@/components/EnhancedTableHead";
 import Loading from "@/components/Loading";
 import NotFound from "@/components/NotFound";
+import SelectCheckAllTable from "@/components/SelectCheckAllTable";
 // hooks
 import useSearchQuery from "@/hooks/useSearchQuery";
 import useSelectedItem from "@/hooks/useSelectedItem";
@@ -133,229 +134,235 @@ const MarterialCategoriesList = () => {
   }
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: "1140px",
-        minWidth: "840px",
-        overflowX: "auto",
-      }}
-    >
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableContainer
-          sx={{
-            scrollbarWidth: "thin",
-            "&::-webkit-scrollbar": {
-              height: "8px",
-            },
-          }}
-        >
-          <Table aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              onSelectAllClick={(event) => handleSelectAllClick(event, data)}
-              rowCount={data.length}
-              selected={selected}
-              headCells={headCellMaterialCategory}
-              handleOpenModal={handleOpenModalDeleteMaterials}
-            />
-            <TableBody>
-              {data.map((row, index) => {
-                const isItemSelected = isSelected(row.id.toString());
-                const labelId = `enhanced-table-checkbox-${index}`;
+    <Box>
+      <SelectCheckAllTable
+        numSelected={selected.length}
+        onSelectAllClick={(event) => handleSelectAllClick(event, data)}
+        rowCount={data.length}
+        selected={selected}
+        handleOpenModal={handleOpenModalDeleteMaterials}
+      />
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "1140px",
+          minWidth: "840px",
+          overflowX: "auto",
+        }}
+      >
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <TableContainer
+            sx={{
+              scrollbarWidth: "thin",
+              "&::-webkit-scrollbar": {
+                height: "8px",
+              },
+            }}
+          >
+            <Table aria-labelledby="tableTitle">
+              <EnhancedTableHead headCells={headCellMaterialCategory} />
+              <TableBody>
+                {data.map((row, index) => {
+                  const isItemSelected = isSelected(row.id.toString());
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={() => handleSlectedItem(row.id.toString())}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <span className="font-bold" style={{ color: "#0EA5E9" }}>
-                        {index + 1 + rowsPerPage * (page - 1)}
-                      </span>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Box
-                        sx={{
-                          width: "180px",
-                          height: "110px",
-                        }}
-                      >
-                        <img
-                          src={row.image}
-                          alt="avatar"
-                          className="object-cover w-full h-full rounded-lg "
+                  return (
+                    <TableRow
+                      hover
+                      onClick={() => handleSlectedItem(row.id.toString())}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
                         />
-                      </Box>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                          width: "200px",
-                        }}
-                        className="truncate"
-                      >
-                        <span>{row.name}</span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                          width: "120px",
-                        }}
-                      >
-                        <span>{row.part_number}</span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                        }}
-                      >
-                        {row.type ? (
+                      </TableCell>
+                      <TableCell align="center">
+                        <span
+                          className="font-bold"
+                          style={{ color: "#0EA5E9" }}
+                        >
+                          {index + 1 + rowsPerPage * (page - 1)}
+                        </span>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Box
+                          sx={{
+                            width: "180px",
+                            height: "110px",
+                          }}
+                        >
+                          <img
+                            src={row.image}
+                            alt="avatar"
+                            className="object-cover w-full h-full rounded-lg "
+                          />
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                            width: "200px",
+                          }}
+                          className="truncate"
+                        >
+                          <span>{row.name}</span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                            width: "120px",
+                          }}
+                        >
+                          <span>{row.part_number}</span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                          }}
+                        >
+                          {row.type ? (
+                            <span
+                              style={{
+                                backgroundColor: theme.palette.tagColor?.main,
+                              }}
+                              className="px-2 py-1 rounded-md"
+                            >
+                              {row.type}
+                            </span>
+                          ) : null}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                          }}
+                        >
                           <span
                             style={{
                               backgroundColor: theme.palette.tagColor?.main,
                             }}
                             className="px-2 py-1 rounded-md"
                           >
-                            {row.type}
+                            {row?.category?.name}
                           </span>
-                        ) : null}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                        }}
-                      >
-                        <span
-                          style={{
-                            backgroundColor: theme.palette.tagColor?.main,
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
                           }}
-                          className="px-2 py-1 rounded-md"
                         >
-                          {row?.category?.name}
-                        </span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                        }}
-                      >
-                        <span className="px-2 py-1 rounded-md">
-                          {row.large_title}
-                        </span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                          width: "100px",
-                        }}
-                      >
-                        <span className="px-2 py-1 rounded-md">
-                          {row.small_title}
-                        </span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                          width: "100px",
-                        }}
-                      >
-                        <span
-                          style={{
-                            backgroundColor: theme.palette.tagColor?.secondary,
+                          <span className="px-2 py-1 rounded-md">
+                            {row.large_title}
+                          </span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                            width: "100px",
                           }}
-                          className="px-2 py-1 rounded-md"
                         >
-                          {row.basic_price}
-                        </span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                          width: "130px",
-                        }}
-                      >
-                        <span>{row.supplier.name}</span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center" className="icon-options-table">
-                      <Box className="flex gap-5">
-                        <Tooltip title="Edit">
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              navigate(
-                                `${location.pathname}/edit-marterial-category/${row.id}`
-                              );
+                          <span className="px-2 py-1 rounded-md">
+                            {row.small_title}
+                          </span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                            width: "100px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              backgroundColor:
+                                theme.palette.tagColor?.secondary,
                             }}
+                            className="px-2 py-1 rounded-md"
                           >
-                            <LiaEditSolid />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleDeleteOneMaterial(row.id);
-                              handleOpenModal();
-                            }}
-                          >
-                            <RiDeleteBinLine />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <CustomTablePagination
-          count={totalMarterialCategory}
-          rowsPerPage={rowsPerPage}
-        />
-        <DeleteCategoryDialog
-          ref={modalRefDeleteOne}
-          onClick={handleClickDeleteOneMaterial}
-          content=" You want to delete material ?"
-          title="Delete material"
-        />
-        <DeleteCategoryDialog
-          ref={modalRefDeleteMaterials}
-          onClick={handleClickDeleteMaterials}
-          content={`You want to delete ${selected.length} material ?`}
-          title="Delete material"
-        />
-      </Paper>
+                            {row.basic_price}
+                          </span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                            width: "130px",
+                          }}
+                        >
+                          <span>{row.supplier.name}</span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center" className="icon-options-table">
+                        <Box className="flex gap-5">
+                          <Tooltip title="Edit">
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                navigate(
+                                  `${location.pathname}/edit-marterial-category/${row.id}`
+                                );
+                              }}
+                            >
+                              <LiaEditSolid />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete">
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleDeleteOneMaterial(row.id);
+                                handleOpenModal();
+                              }}
+                            >
+                              <RiDeleteBinLine />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <CustomTablePagination
+            count={totalMarterialCategory}
+            rowsPerPage={rowsPerPage}
+          />
+          <DeleteCategoryDialog
+            ref={modalRefDeleteOne}
+            onClick={handleClickDeleteOneMaterial}
+            content=" You want to delete material ?"
+            title="Delete material"
+          />
+          <DeleteCategoryDialog
+            ref={modalRefDeleteMaterials}
+            onClick={handleClickDeleteMaterials}
+            content={`You want to delete ${selected.length} material ?`}
+            title="Delete material"
+          />
+        </Paper>
+      </Box>
     </Box>
   );
 };

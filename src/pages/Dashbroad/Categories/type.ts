@@ -56,12 +56,7 @@ export interface SelectOptionProps {
 }
 
 export interface EnhancedTableProps {
-  numSelected: number;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  rowCount: number;
-  selected: string[];
   headCells: HeadCell[];
-  handleOpenModal: () => void;
 }
 
 export interface GenericData {
@@ -77,4 +72,8 @@ export interface FormActionProps {
   formMethod: UseFormReturn<DataCategory, unknown, undefined>;
   newImage: string | null;
   loading: boolean;
+}
+
+export interface InputSearchByNameProps {
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }

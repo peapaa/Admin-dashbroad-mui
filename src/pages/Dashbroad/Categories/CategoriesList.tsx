@@ -42,6 +42,7 @@ import useSWR, { mutate } from "swr";
 import { CategoriesProps, DeleteCategory, DeleteHandleProps } from "./type";
 
 // utils
+import SelectCheckAllTable from "@/components/SelectCheckAllTable";
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 import { headCellCategory } from "@/utils/data";
 
@@ -186,139 +187,144 @@ export default function CategoriesList() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableContainer>
-          <Table aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              onSelectAllClick={(event) => handleSelectAllClick(event, data)}
-              rowCount={data.length}
-              selected={selected}
-              headCells={headCellCategory}
-              handleOpenModal={handleOpenModalDeleteCategories}
-            />
-            <TableBody>
-              {data.map((row, index) => {
-                const isItemSelected = isSelected(row.id.toString());
-                const labelId = `enhanced-table-checkbox-${index}`;
+    <Box>
+      <SelectCheckAllTable
+        numSelected={selected.length}
+        onSelectAllClick={(event) => handleSelectAllClick(event, data)}
+        rowCount={data.length}
+        selected={selected}
+        handleOpenModal={handleOpenModalDeleteCategories}
+      />
+      <Box sx={{ width: "100%" }}>
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <TableContainer>
+            <Table aria-labelledby="tableTitle">
+              <EnhancedTableHead headCells={headCellCategory} />
+              <TableBody>
+                {data.map((row, index) => {
+                  const isItemSelected = isSelected(row.id.toString());
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={() => handleSlectedItem(row.id.toString())}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox" width="5%">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{ "aria-labelledby": labelId }}
-                      />
-                    </TableCell>
-                    <TableCell align="center" width="5%">
-                      <span className="font-bold" style={{ color: "#0EA5E9" }}>
-                        {index + 1 + rowsPerPage * (page - 1)}
-                      </span>
-                    </TableCell>
-                    <TableCell align="center" width="20%" height="130px">
-                      <img
-                        src={row.image}
-                        alt="avatar"
-                        className="object-cover w-full h-full rounded-lg "
-                      />
-                    </TableCell>
-                    <TableCell align="center" width="20%">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.main,
-                          width: "200px",
-                        }}
-                        className=" truncate"
-                      >
-                        <span>{row.name}</span>
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center" width="20%">
-                      <Typography
-                        sx={{
-                          color: theme.palette.textColor?.thrid,
-                        }}
-                      >
-                        <span
-                          style={{
-                            backgroundColor:
-                              row.price_type === "per_metter"
-                                ? theme.palette.tagColor?.main
-                                : theme.palette.textColor?.secondary,
-                          }}
-                          className="px-2 py-1 rounded-lg"
-                        >
-                          {row.price_type === "per_metter"
-                            ? "Metter"
-                            : "Quantity"}
-                        </span>
-                      </Typography>
-                    </TableCell>
-
-                    <TableCell
-                      align="center"
-                      style={{
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                      }}
-                      className="icon-options-table"
+                  return (
+                    <TableRow
+                      hover
+                      onClick={() => handleSlectedItem(row.id.toString())}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{ cursor: "pointer" }}
                     >
-                      <Tooltip title="Edit">
-                        <IconButton
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            navigate(`edit-category/${row.id}`);
+                      <TableCell padding="checkbox" width="5%">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
+                        />
+                      </TableCell>
+                      <TableCell align="center" width="5%">
+                        <span
+                          className="font-bold"
+                          style={{ color: "#0EA5E9" }}
+                        >
+                          {index + 1 + rowsPerPage * (page - 1)}
+                        </span>
+                      </TableCell>
+                      <TableCell align="center" width="20%" height="130px">
+                        <img
+                          src={row.image}
+                          alt="avatar"
+                          className="object-cover w-full h-full rounded-lg "
+                        />
+                      </TableCell>
+                      <TableCell align="center" width="20%">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.main,
+                            width: "200px",
+                          }}
+                          className=" truncate"
+                        >
+                          <span>{row.name}</span>
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center" width="20%">
+                        <Typography
+                          sx={{
+                            color: theme.palette.textColor?.thrid,
                           }}
                         >
-                          <LiaEditSolid />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleDeleteCategory(row.id.toString());
-                            handleOpenModal();
-                          }}
-                        >
-                          <RiDeleteBinLine />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <CustomTablePagination
-          count={totalCategory}
-          rowsPerPage={rowsPerPage}
-        />
-        <DeleteCategoryDialog
-          ref={modalRef}
-          onClick={handleClickDeleteOneCategory}
-          content=" You want to delete category ?"
-          title="Delete category"
-        />
-        <DeleteCategoryDialog
-          ref={modalRefDeleteCategories}
-          onClick={handleClickDeleteCategories}
-          content={`You want to delete ${selected.length} category ?`}
-          title="Delete category"
-        />
-      </Paper>
+                          <span
+                            style={{
+                              backgroundColor:
+                                row.price_type === "per_metter"
+                                  ? theme.palette.tagColor?.main
+                                  : theme.palette.textColor?.secondary,
+                            }}
+                            className="px-2 py-1 rounded-lg"
+                          >
+                            {row.price_type === "per_metter"
+                              ? "Metter"
+                              : "Quantity"}
+                          </span>
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+                        align="center"
+                        style={{
+                          paddingLeft: 0,
+                          paddingRight: 0,
+                        }}
+                        className="icon-options-table"
+                      >
+                        <Tooltip title="Edit">
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              navigate(`edit-category/${row.id}`);
+                            }}
+                          >
+                            <LiaEditSolid />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleDeleteCategory(row.id.toString());
+                              handleOpenModal();
+                            }}
+                          >
+                            <RiDeleteBinLine />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <CustomTablePagination
+            count={totalCategory}
+            rowsPerPage={rowsPerPage}
+          />
+          <DeleteCategoryDialog
+            ref={modalRef}
+            onClick={handleClickDeleteOneCategory}
+            content=" You want to delete category ?"
+            title="Delete category"
+          />
+          <DeleteCategoryDialog
+            ref={modalRefDeleteCategories}
+            onClick={handleClickDeleteCategories}
+            content={`You want to delete ${selected.length} category ?`}
+            title="Delete category"
+          />
+        </Paper>
+      </Box>
     </Box>
   );
 }
