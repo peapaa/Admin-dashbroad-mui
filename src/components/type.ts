@@ -16,3 +16,12 @@ export interface SelectCheckAllTableProps {
 export interface ButtonClearSearchProps {
   reset: UseFormReset<FormValuesMaterial>;
 }
+
+export interface LoadingProps {
+  className?: string;
+}
+
+export interface ButtonRetryProps {
+  className?: string;
+  onClick: () => void;
+}
