@@ -1,4 +1,3 @@
-import { WithCategoriesProps, withSupplierProps } from "@/hoc/type";
 import { priceTypesProps } from "@/utils/data";
 import { Control, FieldErrors, UseFormReturn } from "react-hook-form";
 
@@ -40,14 +39,12 @@ export interface ControllerFormProps {
   OptionValues?: priceTypesProps[];
 }
 
-export interface ControllerFormSelectWithCategoriesProps
-  extends WithCategoriesProps {
+export interface ControllerFormSelectWithCategoriesProps {
   control: Control<MarterialCategoriesProps, unknown>;
   errorForm: FieldErrors<MarterialCategoriesProps>;
 }
 
-export interface ControllerFormSelectWithSupplierProps
-  extends withSupplierProps {
+export interface ControllerFormSelectWithSupplierProps {
   control: Control<MarterialCategoriesProps, unknown>;
   errorForm: FieldErrors<MarterialCategoriesProps>;
 }
