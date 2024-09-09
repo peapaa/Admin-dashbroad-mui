@@ -15,15 +15,21 @@ const nameSchema = Yup.string()
 
 const typeSchema = Yup.number()
   .nullable()
+  .transform((value, originalValue) => {
+    if (originalValue === "") {
+      return null;
+    }
+    return value;
+  })
   .typeError("Type must be a number")
   .test("is integer", "Type can't include a decimal point", function (value) {
-    if (value) {
+    if (value !== null) {
       return Number.isInteger(value);
     }
     return true;
   })
-  .max(2147483647, "Type can be at most 2147483647 number")
-  .min(-2147483648, "Type be at least -2147483648 number");
+  .max(2147483647, "Type can be at most 2147483647")
+  .min(-2147483648, "Type must be at least -2147483648");
 
 const largeTitleSchema = Yup.string()
   .required("Required large title")
