@@ -1,4 +1,4 @@
-import ButtonForm from "@/components/ButtonForm";
+import ButtonForm from "@/components/Button/ButtonForm";
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import InputText from "@/pages/Dashbroad/Categories/components/Input/InputText";
 import SelectOption from "@/pages/Dashbroad/Categories/components/Select/SelectOption";

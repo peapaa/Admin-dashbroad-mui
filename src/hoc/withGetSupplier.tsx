@@ -1,6 +1,8 @@
-import { SupplierProps, withSupplierProps } from "@/hoc/type";
-import { getSupplier } from "@/services/supplierService";
 import { ComponentType, useEffect, useState } from "react";
+// hoc
+import { SupplierProps, withSupplierProps } from "@/hoc/type";
+// service
+import { getSupplier } from "@/services/supplierService";
 
 function withGetSupplier<T>(Component: ComponentType<T & withSupplierProps>) {
   return (props: T) => {

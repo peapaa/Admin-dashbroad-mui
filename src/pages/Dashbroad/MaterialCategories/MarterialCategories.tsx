@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 // components
-import ProtectedRouter from "@/components/ProtectedRouter";
+import ProtectedRouter from "@/components/Home/ProtectedRouter";
 // pages
 import LayoutContent from "@/pages/Dashbroad/LayoutContent/LayoutContent";
 import CreateMarterialCategory from "@/pages/Dashbroad/MaterialCategories/CreateMarterialCategory";

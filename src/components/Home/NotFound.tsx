@@ -1,4 +1,4 @@
-import notFoundImage from "../assets/images/404-logo/Error-404.png";
+import notFoundImage from "@/assets/images/404-logo/Error-404.png";
 const NotFound = () => {
   return (
     <img

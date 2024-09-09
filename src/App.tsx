@@ -2,7 +2,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 //component
-import ProtectedRouter from "./components/ProtectedRouter";
+import ProtectedRouter from "./components/Home/ProtectedRouter";
 
 //page
 import Address from "@/pages/Dashbroad/Address/Address";

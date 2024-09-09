@@ -1,11 +1,11 @@
 // component
-import CustomTablePagination from "@/components/CustomTablePagination";
-import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
-import EnhancedTableHead from "@/components/EnhancedTableHead";
-import Loading from "@/components/Loading";
-import NoProduct from "@/components/NoProduct";
-import NotFound from "@/components/NotFound";
-import SelectCheckAllTable from "@/components/SelectCheckAllTable";
+import Loading from "@/components/Home/Loading";
+import NoProduct from "@/components/Home/NoProduct";
+import NotFound from "@/components/Home/NotFound";
+import DeleteCategoryDialog from "@/components/Modal/DeleteCategoryDialog";
+import CustomTablePagination from "@/components/TableCustom/CustomTablePagination";
+import EnhancedTableHead from "@/components/TableCustom/EnhancedTableHead";
+import SelectCheckAllTable from "@/components/TableCustom/SelectCheckAllTable";
 // hooks
 import useSearchQuery from "@/hooks/useSearchQuery";
 import useSelectedItem from "@/hooks/useSelectedItem";

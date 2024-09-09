@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 // components
-import ButtonForm from "@/components/ButtonForm";
+import ButtonForm from "@/components/Button/ButtonForm";
 // pages
 import InputImage from "@/pages/Dashbroad/Categories/components/Input/InputImage";
 import ControllerFormInput from "@/pages/Dashbroad/MaterialCategories/components/form/ControllerFormInput";

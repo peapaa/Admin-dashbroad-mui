@@ -1,7 +1,10 @@
-import { WithCategoriesProps } from "@/hoc/type";
-import { CategoriesProps } from "@/pages/Dashbroad/Categories/type";
-import { getAllCategoriesForMaterial } from "@/services/marterialCategoriesService";
 import React, { useEffect, useState } from "react";
+// hoc
+import { WithCategoriesProps } from "@/hoc/type";
+// page
+import { CategoriesProps } from "@/pages/Dashbroad/Categories/type";
+// services
+import { getAllCategoriesForMaterial } from "@/services/marterialCategoriesService";
 function withGetCategories<T>(
   Component: React.ComponentType<T & WithCategoriesProps>
 ) {

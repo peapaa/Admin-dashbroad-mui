@@ -18,10 +18,10 @@ import Tooltip from "@mui/material/Tooltip";
 import { useTheme } from "@mui/material/styles";
 
 // component
-import CustomTablePagination from "@/components/CustomTablePagination";
-import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
-import EnhancedTableHead from "@/components/EnhancedTableHead";
-import NotFound from "@/components/NotFound";
+import NotFound from "@/components/Home/NotFound";
+import DeleteCategoryDialog from "@/components/Modal/DeleteCategoryDialog";
+import CustomTablePagination from "@/components/TableCustom/CustomTablePagination";
+import EnhancedTableHead from "@/components/TableCustom/EnhancedTableHead";
 
 //services
 import {
@@ -42,8 +42,8 @@ import useSWR, { mutate } from "swr";
 import { CategoriesProps, DeleteCategory, DeleteHandleProps } from "./type";
 
 // utils
-import NoProduct from "@/components/NoProduct";
-import SelectCheckAllTable from "@/components/SelectCheckAllTable";
+import NoProduct from "@/components/Home/NoProduct";
+import SelectCheckAllTable from "@/components/TableCustom/SelectCheckAllTable";
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 import { headCellCategory } from "@/utils/data";
 

@@ -5,8 +5,8 @@ import { Button, Typography, useTheme } from "@mui/material";
 
 import useSearchQuery from "@/hooks/useSearchQuery";
 // components
-import ButtonClearSearch from "@/components/ButtonClearSearch";
-import ButtonSearch from "@/components/ButtonSearch";
+import ButtonClearSearch from "@/components/Button/ButtonClearSearch";
+import ButtonSearch from "@/components/Button/ButtonSearch";
 import InputSearchByName from "@/pages/Dashbroad/Categories/components/Input/InputSearchByName";
 import { FormValuesMaterial } from "@/pages/Dashbroad/Categories/type";
 import SearchByCategory from "@/pages/Dashbroad/MaterialCategories/components/inputSearch/SearchByCategory";
@@ -25,8 +25,8 @@ const NavMaterialCategories = () => {
   const onSubmit = (data: FormValuesMaterial) => {
     handleKeyDown(data.searchText);
     handleKeyDownInputCategory(data.searchCategory);
-    console.log("data", data);
   };
+
   return (
     <div className="flex flex-col my-5 ">
       <Typography sx={{ fontSize: 24, color: theme.palette.text.primary }}>

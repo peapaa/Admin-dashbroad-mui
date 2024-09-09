@@ -2,7 +2,7 @@
 import { Route, Routes } from "react-router-dom";
 
 // page
-import ProtectedRouter from "@/components/ProtectedRouter";
+import ProtectedRouter from "@/components/Home/ProtectedRouter";
 import CategoriesList from "@/pages/Dashbroad/Categories/CategoriesList";
 import CreateCategory from "@/pages/Dashbroad/Categories/CreateCategory";
 import EditCategory from "@/pages/Dashbroad/Categories/EditCategory";

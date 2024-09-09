@@ -1,7 +1,7 @@
 // HOC
 import { WithCategoriesProps } from "@/hoc/type";
 import withGetCategories from "@/hoc/withGetCategories";
-// hooks
+
 // mui
 import { InputSearchProps } from "@/pages/Dashbroad/Categories/type";
 import { InputAdornment } from "@mui/material";

@@ -7,6 +7,8 @@ import { useTheme } from "@mui/material/styles";
 
 // hook
 import useSearchQuery from "@/hooks/useSearchQuery";
+
+// pages
 import InputSearchByName from "@/pages/Dashbroad/Categories/components/Input/InputSearchByName";
 
 // type

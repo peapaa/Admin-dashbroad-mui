@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../../components/Header";
-import SideBar from "../../components/SideBar";
+import Header from "../../components/Home/Header";
+import SideBar from "../../components/Home/SideBar";
 
 const Dashbroad: React.FC = () => {
   return (

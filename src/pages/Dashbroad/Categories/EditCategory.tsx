@@ -12,7 +12,7 @@ import { DataCategory } from "@/pages/Dashbroad/Categories/type";
 import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategory";
 
 // service
-import Loading from "@/components/Loading";
+import Loading from "@/components/Home/Loading";
 import FormActionCategory from "@/pages/Dashbroad/Categories/components/FormAction/FormActionCategory";
 import { editCategory, getOneCategory } from "@/services/categoriesService";
 

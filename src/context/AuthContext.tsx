@@ -1,4 +1,4 @@
-import Loading from "@/components/Loading";
+import Loading from "@/components/Home/Loading";
 import * as React from "react";
 import { createContext, ReactNode, useEffect, useState } from "react";
 

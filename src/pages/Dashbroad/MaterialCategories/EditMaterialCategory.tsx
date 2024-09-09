@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 // components
-import Loading from "@/components/Loading";
+import Loading from "@/components/Home/Loading";
 // pages
 import FormActionMaterial from "@/pages/Dashbroad/MaterialCategories/components/form/FormActionMaterial";
 import formDataMaterial from "@/pages/Dashbroad/MaterialCategories/components/form/formDataMaterial";
