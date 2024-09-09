@@ -1,13 +1,13 @@
-import { SyntheticEvent } from "react";
 // HOC
 import { WithCategoriesProps } from "@/hoc/type";
 import withGetCategories from "@/hoc/withGetCategories";
 // hooks
-import useSearchQuery from "@/hooks/useSearchQuery";
 // mui
+import { InputSearchProps } from "@/pages/Dashbroad/Categories/type";
 import { InputAdornment } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import { SyntheticEvent } from "react";
 import { GoSearch } from "react-icons/go";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -15,14 +15,10 @@ const SearchByCategory = ({
   categories,
   loading,
   errors,
-}: WithCategoriesProps) => {
+  value,
+  onChange,
+}: WithCategoriesProps & InputSearchProps) => {
   const categoriesName = categories.map((category) => category.name);
-  const {
-    searchCategory,
-    handleInputChangeCategory,
-    handleKeyDownInputCategory,
-  } = useSearchQuery();
-
   return (
     <Autocomplete
       freeSolo
@@ -41,24 +37,26 @@ const SearchByCategory = ({
           border: "none",
         },
       }}
-      value={searchCategory}
-      onChange={(
-        event: SyntheticEvent<Element, Event>,
-        value: string | null
-      ) => {
-        handleInputChangeCategory(event, value);
+      value={value}
+      onChange={(_: SyntheticEvent<Element, Event>, value: string | null) => {
+        if (value) {
+          onChange(value);
+        }
       }}
       onInputChange={(
-        event: SyntheticEvent<Element, Event>,
+        _: SyntheticEvent<Element, Event>,
         value: string | null
       ) => {
-        handleInputChangeCategory(event, value);
+        if (value) {
+          onChange(value);
+        }
       }}
       renderInput={(params) => (
         <TextField
           {...params}
           placeholder="Search Category"
-          onKeyDown={handleKeyDownInputCategory}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           InputProps={{
             ...params.InputProps,
             startAdornment: (
