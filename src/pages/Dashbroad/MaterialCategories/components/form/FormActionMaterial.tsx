@@ -100,17 +100,11 @@ const FormActionMaterial: React.FC<FormActionMateriaProps> = ({
                 <ControllerFormSelectWithCategories
                   control={control}
                   errorForm={errors}
-                  categories={[]}
-                  loading={false}
-                  errors={""}
                 />
                 {/* supplier  required */}
                 <ControllerFormSelectWithSupplier
                   control={control}
                   errorForm={errors}
-                  supplier={[]}
-                  loading={false}
-                  errors={""}
                 />
               </div>
               {/* basic_price don't required */}
