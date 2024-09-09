@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const useSearchQuery = () => {
@@ -37,55 +37,41 @@ const useSearchQuery = () => {
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(event.target.value);
-  };
-
-  const handleInputChangeCategory = (
-    _event: SyntheticEvent<Element, Event>,
-    value: string | null
-  ) => {
-    if (value !== null) {
-      setSearchCategory(value);
+  const handleKeyDown = (searchText: string) => {
+    if (searchText.trim() === "") {
+      searchParams.delete("search");
+    } else {
+      searchParams.set("search", searchText.trim());
+      searchParams.set("page", "1"); // enter push page = 0 to url
     }
+    setSearchParams(searchParams);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      if (searchText.trim() === "") {
-        searchParams.delete("search");
-      } else {
-        searchParams.set("search", searchText.trim());
-        searchParams.set("page", "1"); // enter push page = 0 to url
-      }
-      setSearchParams(searchParams);
+  const handleKeyDownInputCategory = (searchCategory: string) => {
+    if (searchCategory.trim() === "") {
+      searchParams.delete("category");
+    } else {
+      searchParams.set("category", searchCategory.trim());
+      searchParams.set("page", "1"); // enter push page = 0 to url
     }
+    setSearchParams(searchParams);
   };
 
-  const handleKeyDownInputCategory = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter") {
-      if (searchCategory.trim() === "") {
-        searchParams.delete("category");
-      } else {
-        searchParams.set("category", searchCategory.trim());
-        searchParams.set("page", "1"); // enter push page = 0 to url
-      }
-      setSearchParams(searchParams);
-    }
+  const handleResetSearch = () => {
+    searchParams.delete("search");
+    searchParams.delete("category");
+    searchParams.delete("page");
+    setSearchParams(searchParams);
   };
-
   return {
     searchText,
     searchCategory,
-    handleInputChange,
-    handleInputChangeCategory,
     handleKeyDown,
     handleKeyDownInputCategory,
     handleNextPage,
     handlePrevPage,
     page,
+    handleResetSearch,
   };
 };
 
