@@ -1,10 +1,12 @@
 // HOC
+import ButtonRetry from "@/components/Button/ButtonRetry";
+import Loading from "@/components/Home/Loading";
 import { WithCategoriesProps } from "@/hoc/type";
 import withGetCategories from "@/hoc/withGetCategories";
 
 // mui
 import { InputSearchProps } from "@/pages/Dashbroad/Categories/type";
-import { InputAdornment } from "@mui/material";
+import { Box, InputAdornment } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { SyntheticEvent } from "react";
@@ -15,10 +17,28 @@ const SearchByCategory = ({
   categories,
   loading,
   errors,
+  setRetry,
   value,
   onChange,
 }: WithCategoriesProps & InputSearchProps) => {
   const categoriesName = categories.map((category) => category.name);
+  if (loading) {
+    return (
+      <>
+        <Box className="flex items-center justify-center h-[92px]">
+          <Loading className="!w-6 !h-6" />
+        </Box>
+      </>
+    );
+  }
+
+  if (errors) {
+    return (
+      <Box className="flex items-center justify-center w-[300px]">
+        <ButtonRetry onClick={() => setRetry((prev) => !prev)} />
+      </Box>
+    );
+  }
   return (
     <Autocomplete
       freeSolo
