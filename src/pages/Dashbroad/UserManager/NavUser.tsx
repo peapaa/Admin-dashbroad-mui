@@ -11,7 +11,7 @@ import useSearchQuery from "../../../hooks/useSearchQuery";
 
 const NavUser = () => {
   const theme = useTheme();
-  const { searchText, handleInputChange, handleKeyDown } = useSearchQuery();
+  const { searchText } = useSearchQuery();
 
   return (
     <div className="flex my-5 items-center justify-between">
@@ -29,8 +29,8 @@ const NavUser = () => {
           <InputBase
             placeholder="Search"
             value={searchText}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
+            // onChange={handleInputChange}
+            // onKeyDown={handleKeyDown}
             sx={{
               width: "320px",
               height: "32px",
