@@ -42,6 +42,7 @@ import useSWR, { mutate } from "swr";
 import { CategoriesProps, DeleteCategory, DeleteHandleProps } from "./type";
 
 // utils
+import NoProduct from "@/components/NoProduct";
 import SelectCheckAllTable from "@/components/SelectCheckAllTable";
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
 import { headCellCategory } from "@/utils/data";
@@ -185,6 +186,10 @@ export default function CategoriesList() {
   const handleOpenModalDeleteCategories = () => {
     modalRefDeleteCategories.current?.openModal();
   };
+
+  if (totalCategory < 0) {
+    <NoProduct />;
+  }
 
   return (
     <Box>
