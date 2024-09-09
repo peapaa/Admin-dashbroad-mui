@@ -1,3 +1,6 @@
+import { FormValuesMaterial } from "@/pages/Dashbroad/Categories/type";
+import { UseFormReset } from "react-hook-form";
+
 export interface ButtonFormProps {
   loading: boolean;
 }
@@ -8,4 +11,8 @@ export interface SelectCheckAllTableProps {
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selected: string[];
   handleOpenModal: () => void;
+}
+
+export interface ButtonClearSearchProps {
+  reset: UseFormReset<FormValuesMaterial>;
 }
