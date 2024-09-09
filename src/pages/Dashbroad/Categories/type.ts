@@ -74,6 +74,16 @@ export interface FormActionProps {
   loading: boolean;
 }
 
-export interface InputSearchByNameProps {
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+export interface FormValuesMaterial {
+  searchText: string;
+  searchCategory: string;
+}
+
+export interface InputSearchProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export interface FormValuesCategory {
+  searchText: string;
 }

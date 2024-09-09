@@ -1,14 +1,13 @@
+// type
+import { InputSearchProps } from "@/pages/Dashbroad/Categories/type";
+
 // mui
 import { Box, InputAdornment, InputBase } from "@mui/material";
 
 // icon
 import { GoSearch } from "react-icons/go";
 
-// hooks
-import useSearchQuery from "@/hooks/useSearchQuery";
-
-const InputSearchByName = () => {
-  const { searchText, handleInputChange, handleKeyDown } = useSearchQuery();
+const InputSearchByName: React.FC<InputSearchProps> = ({ value, onChange }) => {
   return (
     <Box
       sx={{
@@ -19,9 +18,8 @@ const InputSearchByName = () => {
     >
       <InputBase
         placeholder="Search"
-        value={searchText}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         sx={{
           width: "320px",
           height: "32px",
