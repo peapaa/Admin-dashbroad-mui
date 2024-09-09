@@ -16,6 +16,7 @@ import { FormValuesCategory } from "@/pages/Dashbroad/Categories/type";
 
 const NavCategories = () => {
   const theme = useTheme();
+
   const location = useLocation();
   const { handleKeyDown } = useSearchQuery();
   const { handleSubmit, control } = useForm<FormValuesCategory>({
@@ -32,6 +33,7 @@ const NavCategories = () => {
         <Typography sx={{ fontSize: 24, color: theme.palette.text.primary }}>
           Category
         </Typography>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
             control={control}

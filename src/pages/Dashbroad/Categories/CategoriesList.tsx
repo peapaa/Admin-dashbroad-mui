@@ -191,6 +191,10 @@ export default function CategoriesList() {
     <NoProduct />;
   }
 
+  if (totalCategory < 0) {
+    <NoProduct />;
+  }
+
   return (
     <Box>
       <SelectCheckAllTable
