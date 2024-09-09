@@ -25,6 +25,17 @@ const EditMaterialCategory = () => {
 
   const formMethod = useForm<MarterialCategoriesProps>({
     resolver: yupResolver(editMaterialSchema),
+    defaultValues: {
+      image: [],
+      part_number: "",
+      name: "",
+      type: 0,
+      large_title: "",
+      small_title: "",
+      basic_price: 0,
+      category: "",
+      supplier: "",
+    },
   });
 
   const { setValue } = formMethod;
