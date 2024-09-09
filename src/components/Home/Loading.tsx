@@ -1,13 +1,8 @@
-import { Box, CircularProgress } from "@mui/material";
+import { LoadingProps } from "@/components/type";
+import { CircularProgress } from "@mui/material";
 
-const Loading = () => {
-  return (
-    <Box className="w-full h-full">
-      <Box className="flex items-center justify-center h-screen">
-        <CircularProgress />
-      </Box>
-    </Box>
-  );
+const Loading: React.FC<LoadingProps> = ({ className }) => {
+  return <CircularProgress className={className} />;
 };
 
 export default Loading;

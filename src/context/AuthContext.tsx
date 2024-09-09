@@ -1,4 +1,5 @@
 import Loading from "@/components/Home/Loading";
+import { Box } from "@mui/material";
 import * as React from "react";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -42,7 +43,16 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
     setToken(null);
   };
   if (loading) {
-    return <Loading />;
+    return (
+      <>
+        <Box className="w-full h-full">
+          <Box className="flex items-center justify-center h-screen">
+            <Loading />
+          </Box>
+        </Box>
+        ;
+      </>
+    );
   }
 
   // const { searchText, page } = useSearchQuery();

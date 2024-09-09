@@ -16,6 +16,7 @@ import {
 } from "@/services/marterialCategoriesService";
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Box } from "@mui/material";
 import axios from "axios";
 
 const EditMaterialCategory = () => {
@@ -112,7 +113,16 @@ const EditMaterialCategory = () => {
   };
 
   if (loading) {
-    return <Loading />;
+    return (
+      <>
+        <Box className="w-full h-full">
+          <Box className="flex items-center justify-center h-screen">
+            <Loading />
+          </Box>
+        </Box>
+        ;
+      </>
+    );
   }
 
   return (

@@ -134,7 +134,16 @@ const MarterialCategoriesList = () => {
   };
 
   if (loading) {
-    return <Loading />;
+    return (
+      <>
+        <Box className="w-full h-full">
+          <Box className="flex items-center justify-center h-screen">
+            <Loading />
+          </Box>
+        </Box>
+        ;
+      </>
+    );
   }
 
   if (totalMarterialCategory < 0) {

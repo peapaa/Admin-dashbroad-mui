@@ -15,6 +15,7 @@ import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategor
 import Loading from "@/components/Home/Loading";
 import FormActionCategory from "@/pages/Dashbroad/Categories/components/FormAction/FormActionCategory";
 import { editCategory, getOneCategory } from "@/services/categoriesService";
+import { Box } from "@mui/material";
 
 const EditCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -74,7 +75,16 @@ const EditCategory = () => {
   );
 
   if (loading) {
-    return <Loading />;
+    return (
+      <>
+        <Box className="w-full h-full">
+          <Box className="flex items-center justify-center h-screen">
+            <Loading />
+          </Box>
+        </Box>
+        ;
+      </>
+    );
   }
 
   return (
