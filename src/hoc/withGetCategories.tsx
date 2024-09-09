@@ -11,22 +11,31 @@ function withGetCategories<T>(
   return (props: T) => {
     const [categories, setCategories] = useState<CategoriesProps[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [errors, setErrors] = useState<string>("");
+    const [errors, setErrors] = useState<boolean>(false);
+    const [retry, setRetry] = useState<boolean>(false);
     useEffect(() => {
       const getCategories = async () => {
         setLoading(true);
+        setErrors(false);
         try {
           const response = await getAllCategoriesForMaterial();
           setCategories(response.data.results as CategoriesProps[]);
+          // const number = Math.random();
+          // console.log(number);
+          // const math = number > 0.1;
+          // console.log("math", math);
+          // if (math) {
+          //   throw new Error("Simulated error for testing purposes");
+          // }
         } catch (error) {
           console.error("error", error);
-          setErrors("fetch api categories failed");
+          setErrors(true);
         } finally {
           setLoading(false);
         }
       };
       getCategories();
-    }, []);
+    }, [retry]);
 
     return (
       <Component
@@ -34,6 +43,7 @@ function withGetCategories<T>(
         categories={categories}
         loading={loading}
         errors={errors}
+        setRetry={setRetry}
       />
     );
   };

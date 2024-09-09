@@ -13,11 +13,13 @@ export interface SupplierProps {
 export interface WithCategoriesProps {
   categories: CategoriesProps[];
   loading: boolean;
-  errors: string;
+  errors: boolean;
+  setRetry: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface withSupplierProps {
   supplier: SupplierProps[];
   loading: boolean;
-  errors: string;
+  errors: boolean;
+  setRetry: React.Dispatch<React.SetStateAction<boolean>>;
 }
