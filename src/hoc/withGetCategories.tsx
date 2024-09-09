@@ -16,7 +16,7 @@ function withGetCategories<T>(
           const response = await getAllCategoriesForMaterial();
           setCategories(response.data.results as CategoriesProps[]);
         } catch (error) {
-          console.log("error", error);
+          console.error("error", error);
           setErrors("fetch api categories failed");
         } finally {
           setLoading(false);

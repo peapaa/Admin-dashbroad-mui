@@ -14,7 +14,7 @@ function withGetSupplier<T>(Component: ComponentType<T & withSupplierProps>) {
           const response = await getSupplier();
           setSupplier(response.data.results as SupplierProps[]);
         } catch (error) {
-          console.log(error);
+          console.error(error);
           setErrors("fetch get supplier failed");
         } finally {
           setLoading(false);
