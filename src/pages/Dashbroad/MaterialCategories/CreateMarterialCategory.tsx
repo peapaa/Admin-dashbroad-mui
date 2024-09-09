@@ -23,6 +23,8 @@ const CreateMarterialCategory = () => {
     defaultValues: {
       image: [],
       part_number: "",
+      name: "",
+      type: 0,
       large_title: "",
       small_title: "",
       basic_price: 0,
