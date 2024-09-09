@@ -3,6 +3,7 @@ import CustomTablePagination from "@/components/CustomTablePagination";
 import DeleteCategoryDialog from "@/components/DeleteCategoryDialog";
 import EnhancedTableHead from "@/components/EnhancedTableHead";
 import Loading from "@/components/Loading";
+import NoProduct from "@/components/NoProduct";
 import NotFound from "@/components/NotFound";
 import SelectCheckAllTable from "@/components/SelectCheckAllTable";
 // hooks
@@ -62,6 +63,7 @@ const MarterialCategoriesList = () => {
   useEffect(() => {
     let ignore = false;
     const fetchAllMaterialCategories = async () => {
+      setLoading(true);
       try {
         const response = await getAllMarterialCategories(
           searchText,
@@ -75,6 +77,8 @@ const MarterialCategoriesList = () => {
         }
       } catch (error) {
         console.error("error", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchAllMaterialCategories();
@@ -131,6 +135,10 @@ const MarterialCategoriesList = () => {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (totalMarterialCategory < 0) {
+    return <NoProduct />;
   }
 
   return (

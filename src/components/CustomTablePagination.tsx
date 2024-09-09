@@ -50,9 +50,7 @@ const CustomTablePagination: React.FC<CustomTablePaginationProps> = ({
       </IconButton>
       <Box mx={2}>
         <Typography sx={{ color: theme.palette.textColor?.main }}>
-          {count > 0
-            ? `${displayRangeStart}-${displayRangeEnd} of ${count}`
-            : "No Category"}
+          {count > 0 && `${displayRangeStart}-${displayRangeEnd} of ${count}`}
         </Typography>
       </Box>
       <IconButton
