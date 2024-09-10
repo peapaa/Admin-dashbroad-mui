@@ -20,12 +20,13 @@ function withGetCategories<T>(
         try {
           const response = await getAllCategoriesForMaterial();
           setCategories(response.data.results as CategoriesProps[]);
+          // console.log("response", response);
           // const number = Math.random();
           // console.log(number);
           // const math = number > 0.1;
           // console.log("math", math);
           // if (math) {
-          //   throw new Error("Simulated error for testing purposes");
+          //   throw new Error();
           // }
         } catch (error) {
           console.error("error", error);
