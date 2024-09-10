@@ -42,6 +42,7 @@ import useSWR, { mutate } from "swr";
 import { CategoriesProps, DeleteCategory, DeleteHandleProps } from "./type";
 
 // utils
+import ButtonRetry from "@/components/Button/ButtonRetry";
 import NoProduct from "@/components/Home/NoProduct";
 import SelectCheckAllTable from "@/components/TableCustom/SelectCheckAllTable";
 import { useGetUrlCategory } from "@/hooks/useKeyCategory";
@@ -108,7 +109,11 @@ export default function CategoriesList() {
   // }
   // );
 
-  const { data: categoriesData } = useSWR(url, getAllCategories, {});
+  const { data: categoriesData, error } = useSWR(url, getAllCategories, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    shouldRetryOnError: false, // don't should retry when error
+  });
 
   React.useEffect(() => {
     if (categoriesData) {
@@ -172,6 +177,13 @@ export default function CategoriesList() {
     setLoadingDeleteCategoies(true);
   };
 
+  const handleRetry = () => {
+    if (error?.response?.status === 404) {
+      return;
+    }
+    return mutate(url);
+  };
+
   if (totalCategory > 0 && page) {
     // check totalCategory vs page
     if (page > Math.ceil(totalCategory / rowsPerPage)) {
@@ -194,7 +206,13 @@ export default function CategoriesList() {
   if (totalCategory < 0) {
     <NoProduct />;
   }
-
+  if (error) {
+    return (
+      <Box className="flex items-center justify-center h-[300px] ">
+        <ButtonRetry onClick={handleRetry} />
+      </Box>
+    );
+  }
   return (
     <Box>
       <SelectCheckAllTable
