@@ -23,3 +23,7 @@ export interface withSupplierProps {
   errors: boolean;
   setRetry: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface WithCheckIdProps {
+  id: string;
+}
