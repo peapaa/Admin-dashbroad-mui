@@ -25,7 +25,7 @@ function Categories() {
           path="edit-category/:id"
           element={
             <ProtectedRouter>
-              <EditCategory />
+              <EditCategory id={""} />
             </ProtectedRouter>
           }
         ></Route>

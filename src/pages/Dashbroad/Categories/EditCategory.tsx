@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 // yup
@@ -13,33 +13,33 @@ import { editCategoryschema } from "@/pages/Dashbroad/Categories/validateCategor
 
 // service
 import Loading from "@/components/Home/Loading";
+import withCheckId from "@/hoc/withCheckId";
 import FormActionCategory from "@/pages/Dashbroad/Categories/components/FormAction/FormActionCategory";
 import { editCategory, getOneCategory } from "@/services/categoriesService";
 import { Box } from "@mui/material";
 
-const EditCategory = () => {
+// eslint-disable-next-line react-refresh/only-export-components
+const EditCategory = ({ id }: { id: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
 
   const [newImage, setNewImage] = useState<string | null>(null);
 
   const formMethod = useForm<DataCategory>({
     resolver: yupResolver(editCategoryschema),
   });
+
   const { setValue } = formMethod;
 
   useEffect(() => {
     const fetchGetOneCategory = async () => {
       setLoading(true);
       try {
-        if (id) {
-          const response = await getOneCategory(id);
-          const { name, image, price_type } = response.data;
-          setValue("name", name);
-          setValue("price_type", price_type);
-          setNewImage(image); // image not required --> dont setValue to form
-        }
+        const response = await getOneCategory(id);
+        const { name, image, price_type } = response.data;
+        setValue("name", name);
+        setValue("price_type", price_type);
+        setNewImage(image); // image not required --> dont setValue to form
       } catch (error) {
         console.error(error);
       } finally {
@@ -53,16 +53,14 @@ const EditCategory = () => {
     async (data: DataCategory) => {
       setLoading(true);
       try {
-        if (id) {
-          const formData = formDataCategory(data);
-          await editCategory(formData, id);
-          toast.success("Edit category suscess!");
-          if (localStorage.getItem("redirectPath")) {
-            navigate("/admin/resources/categories");
-            localStorage.removeItem("redirectPath");
-          } else {
-            navigate(-1);
-          }
+        const formData = formDataCategory(data);
+        await editCategory(formData, id);
+        toast.success("Edit category suscess!");
+        if (localStorage.getItem("redirectPath")) {
+          navigate("/admin/resources/categories");
+          localStorage.removeItem("redirectPath");
+        } else {
+          navigate(-1);
         }
       } catch (error) {
         console.log(error);
@@ -73,6 +71,11 @@ const EditCategory = () => {
     },
     [id, navigate]
   );
+
+  // check id version 1
+  // if (id === undefined) {
+  //   navigate("/admin/resources/categories");
+  // }
 
   if (loading) {
     return (
@@ -97,4 +100,5 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+// eslint-disable-next-line react-refresh/only-export-components
+export default withCheckId(EditCategory);
