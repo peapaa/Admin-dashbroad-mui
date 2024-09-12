@@ -7,6 +7,8 @@ const Tag = ({ supplier }: withSupplierProps) => {
   // if (loading) return <div>Loading...</div>;
   // if (errors) return <div>errors...</div>;
   console.log("supplier from tag", supplier);
+  console.time("filter array");
+
   useEffect(() => {
     const fetch = async () => {
       const response = await getAllCategoriesForMaterial(); // test HOC
@@ -14,6 +16,7 @@ const Tag = ({ supplier }: withSupplierProps) => {
     };
     fetch();
   }, []);
+  console.timeEnd("filter array");
   console.log("supplier", supplier);
   return (
     <div>
