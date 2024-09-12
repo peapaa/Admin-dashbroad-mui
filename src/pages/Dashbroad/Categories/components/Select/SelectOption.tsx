@@ -14,7 +14,7 @@ const SelectOption: React.FC<SelectOptionProps> = ({
       <div className="w-full ">
         <FormControl className="w-full ">
           <Select
-            value={value}
+            value={value ?? ""}
             onChange={(e) => onChange(e.target.value)}
             displayEmpty
             id={id}
@@ -27,8 +27,8 @@ const SelectOption: React.FC<SelectOptionProps> = ({
             <MenuItem value="">
               <em>Select option</em>
             </MenuItem>
-            {optionValues.map((optionValues) => (
-              <MenuItem value={optionValues.value}>
+            {optionValues.map((optionValues, index) => (
+              <MenuItem value={optionValues.value} key={index}>
                 {optionValues.option}
               </MenuItem>
             ))}
