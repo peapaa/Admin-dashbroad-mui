@@ -25,17 +25,17 @@ const priceTypeSchema = Yup.string()
   .required("Price type is required")
   .oneOf(price_type, "Invalid price type selected");
 
-export const imageCreateCategorySchema = Yup.mixed()
+export const imageCreateCategorySchema = Yup.mixed<File[]>()
   .test("is-required-or-exists", "Required image", function (value) {
     const { createError } = this;
-    const files = value as File[];
+    const files = value;
     if (!files || files.length === 0) {
       return createError({ message: "Required image" });
     }
     return true;
   })
   .test("is-valid-type", "Not a valid image type", function (value) {
-    const files = value as File[];
+    const files = value;
     if (files && files.length > 0) {
       const file = files[0];
       const isValid = isValidFileType(file.name.toLowerCase());
@@ -49,7 +49,7 @@ export const imageCreateCategorySchema = Yup.mixed()
     "is-valid-size",
     `Max allowed size is ${MAX_FILE_SIZE}MB`,
     function (value) {
-      const files = value as File[];
+      const files = value;
       if (files && files.length > 0) {
         const file = files[0];
         return file.size <= MAX_FILE_SIZE * 1024 * 1024;
@@ -58,10 +58,10 @@ export const imageCreateCategorySchema = Yup.mixed()
     }
   );
 
-export const imageEditCategorySchema = Yup.mixed()
+export const imageEditCategorySchema = Yup.mixed<File[]>()
   .nullable()
   .test("is-valid-type", "Not a valid image type", function (value) {
-    const files = value as File[];
+    const files = value;
     if (!files || files.length === 0) return true;
     if (files && files.length > 0) {
       const file = files[0];
@@ -73,7 +73,7 @@ export const imageEditCategorySchema = Yup.mixed()
     "is-valid-size",
     `Max allowed size is ${MAX_FILE_SIZE}MB`,
     function (value) {
-      const files = value as File[];
+      const files = value;
       if (!files || files.length === 0) return true;
       if (files && files.length > 0) {
         const file = files[0];
