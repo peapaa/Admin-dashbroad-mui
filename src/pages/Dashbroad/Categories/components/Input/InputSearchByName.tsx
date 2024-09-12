@@ -14,6 +14,7 @@ const InputSearchByName: React.FC<InputSearchProps> = ({ value, onChange }) => {
         display: "flex",
         justifyContent: "space-between",
         margin: "8px 0",
+        width: "320px",
       }}
     >
       <InputBase
@@ -21,7 +22,7 @@ const InputSearchByName: React.FC<InputSearchProps> = ({ value, onChange }) => {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         sx={{
-          width: "320px",
+          width: "100%",
           height: "32px",
           borderRadius: "25px",
           paddingLeft: "8px",

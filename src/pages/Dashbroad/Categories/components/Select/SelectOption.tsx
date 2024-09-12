@@ -1,4 +1,6 @@
+import ErrorText from "@/components/ErrorText/ErrorText";
 import { SelectOptionProps } from "@/pages/Dashbroad/Categories/type";
+import { FormControl, MenuItem, Select } from "@mui/material";
 
 const SelectOption: React.FC<SelectOptionProps> = ({
   value,
@@ -8,31 +10,32 @@ const SelectOption: React.FC<SelectOptionProps> = ({
   id,
 }) => {
   return (
-    <div className="flex justify-center flex-col">
-      <div>
-        <select
-          className="border outline-none rounded-md px-2 py-1 w-[280px] truncate"
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        >
-          <option value="" disabled>
-            Select option
-          </option>
-          {optionValues.map((optionValues, index) => (
-            <option
-              value={optionValues.value}
-              key={index}
-              className="w-[280px] truncate"
-            >
-              {optionValues.option}
-            </option>
-          ))}
-        </select>
+    <div className="flex flex-col w-full ">
+      <div className="w-full ">
+        <FormControl className="w-full ">
+          <Select
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            displayEmpty
+            id={id}
+            sx={{
+              "& .MuiSelect-select": {
+                padding: "6px 8px",
+              },
+            }}
+          >
+            <MenuItem value="">
+              <em>Select option</em>
+            </MenuItem>
+            {optionValues.map((optionValues) => (
+              <MenuItem value={optionValues.value}>
+                {optionValues.option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
-      <div className="h-5">
-        {error && <p className="text-red-500 ">{error}</p>}
-      </div>
+      <ErrorText error={error} />
     </div>
   );
 };
