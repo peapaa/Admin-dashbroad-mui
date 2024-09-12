@@ -4,6 +4,7 @@ import * as React from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // type
+import ErrorText from "@/components/ErrorText/ErrorText";
 import { InputImageProps } from "@/pages/Dashbroad/Categories/type";
 
 const InputImage: React.FC<InputImageProps> = ({
@@ -53,11 +54,10 @@ const InputImage: React.FC<InputImageProps> = ({
         id="image"
         className="w-0 h-0 opacity-0"
         accept=".jpg, .png, .jpeg, .svg"
-        // accept="image/*"
         multiple={false}
         onChange={handleChangeImage}
       />
-      {error && <p className="text-red-500">{error}</p>}
+      <ErrorText error={error} />
     </div>
   );
 };

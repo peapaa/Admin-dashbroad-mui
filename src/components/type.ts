@@ -25,3 +25,7 @@ export interface ButtonRetryProps {
   className?: string;
   onClick: () => void;
 }
+
+export interface ErrorTextProps {
+  error?: string | undefined;
+}

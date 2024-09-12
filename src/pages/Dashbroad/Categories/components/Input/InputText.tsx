@@ -1,4 +1,5 @@
 // type
+import ErrorText from "@/components/ErrorText/ErrorText";
 import { InputTextProps } from "@/pages/Dashbroad/Categories/type";
 import { Box } from "@mui/material";
 
@@ -9,16 +10,16 @@ const InputText: React.FC<InputTextProps> = ({
   typeInput,
 }) => {
   return (
-    <Box component="div" className="">
+    <Box component="div">
       <input
         type={typeInput}
         id="name"
         value={value}
-        className="border outline-none rounded-md ml-5 pl-3 h-8 w-[280px] "
+        className="border outline-none rounded-md pl-3 h-8 w-full"
         onChange={(e) => onChange(e.target.value)}
       />
-      <Box component="div" className="h-5">
-        {error && <p className="text-red-500 ml-5 h-5">{error}</p>}
+      <Box component="div">
+        <ErrorText error={error} />
       </Box>
     </Box>
   );
