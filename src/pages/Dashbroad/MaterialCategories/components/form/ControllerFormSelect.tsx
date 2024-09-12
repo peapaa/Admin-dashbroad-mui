@@ -22,15 +22,15 @@ const ControllerFormSelect: React.FC<ControllerFormProps> = ({
       name={name as keyof MarterialCategoriesProps}
       render={({ field: { onChange, value } }) => {
         return (
-          <div className="flex flex-col">
-            <label htmlFor={name} className="my-2 ml-5">
+          <div className="flex flex-col w-full">
+            <label htmlFor={name} className="my-2">
               {title}
               {title === "Name" || title === "Type" ? null : (
                 <span className="text-red-600"> *</span>
               )}{" "}
               :
             </label>
-            <Box className="ml-5">
+            <Box>
               <SelectOption
                 value={value as string}
                 error={errors[keyName]?.message}

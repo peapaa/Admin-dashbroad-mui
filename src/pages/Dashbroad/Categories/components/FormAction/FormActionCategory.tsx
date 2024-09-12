@@ -37,29 +37,33 @@ const FormActionCategory: React.FC<FormActionProps> = ({
             );
           }}
         />
-        <div className="flex flex-col items-center justify-center gap-5">
-          <div className=" flex flex-col gap-5 items-center justify-center shadow-shadowCategory px-20 py-10 rounded-md">
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { onChange, value } }) => {
-                return (
-                  <div className="flex">
-                    <label htmlFor="name">
-                      Name<span className="text-red-600"> *</span>:
-                    </label>
-                    <InputText
-                      value={value as string}
-                      onChange={onChange}
-                      error={errors.name?.message}
-                      typeInput="text"
-                    />
-                  </div>
-                );
-              }}
-            />
-            <div className="flex">
-              <label htmlFor="price_type" className="mr-5 mt-1">
+        <div className="flex flex-col items-center justify-center gap-5 w-[500px]">
+          <div className=" flex flex-col w-full gap-5 items-center justify-center shadow-shadowCategory py-10 rounded-md">
+            <div className="flex w-full gap-5 px-10">
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <div className="flex w-full gap-5">
+                      <label htmlFor="name">
+                        Name<span className="text-red-600"> *</span>:
+                      </label>
+                      <div className="grow">
+                        <InputText
+                          value={value as string}
+                          onChange={onChange}
+                          error={errors.name?.message}
+                          typeInput="text"
+                        />
+                      </div>
+                    </div>
+                  );
+                }}
+              />
+            </div>
+            <div className="flex w-full gap-5 px-10">
+              <label htmlFor="price_type" className="flex-shrink-0 ">
                 Price Type:
               </label>
 
