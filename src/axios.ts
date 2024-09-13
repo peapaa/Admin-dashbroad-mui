@@ -16,6 +16,8 @@ const axiosInstance = axios.create({
   },
 });
 
+const timeRefreshToken = 3 * 60 * 1000;
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const tokenString = localStorage.getItem("token");
@@ -94,5 +96,39 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+const refreshToken = async () => {
+  try {
+    const tokenString = localStorage.getItem("token");
+    const token = tokenString ? JSON.parse(tokenString) : null;
+    if (!token || !token.refresh || isTokenExpired(token.refresh)) {
+      // check refresh token con han khong
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+      return;
+    }
+    if (token && token.refresh) {
+      const result = await refreshAccessToken(token.refresh);
+      if (result?.status === 200) {
+        localStorage.setItem(
+          "token",
+          JSON.stringify({
+            ...token,
+            access: result.data.access,
+            refresh: result.data.refresh,
+          })
+        );
+      }
+    }
+  } catch (err) {
+    console.error("Failed to refresh access token:", err);
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+};
+
+setInterval(() => {
+  refreshToken();
+}, timeRefreshToken);
 
 export default axiosInstance;
