@@ -33,7 +33,7 @@ const MarterialCategories = () => {
           path="edit-marterial-category/:id"
           element={
             <ProtectedRouter>
-              <EditMaterialCategory />
+              <EditMaterialCategory id={""} />
             </ProtectedRouter>
           }
         ></Route>

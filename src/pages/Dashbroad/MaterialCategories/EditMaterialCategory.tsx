@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // components
 import Loading from "@/components/Home/Loading";
@@ -15,11 +15,13 @@ import {
   updateMaterial,
 } from "@/services/marterialCategoriesService";
 // yup
+import withCheckId from "@/hoc/withCheckId";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box } from "@mui/material";
 import axios from "axios";
 
-const EditMaterialCategory = () => {
+// eslint-disable-next-line react-refresh/only-export-components
+const EditMaterialCategory = ({ id }: { id: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [newImage, setNewImage] = useState<string | null>(null);
@@ -41,7 +43,7 @@ const EditMaterialCategory = () => {
 
   const { setValue } = formMethod;
 
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const fetcGetOneMaterial = async () => {
@@ -135,4 +137,5 @@ const EditMaterialCategory = () => {
   );
 };
 
-export default EditMaterialCategory;
+// eslint-disable-next-line react-refresh/only-export-components
+export default withCheckId(EditMaterialCategory);
